@@ -70,7 +70,7 @@ export default function Home() {
 				Some questions we get asked a lot.
 			</SectionTitle>
 			<Faq />
-			<Cta />
+			{/* <Cta /> */}
 			<Footer />
 			{/* <PopupWidget /> */}
 		</>
