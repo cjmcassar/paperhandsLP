@@ -39,12 +39,13 @@ export default function Home() {
 			<Navbar />
 			<Hero />
 			<SectionTitle
-				pretitle="Nextly Benefits"
-				title=" Why should you use this landing page"
+				pretitle="Paperhands Benefits"
+				title=" Why exit your assets one by one with a DEX or CEX when you can use Paperhands?"
 			>
-				Nextly is a free landing page & marketing website template for startups
-				and indie projects. Its built with Next.js & TailwindCSS. And its
-				completely open-source.
+				We help you clean up your crypto portfolio by using our protocol to scan
+				your wallet and find the best rates to sell. You don't have to waste
+				time selling assets one by one or finding a cheap workflow to convert
+				your assets into ETH / USDT.
 			</SectionTitle>
 			<Benefits data={benefitOne} />
 			<Benefits imgPos="right" data={benefitTwo} />
