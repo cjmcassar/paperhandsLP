@@ -3,7 +3,7 @@ import ThemeChanger from "./DarkSwitch";
 import { Disclosure } from "@headlessui/react";
 
 export default function Navbar() {
-	const navigation = ["Product", "Features", "Pricing", "Company", "Blog"];
+	const navigation = ["Product", "Features"];
 
 	return (
 		<div className="w-full">
