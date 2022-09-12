@@ -90,7 +90,7 @@ export default function Navbar() {
 				</div>
 
 				<div className="hidden mr-3 space-x-4 lg:flex nav__item">
-					<Link href="/">
+					<Link href="https://paperhands.vercel.app/">
 						<a className="px-6 py-2 text-white bg-indigo-600 rounded-md md:ml-5">
 							Get Early Access
 						</a>
