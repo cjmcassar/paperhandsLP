@@ -15,41 +15,15 @@ export default function Footer() {
 							{" "}
 							<Link href="/">
 								<a className="flex items-center space-x-2 text-2xl font-medium text-indigo-500 dark:text-gray-100">
-									{/* <span>
-                    <img
-                      src="/img/logo.svg"
-                      alt="N"
-                      width="32"
-                      height="32"
-                      className="w-8"
-                    />
-                  </span> */}
 									<span>Paperhands</span>
 								</a>
 							</Link>
 						</div>
 
 						<div className="max-w-md mt-4 text-gray-500 dark:text-gray-400">
-							Paperhands is a trading tool for casual traders to get out of
-							their positions through a simple to use interface.
+							Paperhands is a risk management tool for casual traders to
+							understand the implications behind their crypto investments.
 						</div>
-
-						{/* <div className="mt-5">
-							<a
-								href="https://vercel.com/?utm_source=web3templates&utm_campaign=oss"
-								target="_blank"
-								rel="noopener"
-								className="relative block w-44"
-							>
-								<Image
-									src="/img/vercel.svg"
-									layout="responsive"
-									alt="Powered by Vercel"
-									width="212"
-									height="44"
-								/>
-							</a>
-						</div> */}
 					</div>
 
 					<div>
@@ -112,17 +86,8 @@ export default function Footer() {
 				<div className="my-10 text-sm text-center text-gray-600 dark:text-gray-400">
 					Copyright © {new Date().getFullYear()}. Made with ♥ by a couple of
 					paperhanded devs
-					{/* <a href="https://web3templates.com/" target="_blank" rel="noopener">
-						Web3Templates.
-					</a>{" "}
-					Illustrations from{" "}
-					<a href="https://www.glazestock.com/" target="_blank" rel="noopener ">
-						Glazestock
-					</a> */}
 				</div>
 			</Container>
-			{/* Do not remove this */}
-			{/* <Backlink /> */}
 		</div>
 	);
 }
