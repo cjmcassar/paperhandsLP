@@ -11,23 +11,23 @@ import benefitOneImg from "../public/img/benefit-one.png";
 import benefitTwoImg from "../public/img/benefit-two.png";
 
 const benefitOne = {
-	title: "Simple interface to get out of your assets",
-	desc: "Casual traders want to get out of their assets to ETH / USDT as fast as possible. Paperhands makes it easy to sell your assets at the best rates.",
+	title: "More than a dashboard. We keep you informed.",
+	desc: "Paper Hands doesn't end after your initial risk audit. The market changes everyday. That's why our specialist team and bot sidekicks track new developments that impact risk daily. We go out of our way to keep you informed!",
 	image: benefitOneImg,
 	bullets: [
 		{
-			title: "Easy workflow to cash out",
-			desc: "Clean out your portfolio with a few clicks then cash out with one asset to a CEX.",
+			title: "Best Practices & Benchmarks",
+			desc: "If we notice risk in your portfolio, we'll explain why it's risky and share our top recommendations to keep your crypto safe. We'll even benchmark your risk level against our recommended risk distribution.",
 			icon: <EmojiHappyIcon />,
 		},
 		{
-			title: "Improve your profit taking strategy",
-			desc: "Exit your assets to a stablecoin when you see the market getting shakey.",
+			title: "An ever-growing risk database",
+			desc: "Our database includes over 2100 assets and 37 storage methods, and this is growing everyday.",
 			icon: <ChartSquareBarIcon />,
 		},
 		{
-			title: "Easy to use on desktop and mobile",
-			desc: "With a few clicks you can jump into ETH or USDT with your assets.",
+			title: "Keeping you informed",
+			desc: "Don't worry about logging into the app everyday. We'll reach out by email whenever one of your assets has increased its risk level. We'll share some context around the change and recommendations to improve your portfolio health.",
 			icon: <CursorClickIcon />,
 		},
 	],

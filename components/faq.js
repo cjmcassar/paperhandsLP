@@ -35,22 +35,12 @@ export default function Faq() {
 
 const faqdata = [
 	{
-		question: "Do you collect our wallet data?",
+		question: "How does it work?",
 		answer:
-			"No, this is a completely decentralized application. We do not collect any wallet data.",
+			"First, you log all your crypto assets records. Right away, you'll get a FREE RISK AUDIT. Then, we'll keep you informed via email if your portfolio risk changes. It couldn't be simpler!",
 	},
 	{
 		question: "Is this free to use?",
 		answer: "Yes, this is a completely free to use application.",
 	},
-	// {
-	// 	question: "What is your refund policy? ",
-	// 	answer:
-	// 		"If you're unhappy with your purchase for any reason, email us within 90 days and we'll refund you in full, no questions asked.",
-	// },
-	// {
-	// 	question: "Do you offer technical support? ",
-	// 	answer:
-	// 		"No, we don't offer technical support for free downloads. Please purchase a support plan to get 6 months of support.",
-	// },
 ];

@@ -28,10 +28,10 @@ export default function Home() {
 	return (
 		<>
 			<Head>
-				<title>Paperhands: A simple interface to get out of your assets</title>
+				<title>Paperhands: Identify risk in your crypto portfolio</title>
 				<meta
 					name="description"
-					content="Paperhands: A simple interface to get out of your assets"
+					content="Paperhands: Identify risk in your crypto portfolio"
 				/>
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
@@ -40,39 +40,19 @@ export default function Home() {
 			<Hero />
 			<SectionTitle
 				pretitle="Paperhands Benefits"
-				title=" Why exit your assets one by one with a DEX or CEX when you can use Paperhands?"
+				title="We're a portfolio tracker that specialize in risk management"
 			>
-				We help you clean up your crypto portfolio by using our protocol to scan
-				your wallet and find the best rates to sell. You don't have to waste
-				time selling assets one by one or finding a cheap workflow to convert
-				your assets into ETH / USDT.
+				We review the risk of crypto assets, blockchains and storage methods to
+				give you a FREE RISK AUDIT. We monitor your assets in real-time to track
+				the health of your portfolio over time and give you the most up-to-date
+				information.
 			</SectionTitle>
 			<Benefits data={benefitOne} />
-			{/* <Benefits imgPos="right" data={benefitTwo} /> */}
-			{/* <SectionTitle
-				pretitle="Watch a video"
-				title="Learn how to fullfil your needs"
-			>
-				This section is to highlight a promo or demo video of your product.
-				Analysts says a landing page with video has 3% more conversion rate. So,
-				don't forget to add one. Just like this.
-			</SectionTitle> */}
-			{/* <Video /> */}
-			{/* <SectionTitle
-				pretitle="Testimonials"
-				title="Here's what our customers said"
-			>
-				Testimonails is a great way to increase the brand trust and awareness.
-				Use this section to highlight your popular customers.
-			</SectionTitle> */}
-			{/* <Testimonials /> */}
 			<SectionTitle pretitle="FAQ" title="Frequently Asked Questions">
 				Some questions we get asked a lot.
 			</SectionTitle>
 			<Faq />
-			{/* <Cta /> */}
 			<Footer />
-			{/* <PopupWidget /> */}
 		</>
 	);
 }
