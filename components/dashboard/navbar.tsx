@@ -1,5 +1,8 @@
 import React from "react";
 import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { faSearch, faUser } from "@fortawesome/free-solid-svg-icons";
 
 export default function Navbar() {
 	return (
@@ -31,7 +34,10 @@ export default function Navbar() {
 					<div className="flex items-center md:ml-auto md:pr-4">
 						<div className="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease">
 							<span className="text-sm ease leading-5.6 absolute z-50 -ml-px flex h-full items-center whitespace-nowrap rounded-lg rounded-tr-none rounded-br-none border border-r-0 border-transparent bg-transparent py-2 px-2.5 text-center font-normal text-slate-500 transition-all">
-								<i className="fas fa-search"></i>
+								<FontAwesomeIcon
+									className="text-gray-500 opacity-100"
+									icon={faSearch as IconProp}
+								/>
 							</span>
 							<input
 								type="text"
@@ -40,6 +46,7 @@ export default function Navbar() {
 							/>
 						</div>
 					</div>
+
 					<ul className="flex flex-row justify-end pl-0 mb-0 list-none md-max:w-full">
 						{/* <!-- online builder btn  --> */}
 						{/* <li className="flex items-center">
@@ -53,13 +60,16 @@ export default function Navbar() {
 						</li> */}
 						{/* end online builder */}
 						<li className="flex items-center">
-							<a
-								href="../pages/sign-in.html"
-								className="block px-0 py-2 text-sm font-semibold text-white transition-all ease-nav-brand"
-							>
-								<i className="fa fa-user sm:mr-1"></i>
-								<span className="hidden sm:inline">Sign In</span>
-							</a>
+							<Link href="/pages/sign-in">
+								<a className="block px-0 py-2 text-sm font-semibold text-white transition-all ease-nav-brand">
+									<i className="fa fa-user sm:mr-1"></i>
+									<FontAwesomeIcon
+										className="sm:mr-1"
+										icon={faUser as IconProp}
+									/>
+									<span className="hidden sm:inline">Sign In</span>
+								</a>
+							</Link>
 						</li>
 						<li className="flex items-center pl-4 xl:hidden">
 							<a
