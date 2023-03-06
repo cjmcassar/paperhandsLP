@@ -2,7 +2,13 @@ import React from "react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faSearch, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+	faBars,
+	faBell,
+	faCog,
+	faSearch,
+	faUser,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function Navbar() {
 	return (
@@ -72,27 +78,13 @@ export default function Navbar() {
 							</Link>
 						</li>
 						<li className="flex items-center pl-4 xl:hidden">
-							<a
-								href="javascript:;"
-								className="block p-0 text-sm text-white transition-all ease-nav-brand"
-								sidenav-trigger
-							>
-								<div className="w-4.5 overflow-hidden">
-									<i className="ease mb-0.75 relative block h-0.5 rounded-sm bg-white transition-all"></i>
-									<i className="ease mb-0.75 relative block h-0.5 rounded-sm bg-white transition-all"></i>
-									<i className="ease relative block h-0.5 rounded-sm bg-white transition-all"></i>
-								</div>
+							<a className="cursor-pointer block p-0 text-sm text-white transition-all ease-nav-brand">
+								<FontAwesomeIcon icon={faBars as IconProp} />
 							</a>
 						</li>
 						<li className="flex items-center px-4">
-							<a
-								href="javascript:;"
-								className="p-0 text-sm text-white transition-all ease-nav-brand"
-							>
-								<i
-									fixed-plugin-button-nav
-									className="cursor-pointer fa fa-cog"
-								></i>
+							<a className="cursor-pointer p-0 text-sm text-white transition-all ease-nav-brand">
+								<FontAwesomeIcon icon={faCog as IconProp} />
 								{/* <!-- fixed-plugin-button-nav  --> */}
 							</a>
 						</li>
@@ -102,12 +94,14 @@ export default function Navbar() {
 						<li className="relative flex items-center pr-2">
 							<p className="hidden transform-dropdown-show"></p>
 							<a
-								href="javascript:;"
 								className="block p-0 text-sm text-white transition-all ease-nav-brand"
 								dropdown-trigger
 								aria-expanded="false"
 							>
-								<i className="cursor-pointer fa fa-bell"></i>
+								<FontAwesomeIcon
+									className="cursor-pointer"
+									icon={faBell as IconProp}
+								/>
 							</a>
 
 							<ul
