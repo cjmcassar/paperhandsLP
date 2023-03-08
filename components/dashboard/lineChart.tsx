@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
 
 export default function LineChart() {
@@ -15,7 +15,7 @@ export default function LineChart() {
 				gradientStroke.addColorStop(0.2, "rgba(94, 114, 228, 0.0)");
 				gradientStroke.addColorStop(0, "rgba(94, 114, 228, 0)");
 
-				const chart: Chart = new Chart(ctx, {
+				new Chart(ctx, {
 					type: "line",
 					data: {
 						labels: [
