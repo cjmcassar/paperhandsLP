@@ -1,5 +1,4 @@
-import Head from "next/head";
-import DashboardLayout from "../components/layouts/DashboardLayout.tsx";
+import DashboardLayout from "../components/layouts/dashboardLayout";
 function Dashboard() {
   return (
     <DashboardLayout>
