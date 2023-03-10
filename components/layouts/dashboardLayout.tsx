@@ -1,7 +1,7 @@
 import React from "react";
-import Navbar from "../dashboard/Navbar.tsx";
-import Sidebar from "../dashboard/sidebar/Sidebar.tsx";
-// import Footer from "../dashboard/footer.tsx";
+import Navbar from "../dashboard/navbar";
+import Sidebar from "../dashboard/sidebar/sidebar";
+// import Footer from "../dashboard/footer";
 export default function DashboardLayout({ children }) {
   return (
     <div>
