@@ -43,7 +43,6 @@ export default function RightHandSidebar() {
 							<p className="hidden transform-dropdown-show"></p>
 							<a
 								className="block p-0 text-sm text-white transition-all ease-nav-brand"
-								dropdown-trigger
 								aria-expanded="false"
 							>
 								<FontAwesomeIcon
@@ -52,15 +51,9 @@ export default function RightHandSidebar() {
 								/>
 							</a>
 
-							<ul
-								dropdown-menu
-								className="text-sm transform-dropdown before:font-awesome before:leading-default before:duration-350 before:ease lg:shadow-3xl duration-250 min-w-44 before:sm:right-8 before:text-5.5 pointer-events-none absolute right-0 top-0 z-50 origin-top list-none rounded-lg border-0 border-solid border-transparent dark:shadow-dark-xl dark:bg-slate-850 bg-white bg-clip-padding px-2 py-4 text-left text-slate-500 opacity-0 transition-all before:absolute before:right-2 before:left-auto before:top-0 before:z-50 before:inline-block before:font-normal before:text-white before:antialiased before:transition-all before:content-['\f0d8'] sm:-mr-6 lg:absolute lg:right-0 lg:left-auto lg:mt-2 lg:block lg:cursor-pointer"
-							>
+							<ul className="text-sm transform-dropdown before:font-awesome before:leading-default before:duration-350 before:ease lg:shadow-3xl duration-250 min-w-44 before:sm:right-8 before:text-5.5 pointer-events-none absolute right-0 top-0 z-50 origin-top list-none rounded-lg border-0 border-solid border-transparent dark:shadow-dark-xl dark:bg-slate-850 bg-white bg-clip-padding px-2 py-4 text-left text-slate-500 opacity-0 transition-all before:absolute before:right-2 before:left-auto before:top-0 before:z-50 before:inline-block before:font-normal before:text-white before:antialiased before:transition-all before:content-['\f0d8'] sm:-mr-6 lg:absolute lg:right-0 lg:left-auto lg:mt-2 lg:block lg:cursor-pointer">
 								<li className="relative mb-2">
-									<a
-										className="dark:hover:bg-slate-900 ease py-1.2 clear-both block w-full whitespace-nowrap rounded-lg bg-transparent px-4 duration-300 hover:bg-gray-200 hover:text-slate-700 lg:transition-colors"
-										href="javascript:;"
-									>
+									<a className="dark:hover:bg-slate-900 ease py-1.2 clear-both block w-full whitespace-nowrap rounded-lg bg-transparent px-4 duration-300 hover:bg-gray-200 hover:text-slate-700 lg:transition-colors">
 										<div className="flex py-1">
 											<div className="my-auto">
 												<img
@@ -83,10 +76,7 @@ export default function RightHandSidebar() {
 								</li>
 
 								<li className="relative mb-2">
-									<a
-										className="dark:hover:bg-slate-900 ease py-1.2 clear-both block w-full whitespace-nowrap rounded-lg px-4 transition-colors duration-300 hover:bg-gray-200 hover:text-slate-700"
-										href="javascript:;"
-									>
+									<a className="dark:hover:bg-slate-900 ease py-1.2 clear-both block w-full whitespace-nowrap rounded-lg px-4 transition-colors duration-300 hover:bg-gray-200 hover:text-slate-700">
 										<div className="flex py-1">
 											<div className="my-auto">
 												<img
@@ -108,10 +98,7 @@ export default function RightHandSidebar() {
 								</li>
 
 								<li className="relative">
-									<a
-										className="dark:hover:bg-slate-900 ease py-1.2 clear-both block w-full whitespace-nowrap rounded-lg px-4 transition-colors duration-300 hover:bg-gray-200 hover:text-slate-700"
-										href="javascript:;"
-									>
+									<a className="dark:hover:bg-slate-900 ease py-1.2 clear-both block w-full whitespace-nowrap rounded-lg px-4 transition-colors duration-300 hover:bg-gray-200 hover:text-slate-700">
 										<div className="flex py-1">
 											<div className="inline-flex items-center justify-center my-auto mr-4 text-sm text-white transition-all duration-200 ease-nav-brand bg-gradient-to-tl from-slate-600 to-slate-300 h-9 w-9 rounded-xl">
 												<svg
@@ -125,14 +112,14 @@ export default function RightHandSidebar() {
 													<title>credit-card</title>
 													<g
 														stroke="none"
-														stroke-width="1"
+														strokeWidth="1"
 														fill="none"
-														fill-rule="evenodd"
+														fillRule="evenodd"
 													>
 														<g
 															transform="translate(-2169.000000, -745.000000)"
 															fill="#FFFFFF"
-															fill-rule="nonzero"
+															fillRule="nonzero"
 														>
 															<g transform="translate(1716.000000, 291.000000)">
 																<g transform="translate(453.000000, 454.000000)">

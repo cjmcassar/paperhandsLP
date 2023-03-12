@@ -12,7 +12,7 @@ export const History = () => {
 							cy="25"
 							r="20"
 							stroke="black"
-							stroke-width="1"
+							strokeWidth="1"
 							fill="transparent"
 						/>
 						<svg x="14" y="14" width="22" height="22" viewBox="0 0 340 512">
@@ -35,7 +35,7 @@ export const History = () => {
 								cy="25"
 								r="20"
 								stroke="black"
-								stroke-width="1"
+								strokeWidth="1"
 								fill="transparent"
 							/>
 							<svg
@@ -50,18 +50,18 @@ export const History = () => {
 								<path
 									d="M12 12.1L7.5 14.7L3 12.1V6.90005L7.5 4.30005L12 6.90005V8.50005"
 									stroke="#17191C"
-									stroke-width="1.5"
-									stroke-miterlimit="10"
-									stroke-linecap="round"
-									stroke-linejoin="round"
+									strokeWidth="1.5"
+									strokeMiterlimit="10"
+									strokeLinecap="round"
+									strokeLinejoin="round"
 								/>
 								<path
 									d="M12 12.1L16.5 9.5L21 12.1V17.3L16.5 19.9L12 17.3V15.6"
 									stroke="#17191C"
-									stroke-width="1.5"
-									stroke-miterlimit="10"
-									stroke-linecap="round"
-									stroke-linejoin="round"
+									strokeWidth="1.5"
+									strokeMiterlimit="10"
+									strokeLinecap="round"
+									strokeLinejoin="round"
 								/>
 							</svg>
 						</svg>
@@ -82,7 +82,7 @@ export const History = () => {
 							cy="25"
 							r="20"
 							stroke="black"
-							stroke-width="1"
+							strokeWidth="1"
 							fill="transparent"
 						/>
 						<svg x="14" y="14" width="22" height="22" viewBox="0 0 340 512">
@@ -104,7 +104,7 @@ export const History = () => {
 							cy="25"
 							r="20"
 							stroke="black"
-							stroke-width="1"
+							strokeWidth="1"
 							fill="transparent"
 						/>
 						<svg
@@ -133,7 +133,7 @@ export const History = () => {
 							cy="25"
 							r="20"
 							stroke="black"
-							stroke-width="1"
+							strokeWidth="1"
 							fill="transparent"
 						/>
 						<svg x="14" y="14" width="22" height="22" viewBox="0 0 340 512">
