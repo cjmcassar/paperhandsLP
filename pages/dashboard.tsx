@@ -1,12 +1,8 @@
-import History from "../components/dashboard/history";
 import DashboardLayout from "../components/layouts/dashboardLayout";
 function Dashboard() {
 	return (
 		<DashboardLayout>
-			<div>
-				Components inside dashboard layout
-				<History />
-			</div>
+			<div>This is where all of the dashboard components will go.</div>
 		</DashboardLayout>
 	);
 }
