@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import React from "react";
 import History from "../history";
+import RiskInfo from "../riskInfo";
 
 export default function RightHandSidebar() {
 	return (
@@ -153,6 +154,7 @@ export default function RightHandSidebar() {
 						</li>
 					</ul>
 					<History />
+					<RiskInfo />
 				</div>
 			</nav>
 		</>
