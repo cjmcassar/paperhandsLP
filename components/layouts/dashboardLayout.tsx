@@ -1,6 +1,6 @@
 import React from "react";
 import Navbar from "../dashboard/navbar";
-import Sidebar from "../dashboard/sidebar/sidebar";
+import Sidebar from "../dashboard/sidebar/Sidebar";
 import RightHandSidebar from "../dashboard/sidebar/RightHandSidebar";
 
 import Footer from "../dashboard/footer";
