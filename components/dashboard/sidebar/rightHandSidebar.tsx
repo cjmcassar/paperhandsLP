@@ -11,7 +11,7 @@ import React from "react";
 import History from "../history";
 import RiskInfo from "../riskInfo";
 
-import styles from "../sidebar/rightHandSidebar.module.css";
+import styles from "../sidebar/RightHandSidebar.module.css";
 
 function UserSignIn() {
 	return (
