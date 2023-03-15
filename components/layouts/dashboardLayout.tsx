@@ -1,7 +1,7 @@
 import React from "react";
 import Navbar from "../dashboard/navbar";
 import Sidebar from "../dashboard/sidebar/sidebar";
-import RightHandSidebar from "../dashboard/sidebar/rightHandSidebar";
+import RightHandSidebar from "../dashboard/sidebar/RightHandSidebar";
 import Footer from "../dashboard/footer";
 export default function DashboardLayout({ children }) {
 	return (
