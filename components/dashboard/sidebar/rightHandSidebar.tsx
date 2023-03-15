@@ -57,7 +57,7 @@ function Notifications() {
 	);
 }
 
-export default function RightHandSidebar() {
+export default function RightHandSidebar(): JSX.Element {
 	return (
 		<>
 			<nav className={styles.nav}>
