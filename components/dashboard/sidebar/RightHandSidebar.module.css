@@ -1,0 +1,56 @@
+.iconSize {
+	font-size: 1.5rem;
+}
+
+.iconBorder {
+	border-width: 1px;
+	border-style: solid;
+	border-color: #1a1c24;
+	border-radius: 0.625rem;
+	padding: 0.5rem;
+}
+
+.iconBorder:hover {
+	background-color: #2d3748;
+	color: #ffffff;
+}
+
+.nav {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	width: 16rem;
+	background-color: #17181c;
+	z-index: 50;
+}
+
+.listItem {
+	display: flex;
+	align-items: center;
+}
+
+.listItemLink {
+	padding: 0.5rem 0;
+	display: block;
+	font-size: 0.875rem;
+	font-weight: 600;
+	color: #fff;
+	transition: all 0.2s ease-in-out;
+}
+
+.userIcon {
+	width: 2.5rem;
+	height: 2.5rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #1a1c24;
+	color: #4b5563;
+	border-radius: 9999px;
+}
+
+.userIcon:hover {
+	background-color: #2d3748;
+	color: #ffffff;
+}

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import React from "react";
-import Container from "./container";
+import Container from "./Container";
 
 export default function Footer() {
 	const navigation = ["Product", "Features"];
