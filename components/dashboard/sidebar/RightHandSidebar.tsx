@@ -8,8 +8,8 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import React from "react";
-import History from "../history";
-import RiskInfo from "../riskInfo";
+import History from "../History";
+import RiskInfo from "../RiskInfo";
 
 import styles from "../sidebar/RightHandSidebar.module.css";
 
