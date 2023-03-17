@@ -9,6 +9,9 @@ module.exports = {
     extend: {
       colors: {
         trueGray: colors.trueGray,
+        ppPink: "#FC62FF",
+        ppYellow: "#FFF507",
+        ppGreen: "#62FF97",
       },
     },
     fontFamily: {
