@@ -2,126 +2,168 @@ import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
 
 export default function LineChart() {
-	const chartContainer = useRef(null);
+  const chartContainer = useRef(null);
 
-	useEffect(() => {
-		if (chartContainer.current) {
-			const ctx = chartContainer.current.getContext("2d");
+  useEffect(() => {
+    if (chartContainer.current) {
+      const ctx = chartContainer.current.getContext("2d");
 
-			if (ctx) {
-				const gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+      if (ctx) {
+        const gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
 
-				gradientStroke.addColorStop(1, "rgba(94, 114, 228, 0.2)");
-				gradientStroke.addColorStop(0.2, "rgba(94, 114, 228, 0.0)");
-				gradientStroke.addColorStop(0, "rgba(94, 114, 228, 0)");
+        gradientStroke.addColorStop(1, "rgba(94, 114, 228, 0.2)");
+        gradientStroke.addColorStop(0.2, "rgba(94, 114, 228, 0.0)");
+        gradientStroke.addColorStop(0, "rgba(94, 114, 228, 0)");
 
-				new Chart(ctx, {
-					type: "line",
-					data: {
-						labels: [
-							"Apr",
-							"May",
-							"Jun",
-							"Jul",
-							"Aug",
-							"Sep",
-							"Oct",
-							"Nov",
-							"Dec",
-						],
-						datasets: [
-							{
-								label: "Mobile apps",
-								tension: 0.4,
-								pointRadius: 0,
-								borderColor: "#5e72e4",
-								backgroundColor: gradientStroke,
-								borderWidth: 3,
-								fill: true,
-								data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
-							},
-						],
-					},
-					options: {
-						responsive: true,
-						maintainAspectRatio: false,
-						plugins: {
-							legend: {
-								display: false,
-							},
-						},
-						interaction: {
-							intersect: false,
-							mode: "index",
-						},
-						scales: {
-							y: {
-								grid: {
-									display: true,
-									drawOnChartArea: true,
-									drawTicks: false,
-									tickBorderDashOffset: 5,
-								},
-								ticks: {
-									display: true,
-									padding: 10,
-									color: "#fbfbfb",
-									font: {
-										size: 11,
-										family: "Open Sans",
-										style: "normal",
-										lineHeight: 2,
-									},
-								},
-							},
-							x: {
-								grid: {
-									display: false,
-									drawOnChartArea: false,
-									drawTicks: false,
-									tickBorderDashOffset: 5,
-								},
-								ticks: {
-									display: true,
-									color: "#ccc",
-									padding: 20,
-									font: {
-										size: 11,
-										family: "Open Sans",
-										style: "normal",
-										lineHeight: 2,
-									},
-								},
-							},
-						},
-					},
-				});
-			}
-		}
-	}, []);
+        new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "May",
+              "Jun",
+              "Jul",
+              "Aug",
+              "Sep",
+              "Oct",
+              "Nov",
+              "Dec",
+            ],
+            datasets: [
+              {
+                label: "High Risk",
+                tension: 0.4,
+                pointRadius: 0,
+                borderColor: "#FC62FF",
+                // fill: true,
+                // backgroundColor: gradientStroke,
+                borderWidth: 2,
+                data: [0, 25, 76, 50, 40, 300, 220, 500, 250, 400, 230, 500],
+              },
+              {
+                label: "Medium Risk",
+                tension: 0.4,
+                pointRadius: 0,
+                borderColor: "#FFF507",
+                // fill: true,
+                // backgroundColor: gradientStroke,
+                borderWidth: 2,
+                data: [0, 90, 34, 40, 76, 76, 50, 76, 56, 230, 500, 230],
+              },
+              {
+                label: "Low Risk",
+                tension: 0.4,
+                pointRadius: 0,
+                borderColor: "#62FF97",
+                // fill: true,
+                // backgroundColor: gradientStroke,
+                borderWidth: 2,
+                data: [0, 50, 30, 76, 30, 34, 230, 230, 40, 76, 76, 150],
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              },
+            },
+            interaction: {
+              intersect: false,
+              mode: "index",
+            },
+            scales: {
+              y: {
+                grid: {
+                  display: true,
+                  color: "#1e293b",
+                  drawOnChartArea: true,
+                  drawTicks: false,
+                  tickBorderDashOffset: 5,
+                },
+                ticks: {
+                  display: true,
+                  padding: 10,
+                  color: "#64748b",
+                  font: {
+                    size: 12,
+                    family: "Open Sans",
+                    style: "normal",
+                    lineHeight: 2,
+                  },
+                  callback: function (value, index, ticks) {
+                    return `${value}k`;
+                  },
+                },
+              },
+              x: {
+                grid: {
+                  display: false,
+                  drawOnChartArea: false,
+                  drawTicks: false,
+                  tickBorderDashOffset: 5,
+                },
+                ticks: {
+                  display: true,
+                  color: "#64748b",
+                  padding: 20,
+                  font: {
+                    size: 12,
+                    family: "Open Sans",
+                    style: "normal",
+                    lineHeight: 2,
+                  },
+                },
+              },
+            },
+          },
+        });
+      }
+    }
+  }, []);
 
-	return (
-		<div className="flex flex-wrap mt-6 -mx-3">
-			<div className="w-full max-w-full px-3 mt-0 lg:w-7/12 lg:flex-none">
-				<div className="border-black/12.5 dark:bg-slate-850 dark:shadow-dark-xl shadow-xl relative z-20 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-white bg-clip-border">
-					<div className="border-black/12.5 mb-0 rounded-t-2xl border-b-0 border-solid p-6 pt-4 pb-0">
-						<h6 className="capitalize dark:text-white">Sales overview</h6>
-						<p className="mb-0 text-sm leading-normal dark:text-white dark:opacity-60">
-							<i className="fa fa-arrow-up text-emerald-500"></i>
-							<span className="font-semibold">4% more</span> in 2021
-						</p>
-					</div>
-					<div className="flex-auto p-4">
-						<div>
-							<canvas
-								id="chart-line"
-								ref={chartContainer}
-								height="300"
-							></canvas>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	);
+  return (
+    <div className="flex flex-wrap mt-6 -mx-3">
+      <div className="w-full max-w-full px-3 mt-0 lg:flex-none">
+        <div className="border-black/12.5 dark:bg-slate-850 dark:shadow-dark-xl shadow-xl relative z-20 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-black bg-clip-border">
+          <div className="flex justify-between items-center mb-20 p-6 pt-10 pb-0">
+            <div>
+              <h2 className="capitalize dark:text-white text-bold md:text-3xl sm:text-lg">
+                Types
+              </h2>
+            </div>
+            <div className="flex gap-4 md:text-lg sm:text-xs">
+              <div className="flex gap-2 items-center">
+                <div className="w-4 h-4 bg-ppPink rounded-full"></div>
+                <div>High Risk</div>
+              </div>
+              <div className="flex gap-2 items-center">
+                <div className="w-4 h-4 bg-ppYellow rounded-full"></div>
+                <div>Medium Risk</div>
+              </div>
+              <div className="flex gap-2 items-center">
+                <div className="w-4 h-4 bg-ppGreen rounded-full"></div>
+                <div>Low Risk</div>
+              </div>
+            </div>
+            <div className="md:text-lg sm:text-xs">Last 7 Days</div>
+          </div>
+          <div className="flex-auto p-4">
+            <div>
+              <canvas
+                id="chart-line"
+                ref={chartContainer}
+                height="300"
+              ></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
