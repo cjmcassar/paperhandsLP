@@ -130,8 +130,8 @@ export default function LineChart() {
   return (
     <div className="flex flex-wrap mt-6 -mx-3">
       <div className="w-full max-w-full px-3 mt-0 lg:flex-none">
-        <div className="border-black/12.5 dark:bg-slate-850 dark:shadow-dark-xl shadow-xl relative z-20 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-black bg-clip-border">
-          <div className="flex justify-between items-center mb-20 p-6 pt-10 pb-0">
+        <div className="border-black/12.5 dark:bg-slate-850 dark:shadow-dark-xl shadow-xl relative z-20 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-phBlack bg-clip-border">
+          <div className="flex justify-between items-center mb-10 p-6 pt-10 pb-0">
             <div>
               <h2 className="capitalize dark:text-white text-bold md:text-3xl sm:text-lg">
                 Types
@@ -139,15 +139,15 @@ export default function LineChart() {
             </div>
             <div className="flex gap-4 md:text-lg sm:text-xs">
               <div className="flex gap-2 items-center">
-                <div className="w-4 h-4 bg-ppPink rounded-full"></div>
+                <div className="w-4 h-4 bg-phPink rounded-full"></div>
                 <div>High Risk</div>
               </div>
               <div className="flex gap-2 items-center">
-                <div className="w-4 h-4 bg-ppYellow rounded-full"></div>
+                <div className="w-4 h-4 bg-phYellow rounded-full"></div>
                 <div>Medium Risk</div>
               </div>
               <div className="flex gap-2 items-center">
-                <div className="w-4 h-4 bg-ppGreen rounded-full"></div>
+                <div className="w-4 h-4 bg-phGreen rounded-full"></div>
                 <div>Low Risk</div>
               </div>
             </div>

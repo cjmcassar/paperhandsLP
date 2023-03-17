@@ -9,12 +9,12 @@ module.exports = {
     extend: {
       colors: {
         trueGray: colors.trueGray,
-        black: "#0E0F13",
-        darkGray: "#17181C",
-        purple: "#7B62FF",
-        ppPink: "#FC62FF",
-        ppYellow: "#FFF507",
-        ppGreen: "#62FF97",
+        phBlack: "#0E0F13",
+        phDarkGray: "#17181C",
+        phPurple: "#7B62FF",
+        phPink: "#FC62FF",
+        phYellow: "#FFF507",
+        phGreen: "#62FF97",
       },
     },
     fontFamily: {
