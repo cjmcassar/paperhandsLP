@@ -19,10 +19,9 @@ function SidebarItem({
       <a
         href="#"
         className={`text-2xl flex items-center gap-4 transition duration-300 py-2 ${
-          isActive ? "bg-purple" : "opacity-50 hover:opacity-100"
+          isActive ? "bg-phPurple" : "opacity-50 hover:opacity-100"
         } px-5 rounded-xl`}
       >
-        {/* <FontAwesomeIcon className="pr-4" icon={icon as IconProp} /> */}
         <img className="w-10" src={iconSrc} alt="" />
         {children}
       </a>
