@@ -5,21 +5,21 @@ import RightHandSidebar from "../dashboard/sidebar/RightHandSidebar";
 
 import Footer from "../dashboard/Footer";
 export default function DashboardLayout({ children }) {
-	return (
-		<>
-			<Sidebar />
+  return (
+    <>
+      <Sidebar />
 
-			<div className="relative md:ml-64 md:mr-64 bg-black w-auto">
-				<Navbar />
-			</div>
+      <div className="relative md:ml-72 md:mr-72 bg-black w-auto">
+        <Navbar />
+      </div>
 
-			<div className="md:p-10 md:ml-64 md:mr-64 flex-1">{children}</div>
+      <div className="md:p-10 md:ml-72 md:mr-72 flex-1">{children}</div>
 
-			<RightHandSidebar />
+      <RightHandSidebar />
 
-			<div className="md:ml-64 md:mr-64">
-				<Footer />
-			</div>
-		</>
-	);
+      <div className="md:ml-72 md:mr-72">
+        <Footer />
+      </div>
+    </>
+  );
 }
