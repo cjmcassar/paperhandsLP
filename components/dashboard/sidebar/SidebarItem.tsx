@@ -6,11 +6,11 @@ import { useRouter } from "next/dist/client/router";
 function SidebarItem({
   href,
   children,
-  icon,
+  iconSrc,
 }: {
   href: string;
   children: string;
-  icon: IconDefinition;
+  iconSrc: string;
 }) {
   const router = useRouter();
   const isActive = router.pathname === href;
@@ -18,11 +18,12 @@ function SidebarItem({
     <Link href={href}>
       <a
         href="#"
-        className={`transition duration-300 py-3 block ${
+        className={`text-2xl flex items-center gap-4 transition duration-300 py-2 ${
           isActive ? "bg-purple" : "opacity-50 hover:opacity-100"
         } px-5 rounded-xl`}
       >
-        <FontAwesomeIcon className="pr-4" icon={icon as IconProp} />
+        {/* <FontAwesomeIcon className="pr-4" icon={icon as IconProp} /> */}
+        <img className="w-10" src={iconSrc} alt="" />
         {children}
       </a>
     </Link>
