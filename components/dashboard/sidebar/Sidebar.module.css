@@ -12,10 +12,12 @@
 	font-weight: 500;
 	color: #fff;
 	text-decoration: none;
+	border-radius: 0.5rem;
 	transition: all 0.2s ease-in-out;
 }
 
 .sidebarLink:hover {
 	color: #ccc;
-	background-color: rgba(255, 255, 255, 0.1);
+	background-color: #7b62ff;
+	border-radius: 0.5rem;
 }

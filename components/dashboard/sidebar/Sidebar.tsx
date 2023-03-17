@@ -69,7 +69,7 @@ function NavigationItems() {
 	return (
 		<ul className="md:flex-col md:min-w-full flex flex-col list-none text-lg">
 			<li className="items-center">
-				<Link href="/analytics">
+				<Link href="#">
 					<a href="#" className={`${styles.sidebarLink} py-3 font-bold block`}>
 						<FontAwesomeIcon className="pr-4" icon={faBox as IconProp} />
 						Dashboard
@@ -78,7 +78,7 @@ function NavigationItems() {
 			</li>
 			<li className="items-center">
 				<Link href="#">
-					<a href="#" className={"py-3 font-bold block"}>
+					<a href="#" className={`${styles.sidebarLink} py-3 font-bold block`}>
 						<FontAwesomeIcon
 							className="pr-4"
 							icon={faChartSimple as IconProp}
@@ -89,7 +89,7 @@ function NavigationItems() {
 			</li>
 			<li className="items-center">
 				<Link href="#">
-					<a href="#" className={"py-3 font-bold block"}>
+					<a href="#" className={`${styles.sidebarLink} py-3 font-bold block`}>
 						<FontAwesomeIcon
 							className="pr-4"
 							icon={faClockRotateLeft as IconProp}
@@ -139,7 +139,10 @@ export default function Sidebar() {
 						<ul className="mt-auto md:flex-col md:min-w-full flex flex-col list-none md:mb-4 text-lg ">
 							<li className="items-center">
 								<Link href="#">
-									<a href="#" className={"py-3 font-bold block"}>
+									<a
+										href="#"
+										className={`${styles.sidebarLink} py-3 font-bold block`}
+									>
 										<FontAwesomeIcon
 											className="pr-4"
 											icon={faGear as IconProp}
@@ -150,7 +153,10 @@ export default function Sidebar() {
 							</li>
 							<li className="items-center">
 								<Link href="#">
-									<a href="#" className={"py-3 font-bold block"}>
+									<a
+										href="#"
+										className={`${styles.sidebarLink} py-3 font-bold block`}
+									>
 										<FontAwesomeIcon
 											className="pr-4"
 											icon={faMessage as IconProp}
