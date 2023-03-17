@@ -60,7 +60,7 @@ export default function AssetSummary() {
 					<KebabMenu width="27.2" height="26.8" />
 				</div>
 				<div className="absolute  top-[52px] left-[26.5px]">
-					<NFT width="53" height="52" />
+					<NFT className="text-[#FFF962]" width="53" height="52" />
 				</div>
 				<div className="absolute top-[140px] left-[26.5px] font-bold text-[32px] leading-[39px] text-[#FFF962]">
 					10
