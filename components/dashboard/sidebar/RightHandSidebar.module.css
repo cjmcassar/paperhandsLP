@@ -54,3 +54,7 @@
 	background-color: #2d3748;
 	color: #ffffff;
 }
+
+.nft path {
+	fill: currentColor;
+}
