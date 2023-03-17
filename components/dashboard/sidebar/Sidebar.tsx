@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Link from "next/link";
-
 import {
   faBars,
   faTimes,
@@ -18,7 +17,7 @@ export default function Sidebar() {
   const [collapseShow, setCollapseShow] = useState("hidden");
   return (
     <>
-      <nav className="md:left-0 md:block md:fixed md:top-0 md:bottom-0 md:overflow-y-auto md:flex-row md:flex-nowrap md:overflow-hidden shadow-xl bg-darkGray flex flex-wrap items-center justify-between relative md:w-64 z-50 py-4 px-6 text-white">
+      <nav className="md:left-0 md:block md:fixed md:top-0 md:bottom-0 md:overflow-y-auto md:flex-row md:flex-nowrap md:overflow-hidden shadow-xl bg-darkGray flex flex-wrap items-center justify-between relative md:w-72 z-50 py-4 px-6 text-white">
         <div className="md:flex-col md:items-stretch md:min-h-full md:flex-nowrap px-0 flex flex-wrap items-center justify-between w-full mx-auto">
           {/* Toggler */}
           <button
@@ -66,18 +65,27 @@ export default function Sidebar() {
             </div>
 
             <ul className="md:flex-col md:min-w-full flex flex-col list-none text-lg">
-              <li className="items-center ">
-                <SidebarItem href="/dashboard" icon={faBox}>
+              <li className="items-center mb-5">
+                <SidebarItem
+                  href="/dashboard"
+                  iconSrc="/img/dashboard/icons/dashboard.svg"
+                >
                   Dashboard
                 </SidebarItem>
               </li>
-              <li className="items-center">
-                <SidebarItem href="/analytics" icon={faChartSimple}>
+              <li className="items-center mb-5">
+                <SidebarItem
+                  href="/analytics"
+                  iconSrc="/img/dashboard/icons/analytics.svg"
+                >
                   Analytics
                 </SidebarItem>
               </li>
-              <li className="items-center">
-                <SidebarItem href="/history" icon={faClockRotateLeft}>
+              <li className="items-center mb-5">
+                <SidebarItem
+                  href="/history"
+                  iconSrc="/img/dashboard/icons/history.svg"
+                >
                   History
                 </SidebarItem>
               </li>
@@ -87,13 +95,19 @@ export default function Sidebar() {
               {" "}
               {/* Divider */}
               <hr className="my-4 md:min-w-full" />
-              <li className="items-center">
-                <SidebarItem href="/settings" icon={faGear}>
+              <li className="items-center mb-5">
+                <SidebarItem
+                  href="/settings"
+                  iconSrc="/img/dashboard/icons/settings.svg"
+                >
                   Settings
                 </SidebarItem>
               </li>
-              <li className="items-center">
-                <SidebarItem href="/contact" icon={faMessage}>
+              <li className="items-center mb-5">
+                <SidebarItem
+                  href="/contact"
+                  iconSrc="/img/dashboard/icons/contact.svg"
+                >
                   Contact Us
                 </SidebarItem>
               </li>
