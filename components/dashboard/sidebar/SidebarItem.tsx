@@ -18,7 +18,7 @@ function SidebarItem({
     <Link href={href}>
       <a
         href="#"
-        className={`transition duration-300 py-3 font-bold block ${
+        className={`transition duration-300 py-3 block ${
           isActive ? "bg-purple" : "opacity-50 hover:opacity-100"
         } px-5 rounded-xl`}
       >
