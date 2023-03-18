@@ -75,10 +75,10 @@ export default function Sidebar() {
               </li>
               <li className="items-center mb-5">
                 <SidebarItem
-                  href="/analytics"
+                  href="/risk-review"
                   iconSrc="/img/dashboard/icons/analytics.svg"
                 >
-                  Analytics
+                  Risk Review
                 </SidebarItem>
               </li>
               <li className="items-center mb-5">

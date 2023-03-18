@@ -1,9 +1,9 @@
+import RiskReview from "../components/dashboard/risk-review/RiskReview";
 import DashboardLayout from "../components/layouts/DashboardLayout";
 function Dashboard() {
   return (
     <DashboardLayout>
-      {/* this is where all of the dashboard components go */}
-      <div>Analytics</div>
+      <RiskReview />
     </DashboardLayout>
   );
 }
