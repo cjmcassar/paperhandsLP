@@ -158,7 +158,7 @@ function RiskReviewTable() {
       </div>
       <div className="overflow-x-auto rounded-lg">
         <table
-          className={`${styles.riskReviewTable} w-full sm:text-sm text-gray-400  border-collapse`}
+          className={`${styles.riskReviewTable} w-full sm:text-sm text-white  border-collapse`}
         >
           <thead
             className={`${styles.riskReviewTable} text-xs uppercase font-medium`}
