@@ -125,7 +125,7 @@ function RiskReviewTable() {
   return (
     <>
       <div className="py-5">
-        <div className="flex gap-6 md:text-lg sm:text-xs">
+        <div className="flex gap-6 md:text-lg sm:text-xs text-white">
           <div className="flex gap-2 items-center">
             <div
               className="w-4 h-4 rounded-full"

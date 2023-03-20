@@ -9,11 +9,11 @@ function Header() {
   return (
     <div className="flex items-center py-5 gap-8">
       <div>
-        <h2 className="capitalize dark:text-white text-bold md:text-3xl sm:text-lg">
+        <h2 className="capitalize text-white text-bold md:text-3xl sm:text-lg">
           Risk Review
         </h2>
       </div>
-      <div className="flex gap-4 md:text-lg sm:text-xs">
+      <div className="flex gap-4 md:text-lg sm:text-xs text-white">
         <button className="transition duration-300 flex items-center gap-3 rounded-full border-4 px-2 py-1 hover:border-phPurple">
           <Plus width="22" height="22" />
           <span className="text-xs">Add New Crypto</span>
