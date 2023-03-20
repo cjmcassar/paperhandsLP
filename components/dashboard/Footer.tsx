@@ -6,7 +6,7 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 export default function Footer() {
   return (
     <>
-      <footer className="py-4 bg-gray-100">
+      <footer className="py-4 bg-phDarkGray text-white">
         <div className="w-full px-6 mx-auto">
           <div className="flex flex-wrap items-center -mx-3 lg:justify-between">
             <div className="w-full max-w-full px-3 mt-0 mb-6 shrink-0 lg:mb-0 lg:w-1/2 lg:flex-none">
@@ -14,7 +14,7 @@ export default function Footer() {
                 © {new Date().getFullYear()}, made with{" "}
                 <FontAwesomeIcon icon={faHeart} /> by{" "}
                 <Link href="/">
-                  <a className="font-semibold text-slate-700 dark:text-white">
+                  <a className="font-semibold text-slate-700 text-white">
                     The Paperhands App Team{" "}
                   </a>
                 </Link>
