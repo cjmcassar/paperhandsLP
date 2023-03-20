@@ -130,10 +130,10 @@ export default function LineChart() {
   return (
     <div className="flex flex-wrap mt-6 -mx-3">
       <div className="w-full max-w-full px-3 mt-0 lg:flex-none">
-        <div className="border-black/12.5 dark:bg-slate-850 dark:shadow-dark-xl shadow-xl relative z-20 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-phBlack bg-clip-border">
-          <div className="flex justify-between items-center mb-10 p-6 pt-10 pb-0">
+        <div className="border-black/12.5 bg-slate-850 shadow-dark-xl shadow-xl relative z-20 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-phBlack bg-clip-border">
+          <div className="flex justify-between items-center mb-10 p-6 pt-10 pb-0 text-white">
             <div>
-              <h2 className="capitalize dark:text-white text-bold md:text-3xl sm:text-lg">
+              <h2 className="capitalize  text-bold md:text-3xl sm:text-lg">
                 Types
               </h2>
             </div>
