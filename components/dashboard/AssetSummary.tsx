@@ -1,10 +1,11 @@
 import React from "react";
+import styles from "./AssetSummary.module.css";
 
 export default function AssetSummary() {
 	return (
-		<div className=" flex justify-around ">
-			<div className="relative w-[254px] h-[298px] bg-[#1A1C24] rounded-[35px]">
-				<div className="absolute top-[38.4px] right-[38.6px]">
+		<div className={styles.container}>
+			<div className={`${styles.assetCard}`}>
+				<div className={`${styles.icon}`}>
 					<svg
 						width="27.2"
 						height="26.8"
@@ -15,20 +16,18 @@ export default function AssetSummary() {
 						<path d="M56 472a56 56 0 1 1 0-112 56 56 0 1 1 0 112zm0-160a56 56 0 1 1 0-112 56 56 0 1 1 0 112zM0 96a56 56 0 1 1 112 0A56 56 0 1 1 0 96z" />
 					</svg>
 				</div>
-				<div className="absolute  top-[52px] left-[26.5px]">
+				<div className={`${styles.symbol}`}>
 					<svg fill="white" width="31.25" height="51.25" viewBox="0 0 340 512">
 						<path d="M311.9 260.8L160 353.6 8 260.8 160 0l151.9 260.8zM160 383.4L8 290.6 160 512l152-221.4-152 92.8z" />
 					</svg>
 				</div>
-				<div className="absolute top-[140px] left-[26.5px] font-bold text-2xl text-white">
-					32 ETH
-				</div>
+				<div className={`${styles.amount} ${styles.textWhite}`}>32 ETH</div>
 				<div className="w-[91px] h-[56px] absolute top-[196px] left-[26.5px] text-white font-medium text-xl">
 					Total Amount
 				</div>
 			</div>
 
-			<div className="relative w-[254px] h-[298px] bg-[#1A1C24] rounded-[35px]">
+			<div className={`${styles.assetCard}`}>
 				<div className="absolute top-[38.4px] right-[38.6px]">
 					<svg
 						width="27.2"
@@ -62,7 +61,7 @@ export default function AssetSummary() {
 				</div>
 			</div>
 
-			<div className="relative w-[254px] h-[298px] bg-[#1A1C24] rounded-[35px]">
+			<div className={`${styles.assetCard}`}>
 				<div className="absolute top-[38.4px] right-[38.6px]">
 					<svg
 						width="27.2"
@@ -98,7 +97,7 @@ export default function AssetSummary() {
 				</div>
 			</div>
 
-			<div className="relative w-[254px] h-[298px] bg-[#1A1C24] rounded-[35px]">
+			<div className={`${styles.assetCard}`}>
 				<div className="absolute top-[38.4px] right-[38.6px]">
 					<svg
 						width="27.2"

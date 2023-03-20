@@ -1,0 +1,52 @@
+.container {
+	display: flex;
+	justify-content: space-around;
+}
+
+.assetCard {
+	position: relative;
+	width: 254px;
+	height: 298px;
+	background-color: #1a1c24;
+	border-radius: 35px;
+}
+
+.assetCard .icon {
+	position: absolute;
+	top: 38.4px;
+	right: 38.6px;
+}
+
+.assetCard .symbol {
+	position: absolute;
+	top: 52px;
+	left: 26.5px;
+}
+
+.assetCard .amount {
+	position: absolute;
+	top: 140px;
+	left: 26.5px;
+	font-weight: bold;
+	font-size: 2rem;
+}
+
+.assetCard .label {
+	position: absolute;
+	top: 196px;
+	left: 26.5px;
+	font-weight: medium;
+	font-size: 1rem;
+}
+
+.textWhite {
+	color: white;
+}
+
+.textGreen {
+	color: #62ff97;
+}
+
+.textRed {
+	color: #ff6262;
+}
