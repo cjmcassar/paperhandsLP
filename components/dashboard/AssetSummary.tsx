@@ -17,56 +17,42 @@ export default function AssetSummary() {
 					<Eth width="31.25" height="51.25" />
 				</div>
 				<div className={`${styles.amount} ${styles.textWhite}`}>32 ETH</div>
-				<div className="w-[91px] h-[56px] absolute top-[196px] left-[26.5px] text-white font-medium text-xl">
-					Total Amount
-				</div>
+				<div className={`${styles.description}`}>Total Amount</div>
 			</div>
 
 			<div className={`${styles.assetCard}`}>
-				<div className="absolute top-[38.4px] right-[38.6px]">
+				<div className={`${styles.icon}`}>
 					<KebabMenu width="27.2" height="26.8" />
 				</div>
-				<div className="absolute  top-[52px] left-[26.5px]">
+				<div className={`${styles.symbol}`}>
 					<Bank width="56" height="46" />
 				</div>
-				<div className="absolute top-[140px] left-[26.5px] font-bold text-2xl text-[#62FF97]">
-					12 ETH
-				</div>
-				<div className="w-[138px] h-[56px] absolute top-[196px] left-[26.5px] text-white font-medium text-xl">
-					Amount Deposited
-				</div>
+				<div className={`${styles.amount} ${styles.textGreen}`}>12 ETH</div>
+				<div className={`${styles.description}`}>Amount Deposited</div>
 			</div>
 
 			<div className={`${styles.assetCard}`}>
-				<div className="absolute top-[38.4px] right-[38.6px]">
+				<div className={`${styles.icon}`}>
 					<KebabMenu width="27.2" height="26.8" />
 				</div>
-				<div className="absolute  top-[52px] left-[26.5px]">
+				<div className={`${styles.symbol}`}>
 					<RedDollar width="51" height="50" />
 				</div>
 
-				<div className="absolute top-[140px] left-[26.5px] font-bold text-2xl text-[#FF6262]">
-					0 ETH
-				</div>
+				<div className={`${styles.amount} ${styles.textRed}`}>0 ETH</div>
 
-				<div className="w-[91px] h-[56px] absolute top-[196px] left-[26.5px] text-white font-medium text-xl">
-					Amount Sold
-				</div>
+				<div className={`${styles.description}`}>Amount Sold</div>
 			</div>
 
 			<div className={`${styles.assetCard}`}>
-				<div className="absolute top-[38.4px] right-[38.6px]">
+				<div className={`${styles.icon}`}>
 					<KebabMenu width="27.2" height="26.8" />
 				</div>
-				<div className="absolute  top-[52px] left-[26.5px]">
+				<div className={`${styles.symbol}`}>
 					<NFT className="text-[#FFF962]" width="53" height="52" />
 				</div>
-				<div className="absolute top-[140px] left-[26.5px] font-bold text-[32px] leading-[39px] text-[#FFF962]">
-					10
-				</div>
-				<div className="w-[91px] h-[56px] absolute top-[196px] left-[26.5px] text-white font-medium text-xl">
-					Total NFTs
-				</div>
+				<div className={`${styles.amount} ${styles.textYellow}`}>10</div>
+				<div className={`${styles.description}`}>Total NFTs</div>
 			</div>
 		</div>
 	);
