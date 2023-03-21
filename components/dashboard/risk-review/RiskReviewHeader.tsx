@@ -1,11 +1,10 @@
 import React from "react";
-import RiskReviewTable from "./RiskReviewTable";
 
 import Plus from "../../svg/plus.svg";
 import Pen from "../../svg/pen.svg";
 import Question from "../../svg/question.svg";
 
-function Header() {
+function RiskReviewHeader() {
   return (
     <div className="flex items-center py-5 gap-8">
       <div>
@@ -31,13 +30,4 @@ function Header() {
   );
 }
 
-function RiskReview() {
-  return (
-    <>
-      <Header />
-      <RiskReviewTable />
-    </>
-  );
-}
-
-export default RiskReview;
+export default RiskReviewHeader;
