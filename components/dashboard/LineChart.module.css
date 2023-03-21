@@ -1,0 +1,52 @@
+.outerContainer {
+	display: flex;
+	flex-wrap: wrap;
+	margin-top: 6rem;
+	margin-left: -0.75rem;
+	margin-right: -0.75rem;
+}
+
+.container {
+	width: 100%;
+	max-width: 100%;
+	padding-left: 0.75rem;
+	padding-right: 0.75rem;
+	margin-top: 0;
+}
+
+.chartWrapper {
+	border-color: rgba(0, 0, 0, 0.078);
+	background-color: transparent;
+	/* box-shadow: 0 0 2rem 0 rgba(0, 0, 0, 0.5); */
+	position: relative;
+	z-index: 20;
+	display: flex;
+	min-width: 0;
+	flex-direction: column;
+	word-break: break-word;
+	border-radius: 1rem;
+	border-width: 0;
+	border-style: solid;
+	background-clip: border-box;
+}
+
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 2.5rem;
+	padding: 1.5rem;
+	padding-top: 2.5rem;
+	padding-bottom: 0;
+	color: #ffffff;
+}
+
+.title {
+	text-transform: capitalize;
+	font-weight: bold;
+}
+
+.canvasContainer {
+	flex: auto;
+	padding: 1rem;
+}
