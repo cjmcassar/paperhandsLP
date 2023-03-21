@@ -1,0 +1,109 @@
+/* Navbar.module.css */
+.navbar {
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.5rem 0;
+	margin: 0 1.5rem;
+	transition: all 0.25s ease-in;
+	border-radius: 1rem;
+	box-shadow: none;
+}
+
+.navbarTitle {
+	margin-bottom: 0;
+	font-weight: bold;
+	color: #ffffff;
+	text-transform: capitalize;
+}
+
+.navbarList {
+	display: flex;
+	flex-wrap: wrap;
+	padding-top: 0.25rem;
+	margin-right: 3rem;
+	background-color: transparent;
+	border-radius: 0.375rem;
+}
+
+.navbarListItem {
+	font-size: 0.875rem;
+	text-transform: capitalize;
+	line-height: 1.25rem;
+	color: #ffffff;
+}
+
+.navbarListItem::before {
+	float: left;
+	padding-right: 0.5rem;
+	color: #ffffff;
+}
+
+.searchBarContainer {
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: stretch;
+	width: 100%;
+	transition: all 0.25s ease;
+	border-radius: 0.375rem;
+}
+
+.searchIcon {
+	font-size: 0.875rem;
+	line-height: 1.4rem;
+	position: absolute;
+	z-index: 30;
+	margin-left: -1px;
+	display: flex;
+	height: 100%;
+	align-items: center;
+	white-space: nowrap;
+	border-radius: 0.375rem;
+	border: 1px solid transparent;
+	background-color: transparent;
+	padding: 0.5rem 0.625rem;
+	text-align: center;
+	font-weight: normal;
+	color: #4b5563;
+	transition: all 0.25s ease;
+}
+
+.searchInput {
+	/* padding-left: 2.25rem; */
+	font-size: 0.875rem;
+	line-height: 1.4rem;
+	position: relative;
+	margin-left: -1px;
+	display: block;
+	width: 1%;
+	min-width: 0;
+	flex-grow: 1;
+	border-radius: 2.1875rem;
+	background-color: #1a1c24;
+	background-clip: padding-box;
+	padding: 0.5rem 6.75rem;
+	color: #4b5563;
+	transition: all 0.25s ease;
+	box-shadow: none;
+	outline: none;
+}
+
+.searchInput::placeholder {
+	color: #ffffff;
+}
+
+.searchInput:focus {
+	border-color: #3b82f6;
+	box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.5);
+	transition: box-shadow 0.25s ease;
+}
+
+@media (prefers-color-scheme: dark) {
+	.searchInput {
+		background-color: #1f2937;
+		color: #ffffff;
+	}
+}
