@@ -1,14 +1,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import {
-	faBars,
-	faTimes,
-	faBox,
-	faChartSimple,
-	faClockRotateLeft,
-	faGear,
-	faMessage,
-} from "@fortawesome/free-solid-svg-icons";
+import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import SidebarItem from "./SidebarItem";
@@ -42,7 +34,7 @@ function CollapseHeader({ onClose }) {
 						<a href="#" className={styles.link}></a>
 					</Link>
 				</div>
-				<div className="w-6/12 flex justify-end">
+				<div className="w-6/12 flex justify-start">
 					<button type="button" className={styles.button} onClick={onClose}>
 						<FontAwesomeIcon icon={faTimes as IconProp} />
 					</button>
@@ -55,7 +47,7 @@ function CollapseHeader({ onClose }) {
 function NavigationItems() {
 	return (
 		<ul className="md:flex-col md:min-w-full flex flex-col list-none text-lg">
-			<li className="items-center">
+			<li className="items-center mb-5">
 				<SidebarItem
 					href="/dashboard"
 					iconSrc="/img/dashboard/icons/dashboard.svg"
@@ -63,7 +55,7 @@ function NavigationItems() {
 					Dashboard
 				</SidebarItem>
 			</li>
-			<li className="items-center">
+			<li className="items-center mb-5">
 				<SidebarItem
 					href="/risk-review"
 					iconSrc="/img/dashboard/icons/analytics.svg"
@@ -71,7 +63,7 @@ function NavigationItems() {
 					Risk Review
 				</SidebarItem>
 			</li>
-			<li className="items-center">
+			<li className="items-center mb-5">
 				<SidebarItem href="/history" iconSrc="/img/dashboard/icons/history.svg">
 					History
 				</SidebarItem>
@@ -107,19 +99,32 @@ function Divider() {
 
 export default function Sidebar() {
 	const [collapseShow, setCollapseShow] = useState("hidden");
+
+	const toggleCollapse = () => {
+		setCollapseShow((prevCollapseShow) =>
+			prevCollapseShow === "hidden" ? "visible" : "hidden",
+		);
+	};
+
 	return (
 		<>
 			<nav className={`${styles.sidebar} bg-phDarkGray`}>
 				<div className={styles.container}>
-					<Toggler onClick={undefined} />
+					<Toggler onClick={toggleCollapse} />
 					<Brand />
 					{/* Collapse */}
 					<div
-						className={`${styles.collapse} ${collapseShow} ${styles.collapseShadow}`}
+						className={`${styles.collapse} ${
+							collapseShow === "hidden" ? styles.hidden : ""
+						} ${styles.collapseShadow} bg-phDarkGray `}
 					>
-						<CollapseHeader onClose={() => setCollapseShow("hidden")} />
 						<NavigationItems />
 						<NavigationFooter />
+						<CollapseHeader
+							onClose={() => {
+								setCollapseShow("hidden");
+							}}
+						/>
 					</div>
 				</div>
 			</nav>

@@ -3,7 +3,7 @@
 	color: white;
 	opacity: 0.5;
 	display: none;
-	padding: 0.25rem 0.75rem;
+	padding: 0.5rem;
 	font-size: 1.25rem;
 	line-height: 1;
 	background-color: transparent;
@@ -18,15 +18,10 @@
 }
 
 .brand {
-	display: block;
-	text-align: left;
-	padding-bottom: 0.5rem;
-	margin-right: 0;
 	display: inline-block;
-	white-space: nowrap;
 	font-size: 0.875rem;
 	font-weight: 700;
-	padding: 1rem 0;
+	padding: 1rem;
 }
 
 @media (min-width: 768px) {
@@ -117,6 +112,7 @@
 	align-items: center;
 	flex-grow: 1;
 	border-radius: 0.25rem;
+	flex-direction: column;
 }
 
 .collapseShadow {
@@ -133,6 +129,14 @@
 		position: relative;
 		margin-top: 1.5rem;
 		box-shadow: none;
+	}
+}
+
+@media (max-width: 767px) {
+	.collapse {
+		padding: 1rem;
+		margin-top: 1.5rem;
+		align-items: start;
 	}
 }
 
@@ -175,6 +179,12 @@
 
 @media (min-width: 768px) {
 	.button {
+		display: none;
+	}
+}
+
+@media (max-width: 768px) {
+	.hidden {
 		display: none;
 	}
 }
