@@ -8,7 +8,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import React from "react";
-import History from "../History";
+import SidebarHistory from "./SidebarHistory";
 import RiskInfo from "../RiskInfo";
 
 import styles from "../sidebar/RightHandSidebar.module.css";
@@ -67,7 +67,7 @@ export default function RightHandSidebar(): JSX.Element {
 						<Settings />
 						<Notifications />
 					</ul>
-					<History />
+					<SidebarHistory />
 					<RiskInfo />
 				</div>
 			</nav>

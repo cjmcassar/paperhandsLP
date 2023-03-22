@@ -1,9 +1,9 @@
 import React from "react";
-import Eth from "../svg/eth.svg";
-import Matic from "../svg/matic.svg";
-import NFT from "../svg/nft.svg";
+import Eth from "../../svg/eth.svg";
+import Matic from "../../svg/matic.svg";
+import NFT from "../../svg/nft.svg";
 
-function HistoryItem({ icon, title, date, value, valueColor }) {
+function SidebarHistoryItem({ icon, title, date, value, valueColor }) {
 	return (
 		<li className="flex mb-[23px]">
 			<div className="relative bg-[#393c4b] w-[51px] h-[51px] rounded-[20px]">
@@ -22,42 +22,42 @@ function HistoryItem({ icon, title, date, value, valueColor }) {
 	);
 }
 
-export default function History() {
+export default function SidebarHistory() {
 	return (
 		<div className="w-full text-white">
 			<h1 className="font-bold mb-[17px] text-[24px] leading-[29px]">
 				History
 			</h1>
 			<ul className="w-full">
-				<HistoryItem
+				<SidebarHistoryItem
 					icon={<Eth width="12.5px" height="20.5px" />}
 					title="Bought Eth"
 					date="July 4, 2023"
 					value="+1.55"
 					valueColor="text-green-600"
 				/>
-				<HistoryItem
+				<SidebarHistoryItem
 					icon={<Matic width="32px" height="32px" />}
 					title="Bought Matic"
 					date="July 2, 2023"
 					value="+10.55"
 					valueColor="text-green-600"
 				/>
-				<HistoryItem
+				<SidebarHistoryItem
 					icon={<Eth width="12.5px" height="20.5px" />}
 					title="Sold Eth"
 					date="June 4, 2023"
 					value="+1.55"
 					valueColor="text-red-600"
 				/>
-				<HistoryItem
+				<SidebarHistoryItem
 					icon={<NFT fill="white" width="23.55px" height="23.54px" />}
 					title="Bought NFT"
 					date="May 4, 2023"
 					value="+1.55"
 					valueColor="text-green-600"
 				/>
-				<HistoryItem
+				<SidebarHistoryItem
 					icon={<Eth width="12.5px" height="20.5px" />}
 					title="Sold Eth"
 					date="June 4, 2023"
