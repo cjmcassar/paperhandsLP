@@ -1,12 +1,12 @@
 import Head from "next/head";
-import Hero from "../components/Hero";
-import Navbar from "../components/Navbar";
-import SectionTitle from "../components/SectionTitle";
+import Hero from "../components/landingpage/Hero";
+import Navbar from "../components/landingpage/Navbar";
+import SectionTitle from "../components/landingpage/SectionTitle";
 
-import { benefitOne } from "../components/Data";
-import Benefits from "../components/Benefits";
-import Footer from "../components/Footer";
-import Faq from "../components/Faq";
+import { benefitOne } from "../components/landingpage/Data";
+import Benefits from "../components/landingpage/Benefits";
+import Footer from "../components/landingpage/Footer";
+import Faq from "../components/landingpage/Faq";
 
 export default function Home() {
 	return (
