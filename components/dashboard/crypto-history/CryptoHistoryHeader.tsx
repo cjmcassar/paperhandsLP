@@ -1,8 +1,8 @@
 import React from "react";
 
-import Plus from "../../svg/plus.svg";
-import Pen from "../../svg/pen.svg";
-import Question from "../../svg/question.svg";
+import Plus from "../../../public/img/dashboard/icons/plus.svg";
+import Pen from "../../../public/img/dashboard/icons/pen.svg";
+import Question from "../../../public/img/dashboard/icons/question.svg";
 
 import styles from "./CryptoHistoryHeader.module.css";
 

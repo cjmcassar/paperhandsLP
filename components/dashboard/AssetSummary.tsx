@@ -1,10 +1,10 @@
 import React from "react";
 import styles from "./AssetSummary.module.css";
-import Eth from "../svg/eth.svg";
-import KebabMenu from "../svg/kebabMenu.svg";
-import NFT from "../svg/nft.svg";
-import RedDollar from "../svg/redDollar.svg";
-import Bank from "../svg/bank.svg";
+import Eth from "../../public/img/brands/eth.svg";
+import KebabMenu from "../../public/img/dashboard/icons/kebabMenu.svg";
+import NFT from "../../public/img/dashboard/icons/nft.svg";
+import RedDollar from "../../public/img/dashboard/icons/redDollar.svg";
+import Bank from "../../public/img/dashboard/icons/bank.svg";
 
 export default function AssetSummary() {
 	return (

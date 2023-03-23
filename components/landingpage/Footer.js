@@ -2,10 +2,10 @@ import Link from "next/link";
 import Image from "next/image";
 import React from "react";
 import Container from "./Container";
-import Twitter from "../components/svg/twitter.svg";
-import Facebook from "../components/svg/facebook.svg";
-import Instagram from "../components/svg/instagram.svg";
-import Linkedin from "../components/svg/linkedin.svg";
+import Twitter from "../../public/img/brands/twitter.svg";
+import Facebook from "../../public/img/brands/facebook.svg";
+import Instagram from "../../public/img/brands/instagram.svg";
+import Linkedin from "../../public/img/brands/linkedin.svg";
 
 export default function Footer() {
 	const navigation = ["Product", "Features"];

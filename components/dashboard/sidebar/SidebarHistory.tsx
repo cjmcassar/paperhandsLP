@@ -1,7 +1,7 @@
 import React from "react";
-import Eth from "../../svg/eth.svg";
-import Matic from "../../svg/matic.svg";
-import NFT from "../../svg/nft.svg";
+import Eth from "../../../public/img/brands/eth.svg";
+import Matic from "../../../public/img/brands/matic.svg";
+import NFT from "../../../public/img/dashboard/icons/nft.svg";
 
 function SidebarHistoryItem({ icon, title, date, value, valueColor }) {
 	return (

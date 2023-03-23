@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Container from "./Container";
-import heroImg from "../public/img/hero.png";
-import Github from "../components/svg/github.svg";
+import heroImg from "../../public/img/hero.png";
+import Github from "../../public/img/brands/github.svg";
 
 export default function Hero() {
 	return (
