@@ -4,13 +4,13 @@ import Plus from "../../svg/plus.svg";
 import Pen from "../../svg/pen.svg";
 import Question from "../../svg/question.svg";
 
-import styles from "./RiskReviewHeader.module.css";
+import styles from "./CryptoHistoryHeader.module.css";
 
-function RiskReviewHeader() {
+function CryptoHistoryHeader() {
 	return (
 		<div className="flex items-center py-5 gap-8">
 			<div>
-				<h2 className={`${styles.latestOperationsTitle}`}>Risk Review</h2>
+				<h2 className={`${styles.latestOperationsTitle}`}>Latest Operations</h2>
 			</div>
 			<div className={`${styles.buttonGroup}`}>
 				<button className={`${styles.customButton} hover:border-phPurple`}>
@@ -30,4 +30,4 @@ function RiskReviewHeader() {
 	);
 }
 
-export default RiskReviewHeader;
+export default CryptoHistoryHeader;
