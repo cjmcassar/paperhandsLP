@@ -31,10 +31,7 @@ function UserSignIn() {
 				{dropdownOpen && (
 					<div className={`${styles.dropdownMenu} bg-phLightGray`}>
 						<Link href="/login">
-							<a className={styles.dropdownItem}>Login</a>
-						</Link>
-						<Link href="/register">
-							<a className={styles.dropdownItem}>Register</a>
+							<a className={styles.dropdownItem}>🪵 Login</a>
 						</Link>
 					</div>
 				)}
@@ -44,31 +41,75 @@ function UserSignIn() {
 }
 
 function Settings() {
+	const [dropdownOpen, setDropdownOpen] = useState(false);
+
+	const toggleDropdown = () => {
+		setDropdownOpen(!dropdownOpen);
+	};
+
 	return (
 		<li className={`${styles.listItem} px-4 `}>
-			<a className="cursor-pointer p-0 text-sm text-white transition-all ease-nav-brand">
-				<div className={`${styles.iconBorder} bg-phLightGray`}>
-					<FontAwesomeIcon
-						className={styles.iconSize}
-						icon={faCog as IconProp}
-					/>
-				</div>
-			</a>
+			<div className="relative">
+				<button
+					className="cursor-pointer p-0 text-sm text-white transition-all ease-nav-brand"
+					onClick={toggleDropdown}
+				>
+					<div className={`${styles.iconBorder} bg-phLightGray`}>
+						<FontAwesomeIcon
+							className={styles.iconSize}
+							icon={faCog as IconProp}
+						/>
+					</div>
+				</button>
+				{dropdownOpen && (
+					<div className={`${styles.dropdownMenu} bg-phLightGray`}>
+						<Link href="/login">
+							<a className={styles.dropdownItem}>👨🏽‍💼 Account</a>
+						</Link>
+						<Link href="/login">
+							<a className={styles.dropdownItem}>📋 Give us feedback!</a>
+						</Link>
+						<Link href="/register">
+							<a className={styles.dropdownItem}>🙏🏼 Invite a friend</a>
+						</Link>
+					</div>
+				)}
+			</div>
 		</li>
 	);
 }
 
 function Notifications() {
+	const [dropdownOpen, setDropdownOpen] = useState(false);
+
+	const toggleDropdown = () => {
+		setDropdownOpen(!dropdownOpen);
+	};
+
 	return (
-		<li className={`${styles.listItem} pr-4`}>
-			<a className="cursor-pointer p-0 text-sm text-white transition-all ease-nav-brand">
-				<div className={`${styles.iconBorder} bg-phLightGray`}>
-					<FontAwesomeIcon
-						className={styles.iconSize}
-						icon={faBell as IconProp}
-					/>
-				</div>
-			</a>
+		<li className={`${styles.listItem}`}>
+			<div className="relative">
+				<button
+					className="cursor-pointer p-0 text-sm text-white transition-all ease-nav-brand"
+					onClick={toggleDropdown}
+				>
+					<div className={`${styles.iconBorder} bg-phLightGray`}>
+						<FontAwesomeIcon
+							className={styles.iconSize}
+							icon={faBell as IconProp}
+						/>
+					</div>
+				</button>
+				{dropdownOpen && (
+					<div className={`${styles.dropdownMenu} bg-phLightGray`}>
+						<Link href="#">
+							<a className={styles.dropdownItem}>
+								Your risk values have changed!
+							</a>
+						</Link>
+					</div>
+				)}
+			</div>
 		</li>
 	);
 }
