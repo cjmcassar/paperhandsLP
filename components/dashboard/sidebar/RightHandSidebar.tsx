@@ -7,31 +7,47 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import SidebarHistory from "./SidebarHistory";
 import RiskInfo from "../RiskInfo";
 
 import styles from "../sidebar/RightHandSidebar.module.css";
 
 function UserSignIn() {
+	const [dropdownOpen, setDropdownOpen] = useState(false);
+
+	const toggleDropdown = () => {
+		setDropdownOpen(!dropdownOpen);
+	};
+
 	return (
 		<li className={styles.listItem}>
-			<Link href="">
-				<a className="cursor-pointer">
-					<div className={styles.userIcon}>
+			<div className="relative">
+				<button className="cursor-pointer" onClick={toggleDropdown}>
+					<div className={`${styles.userIcon} bg-phLightGray`}>
 						<FontAwesomeIcon icon={faUser} size="1x" />
 					</div>
-				</a>
-			</Link>
+				</button>
+				{dropdownOpen && (
+					<div className={`${styles.dropdownMenu} bg-phLightGray`}>
+						<Link href="/login">
+							<a className={styles.dropdownItem}>Login</a>
+						</Link>
+						<Link href="/register">
+							<a className={styles.dropdownItem}>Register</a>
+						</Link>
+					</div>
+				)}
+			</div>
 		</li>
 	);
 }
 
 function Settings() {
 	return (
-		<li className={`${styles.listItem} px-4`}>
+		<li className={`${styles.listItem} px-4 `}>
 			<a className="cursor-pointer p-0 text-sm text-white transition-all ease-nav-brand">
-				<div className={styles.iconBorder}>
+				<div className={`${styles.iconBorder} bg-phLightGray`}>
 					<FontAwesomeIcon
 						className={styles.iconSize}
 						icon={faCog as IconProp}
@@ -46,7 +62,7 @@ function Notifications() {
 	return (
 		<li className={`${styles.listItem} pr-4`}>
 			<a className="cursor-pointer p-0 text-sm text-white transition-all ease-nav-brand">
-				<div className={styles.iconBorder}>
+				<div className={`${styles.iconBorder} bg-phLightGray`}>
 					<FontAwesomeIcon
 						className={styles.iconSize}
 						icon={faBell as IconProp}

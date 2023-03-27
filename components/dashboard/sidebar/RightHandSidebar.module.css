@@ -1,3 +1,32 @@
+.dropdownMenu {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	z-index: 10;
+	border: 1px solid #1a1c24;
+	border-radius: 0.625rem;
+	min-width: 150px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdownItem {
+	display: block;
+	padding: 8px 16px;
+	color: #fff;
+	text-decoration: none;
+	cursor: pointer;
+	white-space: nowrap;
+	font-size: 0.875rem;
+	font-weight: 600;
+	transition: all 0.2s ease-in-out;
+}
+
+.dropdownItem:hover {
+	background-color: #2d3748;
+	border-radius: 0.625rem;
+	color: #ffffff;
+}
+
 .iconSize {
 	font-size: 1.5rem;
 }
