@@ -12,9 +12,9 @@
 }
 
 .modalContent {
-	background-color: #fff;
+	background-color: #17181c;
 	padding: 2rem;
-	border-radius: 0.5rem;
+	border-radius: 0.625rem;
 	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
 }
 
@@ -26,11 +26,13 @@
 	border: none;
 	font-size: 1.5rem;
 	cursor: pointer;
+	color: #fff;
 }
 
 .modalTitle {
 	font-size: 1.5rem;
 	margin-bottom: 1rem;
+	color: #fff;
 }
 
 .formContainer {
@@ -41,17 +43,19 @@
 .inputField {
 	padding: 0.5rem;
 	margin-bottom: 1rem;
-	border: 1px solid #ccc;
-	border-radius: 0.25rem;
+	border: 1px solid #1a1c24;
+	border-radius: 0.625rem;
 	font-size: 1rem;
+	/* background-color: #fff; */
+	/* color: #1a1c24; */
 }
 
 .submitButton {
 	padding: 0.5rem;
-	background-color: #0070f3;
+	/* background-color: #0070f3; */
 	color: #fff;
 	border: none;
-	border-radius: 0.25rem;
+	border-radius: 0.625rem;
 	font-size: 1rem;
 	cursor: pointer;
 }

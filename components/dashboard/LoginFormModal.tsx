@@ -16,7 +16,7 @@ const LoginFormModal: React.FC<LoginFormModalProps> = ({ onClose }) => {
 	};
 
 	return (
-		<div className={styles.modalContainer}>
+		<div className={`${styles.modalContainer} `}>
 			<div className={styles.modalContent}>
 				<button className={styles.closeButton} onClick={onClose}>
 					X
@@ -29,7 +29,7 @@ const LoginFormModal: React.FC<LoginFormModalProps> = ({ onClose }) => {
 						id="email"
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
-						className={styles.inputField}
+						className={`${styles.inputField} bg-trueGray `}
 						required
 					/>
 					<label htmlFor="password">Password:</label>
@@ -38,10 +38,13 @@ const LoginFormModal: React.FC<LoginFormModalProps> = ({ onClose }) => {
 						id="password"
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
-						className={styles.inputField}
+						className={`${styles.inputField} bg-trueGray`}
 						required
 					/>
-					<button type="submit" className={styles.submitButton}>
+					<button
+						type="submit"
+						className={`${styles.submitButton} bg-phPurple`}
+					>
 						Login
 					</button>
 				</form>
