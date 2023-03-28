@@ -119,13 +119,15 @@ export default function RightHandSidebar(): JSX.Element {
 		<>
 			<nav className={styles.nav}>
 				<div className="md:flex-col md:items-stretch md:min-h-full md:flex-nowrap px-0 flex flex-wrap items-center justify-between w-full mx-auto">
-					<ul className="flex flex-row justify-center pl-0 mb-0 list-none md-max:w-full pt-4">
+					<ul className="flex flex-row justify-start pl-7 mb-0 list-none md-max:w-full pt-4">
 						<UserSignIn />
 						<Settings />
 						<Notifications />
 					</ul>
-					<SidebarHistory />
-					<RiskInfo />
+					<div className="pl-7 pb-5">
+						<SidebarHistory />
+						<RiskInfo />
+					</div>
 				</div>
 			</nav>
 		</>

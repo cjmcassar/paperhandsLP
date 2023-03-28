@@ -11,7 +11,7 @@ function SidebarHistoryItem({ icon, title, date, value, valueColor }) {
 					{icon}
 				</div>
 			</div>
-			<div className="ml-[15px] flex justify-between items-center w-[200px]">
+			<div className="ml-[15px] flex justify-between items-center w-[165px]">
 				<div className="flex flex-col">
 					<h5 className="font-bold">{title}</h5>
 					<p className="text-sm">{date}</p>
