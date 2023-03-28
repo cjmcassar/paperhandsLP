@@ -19,6 +19,9 @@
 	font-size: 0.875rem;
 	font-weight: 600;
 	transition: all 0.2s ease-in-out;
+	display: flex;
+	justify-content: flex-start;
+	width: 100%;
 }
 
 .dropdownItem:hover {

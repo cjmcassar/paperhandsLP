@@ -12,6 +12,7 @@ import SidebarHistory from "./SidebarHistory";
 import RiskInfo from "../RiskInfo";
 
 import styles from "../sidebar/RightHandSidebar.module.css";
+import LoginFormModal from "../LoginFormModal";
 
 function UserSignIn() {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -19,6 +20,13 @@ function UserSignIn() {
 	const toggleDropdown = () => {
 		setDropdownOpen(!dropdownOpen);
 	};
+
+	const openModal = () => {
+		setDropdownOpen(false);
+		setModalOpen(true);
+	};
+
+	const [modalOpen, setModalOpen] = useState(false);
 
 	return (
 		<li className={styles.listItem}>
@@ -28,12 +36,20 @@ function UserSignIn() {
 						<FontAwesomeIcon icon={faUser} size="1x" />
 					</div>
 				</button>
+
 				{dropdownOpen && (
 					<div className={`${styles.dropdownMenu} bg-phLightGray`}>
-						<Link href="/login">
-							<a className={styles.dropdownItem}>🪵 Login</a>
-						</Link>
+						<button className={styles.dropdownItem} onClick={openModal}>
+							🪵 Login
+						</button>
 					</div>
+				)}
+				{modalOpen && (
+					<LoginFormModal
+						onClose={function (): void {
+							throw new Error("Function not implemented.");
+						}}
+					/>
 				)}
 			</div>
 		</li>
