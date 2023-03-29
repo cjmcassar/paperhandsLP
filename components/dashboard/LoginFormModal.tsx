@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import SignInWithGoogle from "./SignInWithGoogle";
 
 import styles from "./LoginFormModal.module.css";
+import Divider from "./Divider";
 
 interface LoginFormModalProps {
 	onClose: () => void;
@@ -39,11 +40,14 @@ const LoginFormModal: React.FC<LoginFormModalProps> = ({ onClose }) => {
 						className={`${styles.inputField} bg-trueGray`}
 						required
 					/>
+
+					<Divider />
+
 					<button
 						type="submit"
-						className={`${styles.submitButton} bg-phPurple`}
+						className={`${styles.submitButton} bg-phPurple `}
 					>
-						Login
+						Login with email
 					</button>
 
 					<div className="mt-4">

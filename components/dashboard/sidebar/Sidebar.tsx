@@ -6,6 +6,7 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import SidebarItem from "./SidebarItem";
 
 import styles from "./Sidebar.module.css";
+import Divider from "../Divider";
 
 function Toggler({ onClick }) {
 	return (
@@ -76,6 +77,7 @@ function NavigationFooter() {
 	return (
 		<ul className="mt-auto md:flex-col md:min-w-full flex flex-col list-none md:mb-4 text-lg ">
 			<Divider />
+
 			<li className="items-center mb-5">
 				{/* <SidebarItem
 					href="/settings"
@@ -91,10 +93,6 @@ function NavigationFooter() {
 			</li>
 		</ul>
 	);
-}
-
-function Divider() {
-	return <hr className={styles.divider} />;
 }
 
 export default function Sidebar() {

@@ -44,11 +44,6 @@
 	}
 }
 
-.divider {
-	margin: 1rem 0;
-	min-width: 100%;
-}
-
 .sidebar {
 	position: relative;
 	display: flex;
