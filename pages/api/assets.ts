@@ -2,7 +2,7 @@ import { google } from "googleapis";
 
 export default async function handler(req, res) {
 	const auth = await getGoogleAuth();
-	const data = await fetchData(auth, process.env.SHEET_ID, "Assets!A2:D");
+	const data = await fetchData(auth, process.env.SHEET_ID, "Assets!A2:G");
 	res.status(200).json({ data });
 }
 
@@ -19,14 +19,25 @@ async function fetchData(auth, sheetId, range) {
 		spreadsheetId: sheetId,
 		range,
 	});
-	// const [Mcap, Asset, Symbol, Rating] = response.data.values[0];
+
 	const data = response.data.values.map((row) => {
-		const [Mcap, Asset, Symbol, Rating] = row;
+		const [
+			Mcap,
+			Asset,
+			Symbol,
+			Price,
+			Rating,
+			Asset_Review,
+			Asset_Recommendation,
+		] = row;
 		return {
 			Mcap,
 			Asset,
 			Symbol,
+			Price,
 			Rating,
+			Asset_Review,
+			Asset_Recommendation,
 		};
 	});
 
