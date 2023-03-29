@@ -18,10 +18,6 @@ function CryptoHistoryHeader() {
 					<span className="text-xs">Add New Crypto</span>
 				</button>
 				<button className={`${styles.customButton} hover:border-phPurple`}>
-					<Pen width="22" height="22" />
-					<span className="text-xs">Edit Portfolio</span>
-				</button>
-				<button className={`${styles.customButton} hover:border-phPurple`}>
 					<Question width="22" height="22" />
 					<span className="text-xs">Help & FAQs</span>
 				</button>
