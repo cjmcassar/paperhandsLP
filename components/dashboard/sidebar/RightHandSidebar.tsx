@@ -26,6 +26,10 @@ function UserSignIn() {
 		setModalOpen(true);
 	};
 
+	const closeModal = () => {
+		setModalOpen(false);
+	};
+
 	const [modalOpen, setModalOpen] = useState(false);
 
 	return (
@@ -44,13 +48,7 @@ function UserSignIn() {
 						</button>
 					</div>
 				)}
-				{modalOpen && (
-					<LoginFormModal
-						onClose={function (): void {
-							throw new Error("Function not implemented.");
-						}}
-					/>
-				)}
+				{modalOpen && <LoginFormModal onClose={closeModal} />}
 			</div>
 		</li>
 	);

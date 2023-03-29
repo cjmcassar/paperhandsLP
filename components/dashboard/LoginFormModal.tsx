@@ -11,16 +11,12 @@ const LoginFormModal: React.FC<LoginFormModalProps> = ({ onClose }) => {
 
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		// Handle login logic here
 		onClose();
 	};
 
 	return (
 		<div className={`${styles.modalContainer} `}>
 			<div className={styles.modalContent}>
-				<button className={styles.closeButton} onClick={onClose}>
-					X
-				</button>
 				<h2 className={styles.modalTitle}>Login</h2>
 				<form onSubmit={handleSubmit} className={styles.formContainer}>
 					<label htmlFor="email">Email:</label>
@@ -46,6 +42,13 @@ const LoginFormModal: React.FC<LoginFormModalProps> = ({ onClose }) => {
 						className={`${styles.submitButton} bg-phPurple`}
 					>
 						Login
+					</button>
+
+					<button
+						className={`${styles.submitButton} bg-phBlack mt-4`}
+						onClick={onClose}
+					>
+						Cancel
 					</button>
 				</form>
 			</div>
