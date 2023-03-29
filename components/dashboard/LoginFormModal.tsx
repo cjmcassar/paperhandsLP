@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import SignInWithGoogle from "./SignInWithGoogle";
+
 import styles from "./LoginFormModal.module.css";
 
 interface LoginFormModalProps {
@@ -43,6 +45,10 @@ const LoginFormModal: React.FC<LoginFormModalProps> = ({ onClose }) => {
 					>
 						Login
 					</button>
+
+					<div className="mt-4">
+						<SignInWithGoogle providerName="Google" />
+					</div>
 
 					<button
 						className={`${styles.submitButton} bg-phBlack mt-4`}

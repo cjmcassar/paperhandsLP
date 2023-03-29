@@ -1,13 +1,14 @@
-// components/LoginButton.tsx
 import React from "react";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../../utils/firebaseClient";
+
+import styles from "./SignInWithGoogle.module.css";
 
 interface LoginButtonProps {
 	providerName: string;
 }
 
-const LoginButton: React.FC<LoginButtonProps> = ({ providerName }) => {
+const SignInWithGoogle: React.FC<LoginButtonProps> = ({ providerName }) => {
 	const handleLogin = async () => {
 		try {
 			const provider = new GoogleAuthProvider();
@@ -19,7 +20,11 @@ const LoginButton: React.FC<LoginButtonProps> = ({ providerName }) => {
 		}
 	};
 
-	return <button onClick={handleLogin}>Login with {providerName}</button>;
+	return (
+		<button className={styles.signInWithGoogle} onClick={handleLogin}>
+			Login with {providerName}
+		</button>
+	);
 };
 
-export default LoginButton;
+export default SignInWithGoogle;
