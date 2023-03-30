@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import SignInWithGoogle from "./SignInWithGoogle";
 
 import styles from "./LoginFormModal.module.css";
@@ -12,8 +13,25 @@ const LoginFormModal: React.FC<LoginFormModalProps> = ({ onClose }) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+	const auth = getAuth();
+
+	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
+
+		try {
+			const userCredential = await signInWithEmailAndPassword(
+				auth,
+				email,
+				password,
+			);
+			const user = userCredential.user;
+			console.log("User logged in ----->", user);
+		} catch (error) {
+			const errorCode = error.code;
+			const errorMessage = error.message;
+			console.log(errorCode, errorMessage);
+		}
+
 		onClose();
 	};
 
