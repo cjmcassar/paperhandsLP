@@ -1,17 +1,17 @@
 import React from "react";
-import Eth from "../../svg/eth.svg";
-import Matic from "../../svg/matic.svg";
-import NFT from "../../svg/nft.svg";
+import Eth from "../../../public/img/brands/eth.svg";
+import Matic from "../../../public/img/brands/matic.svg";
+import NFT from "../../../public/img/dashboard/icons/nft.svg";
 
 function SidebarHistoryItem({ icon, title, date, value, valueColor }) {
 	return (
 		<li className="flex mb-[23px]">
-			<div className="relative bg-[#393c4b] w-[51px] h-[51px] rounded-[20px]">
+			<div className="relative bg-phLightGray w-[51px] h-[51px] rounded-[20px]">
 				<div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
 					{icon}
 				</div>
 			</div>
-			<div className="ml-[15px] flex justify-between items-center w-[200px]">
+			<div className="ml-[15px] flex justify-between items-center w-[165px]">
 				<div className="flex flex-col">
 					<h5 className="font-bold">{title}</h5>
 					<p className="text-sm">{date}</p>

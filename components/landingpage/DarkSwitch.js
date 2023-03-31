@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
-import LightMode from "../components/svg/lightMode.svg";
-import DarkMode from "../components/svg/darkMode.svg";
+import LightMode from "../../public/img/dashboard/icons/lightMode.svg";
+import DarkMode from "../../public/img/dashboard/icons/darkMode.svg";
 
 const ThemeChanger = () => {
 	const [mounted, setMounted] = useState(false);

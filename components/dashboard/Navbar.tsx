@@ -28,9 +28,8 @@ function SearchBar() {
 			</span>
 			<input
 				type="text"
-				className={styles.searchInput}
+				className={`${styles.searchInput} bg-phLightGray text-gray-500 placeholder-gray-500`}
 				placeholder="Search Here"
-				style={{ color: "black" }}
 			/>
 		</div>
 	);
