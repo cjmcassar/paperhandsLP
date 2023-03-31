@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./RiskReviewTable.module.css";
+import { DataTable } from "simple-datatables";
 
 function RiskReviewTable() {
   const riskReviews = [
@@ -12,7 +13,6 @@ function RiskReviewTable() {
       share: "41.6%",
       storage: "Ledger Nano X",
       risk: "Safe",
-      color: "#8DAAF5",
       riskReview:
         "Your Bitcoin assets are historically safe when using Ledger Nano X as the storage method.",
       riskRecommendations: [
@@ -29,7 +29,6 @@ function RiskReviewTable() {
       share: "16.6%",
       storage: "Ledger Nano X",
       risk: "Safe",
-      color: "#8DAAF5",
       riskReview:
         "Your Bitcoin assets are historically safe when using Ledger Nano X as the storage method.",
       riskRecommendations: [
@@ -63,7 +62,6 @@ function RiskReviewTable() {
       share: "4.8%",
       storage: "Coinbase",
       risk: "Medium Risk",
-      color: "#D4955A",
       riskReview:
         "Dogecoin is a medium risk asset, while Coinbase is a medium risk storage method.",
       riskRecommendations: [
@@ -81,7 +79,6 @@ function RiskReviewTable() {
       share: "16.4%",
       storage: "Kraken",
       risk: "High Risk",
-      color: "#CA4B4B",
       riskReview:
         "Dopex is a high risk asset, while Kraken is a high risk storage method.",
       riskRecommendations: [
@@ -99,7 +96,6 @@ function RiskReviewTable() {
       share: "0.7%",
       storage: "Armory",
       risk: "Low Risk",
-      color: "#8DAAF5",
       riskReview:
         "TRON is a low risk asset, while Armory is a low risk storage method.",
       riskRecommendations: [
@@ -116,12 +112,150 @@ function RiskReviewTable() {
       share: "10.9%",
       storage: "Ledger Nano X",
       risk: "High Risk",
-      color: "#CA4B4B",
       riskReview:
         "Dopex is a high risk asset, while Ledger Nano X is a historically safe storage method.",
       riskRecommendations: ["Consider investing in less risky assets."],
     },
   ];
+
+  const [tableInitialised, setTableInitialised] = useState(false);
+  const [dataTable, setDataTable] = useState(null);
+
+  const tableRef = useRef(null);
+
+  useEffect(() => {
+    if (!tableInitialised) {
+      intialiseTable();
+      setTableInitialised(true);
+    } else {
+      populateTable();
+    }
+
+    return () => {
+      if (dataTable) {
+        dataTable.destroy();
+      }
+    };
+  }, [riskReviews]);
+
+  function intialiseTable() {
+    if (!tableInitialised) {
+      const dataTableSearch = new DataTable(tableRef.current, {
+        searchable: true,
+        fixedHeight: false,
+        columns: [
+          {
+            select: 0,
+            render: function (asset) {
+              return `<span class="font-bold text-white my-2 text-xs 2xl:text-sm"> ${asset[0].data}</span>`;
+            },
+          },
+          {
+            select: 1,
+            render: function (symbol) {
+              return `<span class=" text-white my-2 text-xs 2xl:text-sm"> ${symbol[0].data}</span>`;
+            },
+          },
+          {
+            select: 2,
+            render: function (amount) {
+              return `<span class=" text-white my-2 text-xs 2xl:text-sm"> ${amount[0].data}</span>`;
+            },
+          },
+          {
+            select: 3,
+            render: function (value) {
+              return `<span class=" text-white my-2 text-xs 2xl:text-sm"> ${value[0].data}</span>`;
+            },
+          },
+          {
+            select: 4,
+            render: function (share) {
+              return `<span class=" text-white my-2 text-xs 2xl:text-sm"> ${share[0].data}</span>`;
+            },
+          },
+          {
+            select: 5,
+            render: function (storage) {
+              return `<span class=" text-white my-2 text-xs 2xl:text-sm"> ${storage[0].data}</span>`;
+            },
+          },
+          {
+            select: 6,
+            render: function (riskLevel) {
+              let color: string;
+              switch (riskLevel[0].data) {
+                case "Safe":
+                  color = "#8DAAF5";
+                  break;
+                case "Low Risk":
+                  color = "#62FF97";
+                  break;
+                case "Medium Risk":
+                  color = "#FFF507";
+                  break;
+                case "High Risk":
+                  color = "#FC62FF";
+                  break;
+                default:
+                  color = "white";
+              }
+              return `<span style="color:${
+                color || "white"
+              }" class=" my-2 text-xs 2xl:text-sm"> ${
+                riskLevel[0].data
+              }</span>`;
+            },
+          },
+          {
+            select: 7,
+            render: function (riskReview) {
+              return `<span class=" text-white my-2 text-xs 2xl:text-sm"> ${riskReview[0].data}</span>`;
+            },
+          },
+          {
+            select: 8,
+            render: function (riskRecommendations) {
+              const recommendations = riskRecommendations[0].data.split(",");
+
+              let output = `<div>`;
+              recommendations.forEach(
+                (recommendation: string) =>
+                  (output += `<p class=" text-white my-2 text-xs 2xl:text-sm"> ${recommendation}</p>`)
+              );
+              output += `</div>`;
+
+              return output;
+            },
+          },
+        ],
+      });
+      setDataTable(dataTableSearch);
+      setTableInitialised(true);
+    }
+  }
+
+  function populateTable() {
+    dataTable.destroy();
+    dataTable.init();
+    const data = [];
+    riskReviews.forEach((review) => {
+      data.push([
+        review.asset,
+        review.symbol,
+        review.amount,
+        review.value,
+        review.share,
+        review.storage,
+        review.risk,
+        review.riskReview,
+        review.riskRecommendations.join(","),
+      ]);
+    });
+
+    dataTable.insert({ data: data });
+  }
+
   return (
     <>
       <div className="py-5">
@@ -156,82 +290,28 @@ function RiskReviewTable() {
           </div>
         </div>
       </div>
-      <div className="overflow-x-auto rounded-lg">
+      <div className="overflow-x-auto">
         <table
-          className={`${styles.riskReviewTable} w-full sm:text-sm text-white  border-collapse`}
+          ref={tableRef}
+          className={`${styles.riskReviewTable} min-w-full divide-y divide-gray-200 sm:text-sm text-white`}
         >
           <thead
-            className={`${styles.riskReviewTable} text-xs uppercase font-medium`}
+            className={`${styles.riskReviewTable} text-sm uppercase font-medium text-white`}
           >
             <tr>
-              <th scope="col" className="px-6 py-3 text-left">
+              <th className="px-6 py-3 text-left text-xs 2xl:text-sm font-medium text-gray-500 uppercase tracking-wider">
                 Asset
               </th>
-              <th scope="col" className="px-6 py-3 text-left">
-                Symbol
-              </th>
-              <th scope="col" className="px-6 py-3 text-left">
-                Amount
-              </th>
-              <th scope="col" className="px-6 py-3 text-left">
-                Value
-              </th>
-              <th scope="col" className="px-6 py-3 text-left">
-                Share
-              </th>
-              <th scope="col" className="px-6 py-3 text-left">
-                Storage
-              </th>
-              <th scope="col" className="px-6 py-3 text-left">
-                Risk
-              </th>
-              <th scope="col" className="px-6 py-3 text-left">
-                Risk Review
-              </th>
-              <th scope="col" className="px-6 py-3 text-left">
-                Risk Recommendations
-              </th>
+              <th>Symbol</th>
+              <th>Amount</th>
+              <th>Value</th>
+              <th>Share</th>
+              <th>Storage</th>
+              <th>Risk</th>
+              <th>Risk Review</th>
+              <th>Risk Recommendations</th>
             </tr>
           </thead>
-          <tbody className={`${styles.riskReviewTable}`}>
-            {riskReviews.map((riskReview) => (
-              <tr
-                key={riskReview.id}
-                className="bg-black bg-opacity-20 border-b-2 border-gray-600 hover:bg-opacity-30"
-              >
-                <td className="font-bold px-6 py-4 text-xs">
-                  {riskReview.asset}
-                </td>
-                <td className="px-6 py-4 text-xs">{riskReview.symbol}</td>
-                <td className="px-6 py-4 text-xs">{riskReview.amount}</td>
-                <td className="px-6 py-4 text-xs">{riskReview.value}</td>
-                <td className="px-6 py-4 text-xs">{riskReview.share}</td>
-                <td className="px-6 py-4 text-xs">{riskReview.storage}</td>
-                <td
-                  className="px-6 py-4 text-xs"
-                  style={{ color: riskReview.color }}
-                >
-                  {riskReview.risk}
-                </td>
-                <td
-                  className="px-6 py-4 text-xs"
-                  style={{ color: riskReview.color }}
-                >
-                  {riskReview.riskReview}
-                </td>
-                <td
-                  className="px-6 py-4 text-xs"
-                  style={{ color: riskReview.color }}
-                >
-                  {riskReview.riskRecommendations.map(
-                    (riskRecommendation, idx) => (
-                      <div key={idx}> &gt; {riskRecommendation}</div>
-                    )
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
         </table>
       </div>
     </>
