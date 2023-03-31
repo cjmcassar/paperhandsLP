@@ -65,12 +65,13 @@ const SignUpFormModal: React.FC<SignUpModalProps> = ({
 				);
 				const user = userCredential.user;
 				console.log("User created ----->", user);
+				await onSubmit(e);
 			} catch (error) {
 				const errorCode = error.code;
 				const errorMessage = error.message;
 				console.log(errorCode, errorMessage);
+				alert("Sign-up error: " + errorMessage);
 			}
-			await onSubmit(e);
 		} else {
 			alert("Passwords do not match.");
 		}
@@ -79,7 +80,7 @@ const SignUpFormModal: React.FC<SignUpModalProps> = ({
 	return (
 		<div className={styles.modalContainer}>
 			<div className={styles.modalContent}>
-				<h1 className={styles.modalTitle}>Sign up</h1>
+				<h1 className={styles.modalTitle}>Sign-up</h1>
 				<form onSubmit={handleSubmit} className={styles.formContainer}>
 					<input
 						type="email"

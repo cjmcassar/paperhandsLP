@@ -116,7 +116,7 @@ const LoginFormModal: React.FC<LoginFormModalProps> = ({ onClose }) => {
 					className="text-blue-500 hover:text-blue-700 focus:outline-none mt-4"
 					onClick={handleSignUpClick}
 				>
-					Don't have an account? Sign up
+					Don't have an account? Sign-up
 				</button>
 				<SignUpFormModal
 					show={showSignUpModal}
