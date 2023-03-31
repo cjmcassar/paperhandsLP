@@ -95,6 +95,7 @@ export default function DoughnutChart() {
 
           {riskLevelData.map((data) => (
             <div
+              key={data.id}
               className="flex text-center border-b-2 last:border-b-0 border-[#5B5B5B] bg-[#363636]"
               style={{ color: data.color }}
             >
