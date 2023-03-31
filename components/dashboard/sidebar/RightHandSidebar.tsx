@@ -13,6 +13,7 @@ import RiskInfo from "../RiskInfo";
 
 import styles from "../sidebar/RightHandSidebar.module.css";
 import LoginFormModal from "../LoginFormModal";
+import SignUpModal from "../SignUpFormModal";
 
 function UserSignIn() {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -49,6 +50,7 @@ function UserSignIn() {
 					</div>
 				)}
 				{modalOpen && <LoginFormModal onClose={closeModal} />}
+				{/* {modalOpen && <SignUpModal show={modalOpen} onClose={closeModal} />} */}
 			</div>
 		</li>
 	);

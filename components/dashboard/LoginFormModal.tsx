@@ -1,6 +1,11 @@
 import React, { useState } from "react";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+	createUserWithEmailAndPassword,
+	getAuth,
+	signInWithEmailAndPassword,
+} from "firebase/auth";
 import SignInWithGoogle from "./SignInWithGoogle";
+import SignUpFormModal from "./SignUpFormModal";
 
 import styles from "./LoginFormModal.module.css";
 import Divider from "./Divider";
@@ -12,11 +17,22 @@ interface LoginFormModalProps {
 const LoginFormModal: React.FC<LoginFormModalProps> = ({ onClose }) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [showSignUpModal, setShowSignUpModal] = useState(false);
 
 	const auth = getAuth();
 
-	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+	const isValidEmail = (email) => {
+		const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+		return emailRegex.test(email);
+	};
+
+	const handleLoginSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
+
+		if (!isValidEmail(email)) {
+			alert("Please enter a valid email address.");
+			return;
+		}
 
 		try {
 			const userCredential = await signInWithEmailAndPassword(
@@ -24,22 +40,39 @@ const LoginFormModal: React.FC<LoginFormModalProps> = ({ onClose }) => {
 				email,
 				password,
 			);
+
 			const user = userCredential.user;
 			console.log("User logged in ----->", user);
+			onClose();
 		} catch (error) {
 			const errorCode = error.code;
 			const errorMessage = error.message;
 			console.log(errorCode, errorMessage);
+			alert("Login error: " + errorMessage);
 		}
+	};
 
+	const handleSignUpModalSubmit = async (
+		event: React.FormEvent<HTMLFormElement>,
+	) => {
+		event.preventDefault();
+		setShowSignUpModal(false);
 		onClose();
+	};
+
+	const handleSignUpClick = () => {
+		setShowSignUpModal(true);
+	};
+
+	const handleSignUpModalClose = () => {
+		setShowSignUpModal(false);
 	};
 
 	return (
 		<div className={`${styles.modalContainer} `}>
 			<div className={styles.modalContent}>
 				<h2 className={styles.modalTitle}>Login</h2>
-				<form onSubmit={handleSubmit} className={styles.formContainer}>
+				<form onSubmit={handleLoginSubmit} className={styles.formContainer}>
 					<label htmlFor="email">Email:</label>
 					<input
 						type="email"
@@ -79,6 +112,17 @@ const LoginFormModal: React.FC<LoginFormModalProps> = ({ onClose }) => {
 						Cancel
 					</button>
 				</form>
+				<button
+					className="text-blue-500 hover:text-blue-700 focus:outline-none mt-4"
+					onClick={handleSignUpClick}
+				>
+					Don't have an account? Sign up
+				</button>
+				<SignUpFormModal
+					show={showSignUpModal}
+					onClose={handleSignUpModalClose}
+					onSubmit={handleSignUpModalSubmit}
+				/>
 			</div>
 		</div>
 	);
