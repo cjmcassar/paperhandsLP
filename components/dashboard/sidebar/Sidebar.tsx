@@ -46,7 +46,7 @@ function CollapseHeader({ onClose }) {
 function NavigationItems() {
   return (
     <ul className="md:flex-col md:min-w-full flex flex-col list-none text-lg">
-      <li className="items-center mb-5">
+      <li className="items-center mb-3">
         <SidebarItem
           href="/dashboard"
           iconSrc="/img/dashboard/icons/dashboard.svg"
@@ -54,7 +54,7 @@ function NavigationItems() {
           Dashboard
         </SidebarItem>
       </li>
-      <li className="items-center mb-5">
+      <li className="items-center mb-3">
         <SidebarItem
           href="/risk-review"
           iconSrc="/img/dashboard/icons/analytics.svg"
@@ -62,7 +62,7 @@ function NavigationItems() {
           Risk Review
         </SidebarItem>
       </li>
-      <li className="items-center mb-5">
+      <li className="items-center mb-3">
         <SidebarItem href="/history" iconSrc="/img/dashboard/icons/history.svg">
           History
         </SidebarItem>
