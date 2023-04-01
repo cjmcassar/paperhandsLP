@@ -18,11 +18,11 @@ function SidebarItem({
     <Link href={href}>
       <a
         href="#"
-        className={`text-2xl flex items-center gap-4 transition duration-300 py-2 ${
+        className={`text-lg font-bold flex items-center gap-4 transition duration-300 py-2 ${
           isActive ? "bg-phPurple" : "opacity-50 hover:opacity-100"
         } px-5 rounded-xl`}
       >
-        <img className="w-10" src={iconSrc} alt="" />
+        <img className="w-6" src={iconSrc} alt="" />
         {children}
       </a>
     </Link>
