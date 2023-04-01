@@ -9,17 +9,17 @@ export default function DashboardLayout({ children }) {
     <div>
       <Sidebar />
 
-      <div className="relative md:ml-64 md:mr-64 bg-phBlack w-auto">
+      <div className="relative md:ml-56 md:mr-64 bg-phBlack w-auto">
         <Navbar />
       </div>
 
-      <div className="md:p-10 md:ml-64 md:mr-64 flex-1 bg-phBlack min-h-screen">
+      <div className="md:p-10 md:ml-56 md:mr-64  flex-1 bg-phBlack min-h-screen">
         {children}
       </div>
 
       <RightHandSidebar />
 
-      <div className="md:ml-64 md:mr-64">
+      <div className="md:ml-56 md:mr-64">
         <Footer />
       </div>
     </div>
