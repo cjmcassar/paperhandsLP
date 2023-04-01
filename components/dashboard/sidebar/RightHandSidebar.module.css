@@ -1,92 +1,92 @@
 .dropdownMenu {
-	position: absolute;
-	top: 107%;
-	left: 0;
-	z-index: 10;
-	border: 1px solid #1a1c24;
-	border-radius: 0.625rem;
-	min-width: 150px;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  top: 107%;
+  left: 0;
+  z-index: 10;
+  border: 1px solid #1a1c24;
+  border-radius: 0.625rem;
+  min-width: 150px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .dropdownItem {
-	display: block;
-	padding: 8px 16px;
-	color: #fff;
-	text-decoration: none;
-	cursor: pointer;
-	white-space: nowrap;
-	font-size: 0.875rem;
-	font-weight: 600;
-	transition: all 0.2s ease-in-out;
-	display: flex;
-	justify-content: flex-start;
-	width: 100%;
+  display: block;
+  padding: 8px 16px;
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
 }
 
 .dropdownItem:hover {
-	background-color: #2d3748;
-	border-radius: 0.625rem;
-	color: #ffffff;
+  background-color: #2d3748;
+  border-radius: 0.625rem;
+  color: #ffffff;
 }
 
 .iconSize {
-	font-size: 1.5rem;
+  font-size: 1.5rem;
 }
 
 .iconBorder {
-	border-width: 1px;
-	border-style: solid;
-	border-color: #1a1c24;
-	border-radius: 0.625rem;
-	padding: 0.5rem;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #1a1c24;
+  border-radius: 0.625rem;
+  padding: 0.5rem;
 }
 
 .iconBorder:hover {
-	background-color: #2d3748;
-	color: #ffffff;
+  background-color: #2d3748;
+  color: #ffffff;
 }
 
 .nav {
-	position: fixed;
-	top: 0;
-	bottom: 0;
-	right: 0;
-	width: 18rem;
-	background-color: #17181c;
-	z-index: 50;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 16rem;
+  background-color: #17181c;
+  z-index: 50;
 }
 
 .listItem {
-	display: flex;
-	align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .listItemLink {
-	padding: 0.5rem 0;
-	display: block;
-	font-size: 0.875rem;
-	font-weight: 600;
-	color: #fff;
-	transition: all 0.2s ease-in-out;
+  padding: 0.5rem 0;
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+  transition: all 0.2s ease-in-out;
 }
 
 .userIcon {
-	width: 2.5rem;
-	height: 2.5rem;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	background-color: #1a1c24;
-	color: #4b5563;
-	border-radius: 9999px;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1a1c24;
+  color: #4b5563;
+  border-radius: 9999px;
 }
 
 .userIcon:hover {
-	background-color: #2d3748;
-	color: #ffffff;
+  background-color: #2d3748;
+  color: #ffffff;
 }
 
 .nft path {
-	fill: currentColor;
+  fill: currentColor;
 }
