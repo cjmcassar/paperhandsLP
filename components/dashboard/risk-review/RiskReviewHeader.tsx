@@ -3,13 +3,30 @@ import Plus from "../../../public/img/dashboard/icons/plus.svg";
 import Pen from "../../../public/img/dashboard/icons/pen.svg";
 import Question from "../../../public/img/dashboard/icons/question.svg";
 import styles from "./RiskReviewHeader.module.css";
+import useSWR from "swr";
 
-function RiskReviewHeader({ assetData }) {
-	const [showForm, setShowForm] = useState(false); // State to manage the form visibility
+const fetcher = (url) => fetch(url).then((res) => res.json());
+
+function RiskReviewHeader() {
+	const [showForm, setShowForm] = useState(false);
+
+	const { data: assetData, error } = useSWR("/api/assets", fetcher);
+
+	if (error) return <div className="text-red-300 text-9xl">Failed to load</div>;
+
+	if (!assetData) return <div className="text-white text-9xl">Loading...</div>;
 
 	const handleAddNewCrypto = () => {
-		setShowForm(true); // Show the form when the "Add New Crypto" button is clicked
+		setShowForm(true);
 	};
+
+	// <-----------ATTENTION------------>
+	// <-----------ATTENTION------------>
+
+	// If the data is cached in redis, it will return data.cache, otherwise it will return data.data
+
+	// <-----------ATTENTION------------>
+	// <-----------ATTENTION------------>
 
 	return (
 		<div className="flex items-center py-5 gap-8">
@@ -52,11 +69,23 @@ function RiskReviewHeader({ assetData }) {
 									name="asset"
 									className="w-full border rounded px-3 py-2"
 								>
-									{assetData.map((asset) => (
-										<option key={asset.Mcap} value={asset.Mcap}>
-											{asset.Asset} ({asset.Symbol})
-										</option>
-									))}
+									{/*
+								<-----------ATTENTION------------>
+								<-----------ATTENTION------------>
+
+								If the data is cached in redis, it will return data.cache, otherwise it will return data.data
+
+								<-----------ATTENTION------------>
+								<-----------ATTENTION------------> 
+									*/}
+									{(assetData && assetData.cache) ||
+									(assetData && assetData.data)
+										? (assetData.cache || assetData.data).map((asset) => (
+												<option key={asset.Mcap} value={asset.Mcap}>
+													{asset.Asset} ({asset.Symbol})
+												</option>
+										  ))
+										: null}
 								</select>
 							</div>
 							<div className="flex justify-end">
