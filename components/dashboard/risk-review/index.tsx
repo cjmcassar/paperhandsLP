@@ -3,10 +3,10 @@ import RiskLevelCharts from "./RiskLevelCharts";
 import RiskReviewHeader from "./RiskReviewHeader";
 import RiskReviewTable from "./RiskReviewTable";
 
-function RiskReview({ assetData}) {
+function RiskReview() {
 	return (
 		<>
-			<RiskReviewHeader assetData={assetData}  />
+			<RiskReviewHeader />
 			<RiskReviewTable />
 			<RiskLevelCharts />
 		</>
