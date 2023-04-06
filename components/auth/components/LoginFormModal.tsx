@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
   getAuth,
-  signInWithEmailAndPassword,
+  signInWithEmailAndPassword
 } from "firebase/auth";
 import SignInWithGoogle from "./SignInWithGoogle";
 import SignUpFormModal from "./SignUpFormModal";
-
 import styles from "./LoginFormModal.module.css";
 import Divider from "./Divider";
 
@@ -21,7 +20,7 @@ const LoginFormModal: React.FC<LoginFormModalProps> = ({ onClose }) => {
 
   const auth = getAuth();
 
-  const isValidEmail = (email) => {
+  const isValidEmail = email => {
     const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
     return emailRegex.test(email);
   };
@@ -73,21 +72,25 @@ const LoginFormModal: React.FC<LoginFormModalProps> = ({ onClose }) => {
       <div className={styles.modalContent}>
         <h2 className={styles.modalTitle}>Login</h2>
         <form onSubmit={handleLoginSubmit} className={styles.formContainer}>
-          <label htmlFor="email">Email:</label>
+          <label className="text-white" htmlFor="email">
+            Email:
+          </label>
           <input
             type="email"
             id="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={e => setEmail(e.target.value)}
             className={`${styles.inputField} bg-trueGray `}
             required
           />
-          <label htmlFor="password">Password:</label>
+          <label className="text-white" htmlFor="password">
+            Password:
+          </label>
           <input
             type="password"
             id="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={e => setPassword(e.target.value)}
             className={`${styles.inputField} bg-trueGray`}
             required
           />

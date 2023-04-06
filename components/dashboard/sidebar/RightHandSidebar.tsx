@@ -3,35 +3,30 @@ import {
   faUser,
   faBars,
   faCog,
-  faBell,
+  faBell
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import React, { useState } from "react";
 import SidebarHistory from "./components/SidebarHistory";
 import RiskInfo from "./components/RiskInfo";
-
 import styles from "../sidebar/RightHandSidebar.module.css";
-import LoginFormModal from "./components/LoginFormModal";
-import SignUpModal from "./components/SignUpFormModal";
+import { useRouter } from "next/dist/client/router";
+import { getAuth } from "firebase/auth";
 
 function UserSignIn() {
+  const router = useRouter();
+  const auth = getAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
-  const openModal = () => {
-    setDropdownOpen(false);
-    setModalOpen(true);
+  const logout = async () => {
+    await auth.signOut();
+    router.push("/login");
   };
-
-  const closeModal = () => {
-    setModalOpen(false);
-  };
-
-  const [modalOpen, setModalOpen] = useState(false);
 
   return (
     <li className={styles.listItem}>
@@ -44,13 +39,11 @@ function UserSignIn() {
 
         {dropdownOpen && (
           <div className={`${styles.dropdownMenu} bg-phLightGray`}>
-            <button className={styles.dropdownItem} onClick={openModal}>
-              🪵 Login
+            <button className={styles.dropdownItem} onClick={logout}>
+              🪵 Log Out
             </button>
           </div>
         )}
-        {modalOpen && <LoginFormModal onClose={closeModal} />}
-        {/* {modalOpen && <SignUpModal show={modalOpen} onClose={closeModal} />} */}
       </div>
     </li>
   );
@@ -79,13 +72,16 @@ function Settings() {
         </button>
         {dropdownOpen && (
           <div className={`${styles.dropdownMenu} bg-phLightGray`}>
-            <Link href="/login">
+            <Link href="#">
+              {/* TODO: Route to profile page */}
               <a className={styles.dropdownItem}>👨🏽‍💼 Account</a>
             </Link>
-            <Link href="/login">
+            <Link href="#">
+              {/* TODO: Feedback modal */}
               <a className={styles.dropdownItem}>📋 Give us feedback!</a>
             </Link>
-            <Link href="/register">
+            <Link href="#">
+              {/*TODO: Modal for email invitation*/}
               <a className={styles.dropdownItem}>🙏🏼 Invite a friend</a>
             </Link>
           </div>
