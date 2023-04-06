@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./FAQModal.module.css";
+import faqContent from "./data/FaqContent";
 
 const FAQModal = ({ isOpen, onClose }) => {
   if (!isOpen) {
@@ -17,10 +18,12 @@ const FAQModal = ({ isOpen, onClose }) => {
         </div>
         <div>
           {/* Add FAQ items here */}
-          <div className={styles.faqItem}>
-            <div className={styles.question}>Question 1</div>
-            <div className={styles.answer}>Answer 1</div>
-          </div>
+          {faqContent.map((faq, index) => (
+            <div key={index} className={styles.faqItem}>
+              <div className={styles.question}>{faq.question}</div>
+              <div className={styles.answer}>{faq.answer}</div>
+            </div>
+          ))}
           {/* Add more FAQ items */}
         </div>
       </div>
