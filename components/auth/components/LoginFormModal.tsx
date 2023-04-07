@@ -80,7 +80,7 @@ const LoginFormModal: React.FC<LoginFormModalProps> = ({ onClose }) => {
             id="email"
             value={email}
             onChange={e => setEmail(e.target.value)}
-            className={`${styles.inputField} bg-trueGray `}
+            className={`${styles.inputField} bg-trueGrey `}
             required
           />
           <label className="text-white" htmlFor="password">
@@ -91,7 +91,7 @@ const LoginFormModal: React.FC<LoginFormModalProps> = ({ onClose }) => {
             id="password"
             value={password}
             onChange={e => setPassword(e.target.value)}
-            className={`${styles.inputField} bg-trueGray`}
+            className={`${styles.inputField} bg-trueGrey`}
             required
           />
 
@@ -99,7 +99,7 @@ const LoginFormModal: React.FC<LoginFormModalProps> = ({ onClose }) => {
 
           <button
             type="submit"
-            className={`${styles.submitButton} bg-phPurple `}
+            className={`${styles.submitButton} bg-primary `}
           >
             Login with email
           </button>
@@ -109,7 +109,7 @@ const LoginFormModal: React.FC<LoginFormModalProps> = ({ onClose }) => {
           </div>
 
           <button
-            className={`${styles.submitButton} bg-phBlack mt-4`}
+            className={`${styles.submitButton} bg-dark mt-4`}
             onClick={onClose}
           >
             Cancel

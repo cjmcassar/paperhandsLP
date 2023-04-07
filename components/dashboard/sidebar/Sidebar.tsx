@@ -97,14 +97,14 @@ export default function Sidebar() {
   const [collapseShow, setCollapseShow] = useState("hidden");
 
   const toggleCollapse = () => {
-    setCollapseShow((prevCollapseShow) =>
+    setCollapseShow(prevCollapseShow =>
       prevCollapseShow === "hidden" ? "visible" : "hidden"
     );
   };
 
   return (
     <>
-      <nav className={`${styles.sidebar} bg-phDarkGray`}>
+      <nav className={`${styles.sidebar} bg-darkGrey`}>
         <div className={styles.container}>
           <Toggler onClick={toggleCollapse} />
           <Brand />
@@ -112,7 +112,7 @@ export default function Sidebar() {
           <div
             className={`${styles.collapse} ${
               collapseShow === "hidden" ? styles.hidden : ""
-            } ${styles.collapseShadow} bg-phDarkGray `}
+            } ${styles.collapseShadow} bg-darkGrey `}
           >
             <NavigationItems />
             <NavigationFooter />

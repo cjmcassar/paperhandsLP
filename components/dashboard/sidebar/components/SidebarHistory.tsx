@@ -6,7 +6,7 @@ import NFT from "../../../../public/img/dashboard/icons/nft.svg";
 function SidebarHistoryItem({ icon, title, date, value, valueColor }) {
   return (
     <li className="flex mb-[23px]">
-      <div className="relative bg-phLightGray w-10 rounded-5">
+      <div className="relative bg-lightGrey w-10 rounded-5">
         <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
           {icon}
         </div>

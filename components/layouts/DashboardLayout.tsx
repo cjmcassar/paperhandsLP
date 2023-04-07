@@ -27,7 +27,7 @@ export default function DashboardLayout({ children }) {
   }, []);
 
   return loading ? (
-    <div className="flex justify-center min-h-screen items-center text-2xl text-white bg-phBlack">
+    <div className="flex justify-center min-h-screen items-center text-2xl text-white bg-dark">
       <FontAwesomeIcon icon={faSpinner} className="fa-spin mr-4" /> Checking
       authentication
     </div>
@@ -35,11 +35,11 @@ export default function DashboardLayout({ children }) {
     <div>
       <Sidebar />
 
-      <div className="relative md:ml-56 md:mr-64 bg-phBlack w-auto">
+      <div className="relative md:ml-56 md:mr-64 bg-dark w-auto">
         <Navbar />
       </div>
 
-      <div className="md:p-10 md:ml-56 md:mr-64  flex-1 bg-phBlack min-h-screen">
+      <div className="md:p-10 md:ml-56 md:mr-64  flex-1 bg-dark min-h-screen">
         {children}
       </div>
 
