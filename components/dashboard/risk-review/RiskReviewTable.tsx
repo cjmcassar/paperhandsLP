@@ -17,8 +17,8 @@ function RiskReviewTable() {
         "Your Bitcoin assets are historically safe when using Ledger Nano X as the storage method.",
       riskRecommendations: [
         "No recommendations.",
-        "Your crypto is well-preserved & historically safe.",
-      ],
+        "Your crypto is well-preserved & historically safe."
+      ]
     },
     {
       id: 2,
@@ -33,8 +33,8 @@ function RiskReviewTable() {
         "Your Bitcoin assets are historically safe when using Ledger Nano X as the storage method.",
       riskRecommendations: [
         "No recommendations.",
-        "Your crypto is well-preserved & historically safe.",
-      ],
+        "Your crypto is well-preserved & historically safe."
+      ]
     },
     {
       id: 3,
@@ -50,8 +50,8 @@ function RiskReviewTable() {
         "Binance Coin is a low risk asset, while Trezor is a historically safe storage method.",
       riskRecommendations: [
         "No recommendations.",
-        "Your crypto is well-preserved & historically safe.",
-      ],
+        "Your crypto is well-preserved & historically safe."
+      ]
     },
     {
       id: 4,
@@ -67,8 +67,8 @@ function RiskReviewTable() {
       riskRecommendations: [
         "Cold wallets are the safest way to store your crypto over time.",
         "Consider purchasing a Ledger or Trezor",
-        "Consider investing in less risky assets.",
-      ],
+        "Consider investing in less risky assets."
+      ]
     },
     {
       id: 5,
@@ -84,8 +84,8 @@ function RiskReviewTable() {
       riskRecommendations: [
         "Cold wallets are the safest way to store your crypto over time.",
         "Consider purchasing a Ledger or Trezor",
-        "Consider investing in less risky assets.",
-      ],
+        "Consider investing in less risky assets."
+      ]
     },
     {
       id: 6,
@@ -100,8 +100,8 @@ function RiskReviewTable() {
         "TRON is a low risk asset, while Armory is a low risk storage method.",
       riskRecommendations: [
         "No recommendations.",
-        "Your crypto is well-preserved & historically safe.",
-      ],
+        "Your crypto is well-preserved & historically safe."
+      ]
     },
     {
       id: 7,
@@ -114,8 +114,8 @@ function RiskReviewTable() {
       risk: "High Risk",
       riskReview:
         "Dopex is a high risk asset, while Ledger Nano X is a historically safe storage method.",
-      riskRecommendations: ["Consider investing in less risky assets."],
-    },
+      riskRecommendations: ["Consider investing in less risky assets."]
+    }
   ];
 
   const [tableInitialised, setTableInitialised] = useState(false);
@@ -148,37 +148,37 @@ function RiskReviewTable() {
             select: 0,
             render: function (asset) {
               return `<span class="font-bold text-white my-2 text-xs 2xl:text-sm"> ${asset[0].data}</span>`;
-            },
+            }
           },
           {
             select: 1,
             render: function (symbol) {
               return `<span class=" text-white my-2 text-xs 2xl:text-sm"> ${symbol[0].data}</span>`;
-            },
+            }
           },
           {
             select: 2,
             render: function (amount) {
               return `<span class=" text-white my-2 text-xs 2xl:text-sm"> ${amount[0].data}</span>`;
-            },
+            }
           },
           {
             select: 3,
             render: function (value) {
               return `<span class=" text-white my-2 text-xs 2xl:text-sm"> ${value[0].data}</span>`;
-            },
+            }
           },
           {
             select: 4,
             render: function (share) {
               return `<span class=" text-white my-2 text-xs 2xl:text-sm"> ${share[0].data}</span>`;
-            },
+            }
           },
           {
             select: 5,
             render: function (storage) {
               return `<span class=" text-white my-2 text-xs 2xl:text-sm"> ${storage[0].data}</span>`;
-            },
+            }
           },
           {
             select: 6,
@@ -205,13 +205,13 @@ function RiskReviewTable() {
               }" class=" my-2 text-xs 2xl:text-sm"> ${
                 riskLevel[0].data
               }</span>`;
-            },
+            }
           },
           {
             select: 7,
             render: function (riskReview) {
               return `<span class=" text-white my-2 text-xs 2xl:text-sm"> ${riskReview[0].data}</span>`;
-            },
+            }
           },
           {
             select: 8,
@@ -226,9 +226,9 @@ function RiskReviewTable() {
               output += `</div>`;
 
               return output;
-            },
-          },
-        ],
+            }
+          }
+        ]
       });
       setDataTable(dataTableSearch);
       setTableInitialised(true);
@@ -239,7 +239,7 @@ function RiskReviewTable() {
     dataTable.destroy();
     dataTable.init();
     const data = [];
-    riskReviews.forEach((review) => {
+    riskReviews.forEach(review => {
       data.push([
         review.asset,
         review.symbol,
@@ -249,7 +249,7 @@ function RiskReviewTable() {
         review.storage,
         review.risk,
         review.riskReview,
-        review.riskRecommendations.join(","),
+        review.riskRecommendations.join(",")
       ]);
     });
 
