@@ -32,13 +32,13 @@ function UserSignIn() {
     <li className={styles.listItem}>
       <div className="relative">
         <button className="cursor-pointer" onClick={toggleDropdown}>
-          <div className={`${styles.userIcon} bg-phLightGray`}>
+          <div className={`${styles.userIcon} bg-lightGrey`}>
             <FontAwesomeIcon icon={faUser} size="1x" />
           </div>
         </button>
 
         {dropdownOpen && (
-          <div className={`${styles.dropdownMenu} bg-phLightGray`}>
+          <div className={`${styles.dropdownMenu} bg-lightGrey`}>
             <button className={styles.dropdownItem} onClick={logout}>
               🪵 Log Out
             </button>
@@ -63,7 +63,7 @@ function Settings() {
           className="cursor-pointer p-0 text-sm text-white transition-all ease-nav-brand"
           onClick={toggleDropdown}
         >
-          <div className={`${styles.iconBorder} bg-phLightGray`}>
+          <div className={`${styles.iconBorder} bg-lightGrey`}>
             <FontAwesomeIcon
               className={styles.iconSize}
               icon={faCog as IconProp}
@@ -71,7 +71,7 @@ function Settings() {
           </div>
         </button>
         {dropdownOpen && (
-          <div className={`${styles.dropdownMenu} bg-phLightGray`}>
+          <div className={`${styles.dropdownMenu} bg-lightGrey`}>
             <Link href="#">
               {/* TODO: Route to profile page */}
               <a className={styles.dropdownItem}>👨🏽‍💼 Account</a>
@@ -105,7 +105,7 @@ function Notifications() {
           className="cursor-pointer p-0 text-sm text-white transition-all ease-nav-brand"
           onClick={toggleDropdown}
         >
-          <div className={`${styles.iconBorder} bg-phLightGray`}>
+          <div className={`${styles.iconBorder} bg-lightGrey`}>
             <FontAwesomeIcon
               className={styles.iconSize}
               icon={faBell as IconProp}
@@ -113,7 +113,7 @@ function Notifications() {
           </div>
         </button>
         {dropdownOpen && (
-          <div className={`${styles.dropdownMenu} bg-phLightGray`}>
+          <div className={`${styles.dropdownMenu} bg-lightGrey`}>
             <Link href="#">
               <a className={styles.dropdownItem}>
                 Your risk values have changed!
@@ -129,7 +129,7 @@ function Notifications() {
 export default function RightHandSidebar(): JSX.Element {
   return (
     <>
-      <nav className={styles.nav}>
+      <nav className={`${styles.nav} bg-darkGrey`}>
         <div className="md:flex-col md:min-h-full md:flex-nowrap px-0 flex flex-wrap items-center gap-10 w-full mx-auto">
           <ul className="flex flex-row justify-start pl-7 mb-0 list-none md-max:w-full pt-4">
             <UserSignIn />

@@ -6,7 +6,7 @@ import { useRouter } from "next/dist/client/router";
 function SidebarItem({
   href,
   children,
-  iconSrc,
+  iconSrc
 }: {
   href: string;
   children: string;
@@ -19,7 +19,7 @@ function SidebarItem({
       <a
         href="#"
         className={`text-lg font-bold flex items-center gap-4 transition duration-300 py-2 ${
-          isActive ? "bg-phPurple" : "opacity-50 hover:opacity-100"
+          isActive ? "bg-primary" : "opacity-50 hover:opacity-100"
         } px-5 rounded-xl`}
       >
         <img className="w-6" src={iconSrc} alt="" />

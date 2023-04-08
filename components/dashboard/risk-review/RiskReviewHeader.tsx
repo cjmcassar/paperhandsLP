@@ -41,20 +41,20 @@ function RiskReviewHeader() {
       </div>
       <div className={`${styles.buttonGroup}`}>
         <button
-          className={`${styles.customButton} hover:border-phPurple`}
+          className={`${styles.customButton} hover:border-primary`}
           onClick={handleAddNewCrypto}
         >
           <Plus width="22" height="22" />
           <span className="text-xs">Add New Crypto</span>
         </button>
 
-        <button className={`${styles.customButton} hover:border-phPurple`}>
+        <button className={`${styles.customButton} hover:border-primary`}>
           <Pen width="22" height="22" />
           <span className="text-xs">Edit Portfolio</span>
         </button>
         <button
           onClick={openFAQModal}
-          className={`${styles.customButton} hover:border-phPurple`}
+          className={`${styles.customButton} hover:border-primary`}
         >
           <Question width="22" height="22" />
           <span className="text-xs">Help & FAQs</span>

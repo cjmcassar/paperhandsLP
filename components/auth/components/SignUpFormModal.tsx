@@ -113,12 +113,12 @@ const SignUpFormModal: React.FC<SignUpModalProps> = ({
 
           <button
             type="submit"
-            className={`${styles.submitButton} bg-phPurple `}
+            className={`${styles.submitButton} bg-primary `}
           >
             Create Account
           </button>
           <button
-            className={`${styles.submitButton} bg-phBlack mt-4`}
+            className={`${styles.submitButton} bg-dark mt-4`}
             onClick={onClose}
           >
             Cancel

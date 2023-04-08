@@ -31,7 +31,7 @@ function LoginModule() {
     <>
       <div className="flex justify-center items-center min-h-screen min-w-screen">
         <button
-          className="bg-phPurple hover:opacity-80 filter drop-shadow-xl rounded-2xl py-4 px-10 text-white text-2xl"
+          className="bg-primary hover:opacity-80 filter drop-shadow-xl rounded-2xl py-4 px-10 text-white text-2xl"
           onClick={openModal}
         >
           <span className="mr-3">🪵</span> Login
