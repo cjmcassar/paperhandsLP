@@ -6,6 +6,9 @@ import styles from "./RiskReviewHeader.module.css";
 import useSWR from "swr";
 import FAQModal from "../FAQModal";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+
 const fetcher = url => fetch(url).then(res => res.json());
 
 function RiskReviewHeader() {
@@ -18,13 +21,11 @@ function RiskReviewHeader() {
 
   const { data: assetData, error } = useSWR("/api/assets", fetcher);
 
-  if (error) return <div className="text-red-300 text-9xl">Failed to load</div>;
-
-  if (!assetData) return <div className="text-white text-9xl">Loading...</div>;
-
   const handleAddNewCrypto = () => {
     setShowForm(true);
   };
+
+  const showLoading = !assetData || error;
 
   // <-----------ATTENTION------------>
   // <-----------ATTENTION------------>
@@ -37,7 +38,19 @@ function RiskReviewHeader() {
   return (
     <div className="flex items-center py-5 gap-8">
       <div>
-        <h2 className={`${styles.latestOperationsTitle}`}>Risk Review</h2>
+        <h2
+          className={`${styles.latestOperationsTitle} ${
+            showLoading ? "opacity-50" : ""
+          }`}
+        >
+          Risk Review
+          {showLoading && (
+            <FontAwesomeIcon
+              icon={faSpinner}
+              className="fa-spin ml-4 text-gray-500"
+            />
+          )}
+        </h2>
       </div>
       <div className={`${styles.buttonGroup}`}>
         <button
