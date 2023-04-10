@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Navbar from "../dashboard/Navbar";
 import Sidebar from "../dashboard/sidebar/Sidebar";
 import RightHandSidebar from "../dashboard/sidebar/RightHandSidebar";
-import { auth } from "../../utils/firebaseClient.js";
+import { auth } from "../../utils/firebaseClient";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import { useRouter } from "next/dist/client/router";
