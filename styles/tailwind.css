@@ -6,7 +6,7 @@
 @layer base {
   html,
   body {
-    @apply dark:bg-phBlack;
+    @apply dark:bg-dark;
   }
 }
 
