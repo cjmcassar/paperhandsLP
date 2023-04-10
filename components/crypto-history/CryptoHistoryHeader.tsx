@@ -5,7 +5,7 @@ import Pen from "../../../public/img/dashboard/icons/pen.svg";
 import Question from "../../../public/img/dashboard/icons/question.svg";
 
 import styles from "./CryptoHistoryHeader.module.css";
-import FAQModal from "../FAQModal";
+import FAQModal from "../dashboard/FAQModal";
 
 function CryptoHistoryHeader() {
   const [isFAQModalOpen, setIsFAQModalOpen] = useState(false);

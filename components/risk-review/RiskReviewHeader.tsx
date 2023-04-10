@@ -4,9 +4,9 @@ import Pen from "../../../public/img/dashboard/icons/pen.svg";
 import Question from "../../../public/img/dashboard/icons/question.svg";
 import styles from "./RiskReviewHeader.module.css";
 import useSWR from "swr";
-import FAQModal from "../FAQModal";
+import FAQModal from "../dashboard/FAQModal";
 import { doc, setDoc } from "firebase/firestore";
-import { auth, userAssetsRef } from "../../../utils/firebaseClient";
+import { auth, userAssetsRef } from "../../utils/firebaseClient";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
