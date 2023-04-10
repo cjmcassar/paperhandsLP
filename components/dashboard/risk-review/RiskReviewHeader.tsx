@@ -32,7 +32,8 @@ function RiskReviewHeader() {
 
   const handleAddNewCrypto = () => setShowForm(true);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //
+  const handleAssetSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let amount = (
       e.currentTarget.elements.namedItem("amount") as HTMLInputElement
@@ -46,6 +47,7 @@ function RiskReviewHeader() {
 
     if (!selectedAsset) return;
 
+    // Check if user is authenticated
     try {
       setLoading(true);
 
@@ -57,6 +59,7 @@ function RiskReviewHeader() {
 
       const uid = user.uid;
 
+      // Add new asset to user's assets collection
       await setDoc(doc(userAssetsRef), {
         amount: amount,
         asset_name: selectedAsset.Asset,
@@ -141,7 +144,7 @@ function RiskReviewHeader() {
         <div className={`${styles.showForm}`}>
           <div className="bg-white p-8 rounded-lg">
             <h3 className="text-xl font-medium mb-4">Add New Crypto</h3>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleAssetSubmit}>
               <div className="mb-4">
                 <label
                   htmlFor="asset-select"
