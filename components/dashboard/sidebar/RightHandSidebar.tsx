@@ -7,12 +7,19 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SidebarHistory from "./components/SidebarHistory";
 import RiskInfo from "./components/RiskInfo";
 import styles from "../sidebar/RightHandSidebar.module.css";
 import { useRouter } from "next/dist/client/router";
 import { getAuth } from "firebase/auth";
+import {
+  getFirestore,
+  onSnapshot,
+  query,
+  where,
+  collection
+} from "firebase/firestore";
 
 function UserSignIn() {
   const router = useRouter();
@@ -92,12 +99,32 @@ function Settings() {
 }
 
 function Notifications() {
+  const auth = getAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      query(
+        collection(getFirestore(), "notifications"),
+        where("userId", "==", auth.currentUser.uid)
+      ),
+      snapshot => {
+        const newNotifications = snapshot.docs.map(doc => doc.data());
+        setNotifications(newNotifications);
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
+  // need to update with pagination to only show 5 most recent notifications
   return (
     <li className={`${styles.listItem}`}>
       <div className="relative">
@@ -113,12 +140,15 @@ function Notifications() {
           </div>
         </button>
         {dropdownOpen && (
-          <div className={`${styles.dropdownMenu} bg-lightGrey`}>
-            <Link href="#">
-              <a className={styles.dropdownItem}>
-                Your risk values have changed!
-              </a>
-            </Link>
+          <div className={`${styles.dropdownMenu} bg-phLightGray`}>
+            {notifications.map((notification, index) => (
+              <Link key={index} href="#">
+                <a className={styles.dropdownItem}>
+                  {notification.asset} risk score changed to{" "}
+                  {notification.newRiskScore}
+                </a>
+              </Link>
+            ))}
           </div>
         )}
       </div>
