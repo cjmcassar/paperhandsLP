@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import Plus from "../../../public/img/dashboard/icons/plus.svg";
-import Pen from "../../../public/img/dashboard/icons/pen.svg";
-import Question from "../../../public/img/dashboard/icons/question.svg";
+import Plus from "../../public/img/dashboard/icons/plus.svg";
+import Pen from "../../public/img/dashboard/icons/pen.svg";
+import Question from "../../public/img/dashboard/icons/question.svg";
 import styles from "./RiskReviewHeader.module.css";
 import FAQModal from "../dashboard/FAQModal";
 import { doc, setDoc } from "firebase/firestore";
