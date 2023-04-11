@@ -1,4 +1,4 @@
-import RiskReview from "../components/dashboard/risk-review";
+import RiskReview from "../components/risk-review";
 import DashboardLayout from "../components/layouts/DashboardLayout";
 import { AssetDataProvider } from "../contexts/assetDataContext";
 

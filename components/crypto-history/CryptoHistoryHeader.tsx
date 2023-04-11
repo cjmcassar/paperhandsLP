@@ -1,12 +1,11 @@
 import React, { useContext, useState } from "react";
 
-import Plus from "../../../public/img/dashboard/icons/plus.svg";
-import Pen from "../../../public/img/dashboard/icons/pen.svg";
-import Question from "../../../public/img/dashboard/icons/question.svg";
+import Plus from "../../public/img/dashboard/icons/plus.svg";
+import Question from "../../public/img/dashboard/icons/question.svg";
 
 import styles from "./CryptoHistoryHeader.module.css";
-import FAQModal from "../FAQModal";
-import { AssetDataContext } from "../../../contexts/assetDataContext";
+import FAQModal from "../dashboard/FAQModal";
+import { AssetDataContext } from "../../contexts/assetDataContext";
 
 function CryptoHistoryHeader() {
   const [isFAQModalOpen, setIsFAQModalOpen] = useState(false);

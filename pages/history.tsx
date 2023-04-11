@@ -1,4 +1,4 @@
-import CryptoHistory from "../components/dashboard/crypto-history";
+import CryptoHistory from "../components/crypto-history";
 import DashboardLayout from "../components/layouts/DashboardLayout";
 import { AssetDataProvider } from "../contexts/assetDataContext";
 

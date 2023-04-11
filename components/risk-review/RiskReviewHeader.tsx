@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
-import Plus from "../../../public/img/dashboard/icons/plus.svg";
-import Pen from "../../../public/img/dashboard/icons/pen.svg";
-import Question from "../../../public/img/dashboard/icons/question.svg";
+import Plus from "../../public/img/dashboard/icons/plus.svg";
+import Pen from "../../public/img/dashboard/icons/pen.svg";
+import Question from "../../public/img/dashboard/icons/question.svg";
 import styles from "./RiskReviewHeader.module.css";
-import FAQModal from "../FAQModal";
+import FAQModal from "../dashboard/FAQModal";
 import { doc, setDoc } from "firebase/firestore";
-import { auth, userAssetsRef } from "../../../utils/firebaseClient";
+import { auth, userAssetsRef } from "../../utils/firebaseClient";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { AssetDataContext } from "../../../contexts/assetDataContext";
+import { AssetDataContext } from "../../contexts/assetDataContext";
 
 type Asset = {
   Asset: string;
@@ -81,7 +81,7 @@ function RiskReviewHeader() {
   const handleAssetSelect = ({
     target: { value }
   }: React.ChangeEvent<HTMLSelectElement>) => {
-    const asset = (assetData.assetData || assetData.assetData)?.find(
+    const asset = assetData.assetData?.find(
       (asset: Asset) => asset.Mcap === value
     );
     setSelectedAsset(asset);
@@ -156,7 +156,7 @@ function RiskReviewHeader() {
                   className="w-full border rounded px-3 py-2"
                 >
                   <option value="">Select an asset</option>
-                  {(assetData.assetData || assetData.assetData)?.map(asset => (
+                  {assetData.assetData?.map(asset => (
                     <option key={asset.Mcap} value={asset.Mcap}>
                       {asset.Asset} ({asset.Symbol})
                     </option>
