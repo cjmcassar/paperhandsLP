@@ -22,7 +22,6 @@ function RiskReviewHeader() {
   const [loading, setLoading] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
   const [isFAQModalOpen, setIsFAQModalOpen] = useState(false);
-  const [addCustomAsset, setAddCustomAsset] = useState(false);
 
   const openFAQModal = () => setIsFAQModalOpen(true);
   const closeFAQModal = () => setIsFAQModalOpen(false);
@@ -36,17 +35,8 @@ function RiskReviewHeader() {
     let amount = (
       e.currentTarget.elements.namedItem("amount") as HTMLInputElement
     ).value;
-
     let purchaseDate = (
       e.currentTarget.elements.namedItem("purchaseDate") as HTMLInputElement
-    ).value;
-
-    let customAssetName = (
-      e.currentTarget.elements.namedItem("Asset") as HTMLInputElement
-    ).value;
-
-    let customSymbolName = (
-      e.currentTarget.elements.namedItem("assetSymbol") as HTMLInputElement
     ).value;
 
     let value =
@@ -69,8 +59,8 @@ function RiskReviewHeader() {
       // Add new asset to user's assets collection
       await setDoc(doc(userAssetsRef), {
         amount: amount,
-        asset_name: selectedAsset.Asset || customAssetName,
-        asset_symbol: selectedAsset.Symbol || customSymbolName,
+        asset_name: selectedAsset.Asset,
+        asset_symbol: selectedAsset.Symbol,
         purchase_date: new Date(purchaseDate),
         uid: uid,
         value: value
@@ -78,8 +68,6 @@ function RiskReviewHeader() {
 
       amount = "";
       purchaseDate = "";
-      customAssetName = "";
-      customSymbolName = "";
       setSelectedAsset(null);
       setShowForm(false);
       console.log("Document successfully written!");
@@ -93,23 +81,13 @@ function RiskReviewHeader() {
   const handleAssetSelect = ({
     target: { value }
   }: React.ChangeEvent<HTMLSelectElement>) => {
-    if (value === "custom") {
-      console.log("Add custom asset");
-      setAddCustomAsset(true);
-      setSelectedAsset({ Asset: "", Symbol: "", Mcap: "", Price: "" });
-    }
-    const asset = (assetData?.cache || assetData?.data).find(
+    const asset = (assetData.assetData || assetData.assetData)?.find(
       (asset: Asset) => asset.Mcap === value
     );
     setSelectedAsset(asset);
   };
 
-  const handleCustomAssetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setSelectedAsset(prevState => ({ ...prevState, [name]: value }));
-  };
-
-  const showLoading = !assetData || Error;
+  const showLoading = !assetData.assetData;
 
   // <-----------ATTENTION------------>
   // <-----------ATTENTION------------>
@@ -177,49 +155,14 @@ function RiskReviewHeader() {
                   name="asset"
                   className="w-full border rounded px-3 py-2"
                 >
-                  <option value="">Select an Asset</option>
-                  <option value="custom">Add Custom Asset</option>
-                  {(assetData?.cache || assetData?.data)?.map(asset => (
+                  <option value="">Select an asset</option>
+                  {(assetData.assetData || assetData.assetData)?.map(asset => (
                     <option key={asset.Mcap} value={asset.Mcap}>
                       {asset.Asset} ({asset.Symbol})
                     </option>
                   ))}
                 </select>
               </div>
-              {addCustomAsset && (
-                <div className="flex justify-between space-x-2 w-full">
-                  <div className="mb-4">
-                    <label
-                      htmlFor="asset-name-input"
-                      className="block  text-gray-700 font-medium mb-2"
-                    >
-                      Asset Name
-                    </label>
-                    <input
-                      type="text"
-                      id="asset-name-input"
-                      name="Asset"
-                      className="w-full border rounded px-3 py-2"
-                      value={selectedAsset?.Asset || ""}
-                      onChange={handleCustomAssetChange}
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label
-                      htmlFor="asset-symbol-input"
-                      className="block text-gray-700 font-medium mb-2"
-                    >
-                      Asset Symbol
-                    </label>
-                    <input
-                      type="text"
-                      id="asset-symbol-input"
-                      name="assetSymbol"
-                      className="w-full border rounded px-3 py-2"
-                    />
-                  </div>
-                </div>
-              )}
               <div className="mb-4">
                 <label
                   htmlFor="amount-input"
