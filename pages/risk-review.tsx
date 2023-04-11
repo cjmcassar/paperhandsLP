@@ -1,12 +1,15 @@
 import RiskReview from "../components/dashboard/risk-review";
 import DashboardLayout from "../components/layouts/DashboardLayout";
+import { AssetDataProvider } from "../contexts/assetDataContext";
 
 function Risk() {
-	return (
-		<DashboardLayout>
-			<RiskReview />
-		</DashboardLayout>
-	);
+  return (
+    <DashboardLayout>
+      <AssetDataProvider>
+        <RiskReview />
+      </AssetDataProvider>
+    </DashboardLayout>
+  );
 }
 
 export default Risk;
