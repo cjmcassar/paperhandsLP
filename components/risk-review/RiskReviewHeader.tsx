@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import Plus from "../../public/img/dashboard/icons/plus.svg";
 import Pen from "../../public/img/dashboard/icons/pen.svg";
 import Question from "../../public/img/dashboard/icons/question.svg";
@@ -9,6 +9,7 @@ import { auth, userAssetsRef } from "../../utils/firebaseClient";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { AssetDataContext } from "../../contexts/assetDataContext";
+import { StorageDataContext } from "../../contexts/storageDataContext";
 
 type Asset = {
   Asset: string;
@@ -29,6 +30,7 @@ function RiskReviewHeader() {
   const handleAddNewCrypto = () => setShowForm(true);
 
   const assetData = useContext(AssetDataContext);
+  const storageData = useContext(StorageDataContext);
 
   const handleAssetSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -39,12 +41,12 @@ function RiskReviewHeader() {
       e.currentTarget.elements.namedItem("purchaseDate") as HTMLInputElement
     ).value;
 
-    let value =
-      Number(amount) * Number(selectedAsset?.Price?.replace(/[^0-9.-]+/g, ""));
+    let storageType = (
+      e.currentTarget.elements.namedItem("storageType") as HTMLInputElement
+    ).value;
 
     if (!selectedAsset) return;
 
-    // Check if user is authenticated
     try {
       setLoading(true);
 
@@ -56,14 +58,13 @@ function RiskReviewHeader() {
 
       const uid = user.uid;
 
-      // Add new asset to user's assets collection
       await setDoc(doc(userAssetsRef), {
         amount: amount,
         asset_name: selectedAsset.Asset,
         asset_symbol: selectedAsset.Symbol,
+        storage_type: storageType,
         purchase_date: new Date(purchaseDate),
-        uid: uid,
-        value: value
+        uid: uid
       });
 
       amount = "";
@@ -88,14 +89,6 @@ function RiskReviewHeader() {
   };
 
   const showLoading = !assetData.assetData;
-
-  // <-----------ATTENTION------------>
-  // <-----------ATTENTION------------>
-
-  // If the data is cached in redis, it will return data.cache, otherwise it will return data.data
-
-  // <-----------ATTENTION------------>
-  // <-----------ATTENTION------------>
 
   return (
     <div className="flex items-center py-5 gap-8">
@@ -155,10 +148,28 @@ function RiskReviewHeader() {
                   name="asset"
                   className="w-full border rounded px-3 py-2"
                 >
-                  <option value="">Select an asset</option>
+                  <option value="">Asset</option>
                   {assetData.assetData?.map(asset => (
                     <option key={asset.Mcap} value={asset.Mcap}>
                       {asset.Asset} ({asset.Symbol})
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="mb-4">
+                <select
+                  onChange={handleAssetSelect}
+                  id="storage-select"
+                  name="storageType"
+                  className="w-full border rounded px-3 py-2"
+                >
+                  <option value="">Storage Type</option>
+                  {storageData.storageData?.map(storage => (
+                    <option
+                      key={storage.Storage_Method}
+                      value={storage.Storage_Method}
+                    >
+                      {storage.Storage_Method} ({storage.Rating})
                     </option>
                   ))}
                 </select>
@@ -191,6 +202,7 @@ function RiskReviewHeader() {
                   className="w-full border rounded px-3 py-2"
                 />
               </div>
+
               <div className="flex justify-end">
                 <button type="submit" className={`${styles.addButton}`}>
                   Add
