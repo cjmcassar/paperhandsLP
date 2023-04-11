@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Plus from "../../../public/img/dashboard/icons/plus.svg";
 import Pen from "../../../public/img/dashboard/icons/pen.svg";
 import Question from "../../../public/img/dashboard/icons/question.svg";
 import styles from "./RiskReviewHeader.module.css";
-import useSWR from "swr";
 import FAQModal from "../FAQModal";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, userAssetsRef } from "../../../utils/firebaseClient";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { AssetDataContext } from "../../../contexts/assetDataContext";
 
 type Asset = {
   Asset: string;
@@ -16,8 +16,6 @@ type Asset = {
   Mcap: string;
   Price: string;
 };
-
-const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 function RiskReviewHeader() {
   const [showForm, setShowForm] = useState(false);
@@ -28,11 +26,10 @@ function RiskReviewHeader() {
   const openFAQModal = () => setIsFAQModalOpen(true);
   const closeFAQModal = () => setIsFAQModalOpen(false);
 
-  const { data: assetData, error } = useSWR("/api/assets", fetcher);
-
   const handleAddNewCrypto = () => setShowForm(true);
 
-  //
+  const assetData = useContext(AssetDataContext);
+
   const handleAssetSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let amount = (
@@ -84,13 +81,13 @@ function RiskReviewHeader() {
   const handleAssetSelect = ({
     target: { value }
   }: React.ChangeEvent<HTMLSelectElement>) => {
-    const asset = (assetData.cache || assetData.data).find(
+    const asset = (assetData.assetData || assetData.assetData)?.find(
       (asset: Asset) => asset.Mcap === value
     );
     setSelectedAsset(asset);
   };
 
-  const showLoading = !assetData || error;
+  const showLoading = !assetData.assetData;
 
   // <-----------ATTENTION------------>
   // <-----------ATTENTION------------>
@@ -141,7 +138,7 @@ function RiskReviewHeader() {
       </div>
 
       {showForm && (
-        <div className={`${styles.showForm}`}>
+        <div className={`${styles.showForm} z-50`}>
           <div className="bg-white p-8 rounded-lg">
             <h3 className="text-xl font-medium mb-4">Add New Crypto</h3>
             <form onSubmit={handleAssetSubmit}>
@@ -159,7 +156,7 @@ function RiskReviewHeader() {
                   className="w-full border rounded px-3 py-2"
                 >
                   <option value="">Select an asset</option>
-                  {(assetData?.cache || assetData?.data)?.map(asset => (
+                  {(assetData.assetData || assetData.assetData)?.map(asset => (
                     <option key={asset.Mcap} value={asset.Mcap}>
                       {asset.Asset} ({asset.Symbol})
                     </option>
