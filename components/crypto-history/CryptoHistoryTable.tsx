@@ -21,6 +21,8 @@ const CryptoHistory: React.FC<CryptoHistoryProps> = ({ transactions }) => {
   const [dataTable, setDataTable] = useState<DataTable>();
   const [tableInitialised, setTableInitialised] = useState(false);
 
+  console.log("objectf", transactions);
+
   function initialiseTable() {
     if (!tableInitialised) {
       const dataTableSearch = new DataTable(tableRef.current, {
@@ -103,7 +105,7 @@ const CryptoHistory: React.FC<CryptoHistoryProps> = ({ transactions }) => {
         dataTable.destroy();
       }
     };
-  }, [transactions]);
+  }, [dataTable]);
 
   return (
     <>
