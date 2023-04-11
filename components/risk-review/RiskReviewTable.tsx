@@ -175,24 +175,33 @@ function RiskReviewTable() {
     dataTable!.init();
     const data: (string | number)[][] = [];
     userAssets.forEach(review => {
-      const assetDetails = assetData.assetData!.find(
-        asset => asset.Symbol === review.asset_symbol
-      );
+      if (assetData.assetData) {
+        const assetDetails = assetData.assetData.find(
+          asset => asset.Symbol === review.asset_symbol
+        );
 
-      if (assetDetails) {
-        const risk = assetDetails.Rating;
-        const riskReview = assetDetails.Asset_Review;
-        const value = assetDetails.Price;
+        if (assetDetails) {
+          const risk = assetDetails.Rating;
+          const riskReview = assetDetails.Asset_Review;
+          const priceWithoutUSD = assetDetails.Price.replace("$", "").replace(
+            ",",
+            ""
+          );
+          const priceAsNumber = parseFloat(priceWithoutUSD);
+          const value = `$${(priceAsNumber * review.amount).toFixed(2)}`;
 
-        data.push([
-          review.asset_name,
-          review.asset_symbol,
-          review.amount,
-          value,
-          review.storage_type,
-          risk,
-          riskReview
-        ]);
+          if (risk && riskReview && value) {
+            data.push([
+              review.asset_name,
+              review.asset_symbol,
+              review.amount,
+              value,
+              review.storage_type,
+              risk,
+              riskReview
+            ]);
+          }
+        }
       }
     });
 
