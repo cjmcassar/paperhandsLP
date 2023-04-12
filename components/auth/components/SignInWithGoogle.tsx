@@ -1,9 +1,11 @@
 import React from "react";
+import { useRouter } from "next/dist/client/router";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../../../utils/firebaseClient";
-import styles from "./SignInWithGoogle.module.css";
 
-import { useRouter } from "next/dist/client/router";
+import styles from "./SignInWithGoogle.module.css";
 
 interface LoginButtonProps {
   providerName: string;
@@ -25,7 +27,8 @@ const SignInWithGoogle: React.FC<LoginButtonProps> = ({ providerName }) => {
 
   return (
     <button className={styles.signInWithGoogle} onClick={handleLogin}>
-      Login with {providerName}
+      <FontAwesomeIcon icon={faGoogle} /> {""}
+      Sign in with {providerName}
     </button>
   );
 };

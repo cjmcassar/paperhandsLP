@@ -1,9 +1,5 @@
-import React, { useEffect, useState } from "react";
-import {
-  createUserWithEmailAndPassword,
-  getAuth,
-  signInWithEmailAndPassword
-} from "firebase/auth";
+import React, { useState } from "react";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import SignInWithGoogle from "./SignInWithGoogle";
 import SignUpFormModal from "./SignUpFormModal";
 import styles from "./LoginFormModal.module.css";
@@ -101,20 +97,21 @@ const LoginFormModal: React.FC<LoginFormModalProps> = ({ onClose }) => {
             type="submit"
             className={`${styles.submitButton} bg-primary `}
           >
-            Login with email
+            🪵 Login
           </button>
 
-          <div className="mt-4">
-            <SignInWithGoogle providerName="Google" />
-          </div>
-
           <button
+            type="button"
             className={`${styles.submitButton} bg-dark mt-4`}
             onClick={onClose}
           >
-            Cancel
+            🚶🏽‍♂️ Cancel
           </button>
         </form>
+        <Divider />
+        <div className="mt-4">
+          <SignInWithGoogle providerName="Google" />
+        </div>
         <button
           className="text-blue-500 hover:text-blue-700 focus:outline-none mt-4"
           onClick={handleSignUpClick}

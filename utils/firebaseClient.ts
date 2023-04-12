@@ -32,7 +32,6 @@ getDocs(userAssetsRef).then(snapshot => {
   snapshot.docs.forEach(doc => {
     assets.push({ ...doc.data(), id: doc.id });
   });
-  console.log(assets);
-  
+  // console.log(assets);
 });
 export { app, auth, db, userAssetsRef };

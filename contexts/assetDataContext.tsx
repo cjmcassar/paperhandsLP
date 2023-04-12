@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 import useSWR from "swr";
 
 // Define the AssetData type
@@ -7,6 +7,9 @@ type AssetData = {
   Symbol: string;
   Mcap: string;
   Price: string;
+  Asset_Recommendation: string;
+  Asset_Review: string;
+  Rating: string;
 };
 
 // Define the context type

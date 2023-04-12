@@ -1,14 +1,24 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where
+} from "firebase/firestore";
+import { auth, db } from "../../utils/firebaseClient";
+import { AssetDataContext } from "../../contexts/assetDataContext";
+import { StorageDataContext } from "../../contexts/storageDataContext";
+
 import Plus from "../../public/img/dashboard/icons/plus.svg";
 import Pen from "../../public/img/dashboard/icons/pen.svg";
 import Question from "../../public/img/dashboard/icons/question.svg";
 import styles from "./RiskReviewHeader.module.css";
 import FAQModal from "../dashboard/FAQModal";
-import { doc, setDoc } from "firebase/firestore";
-import { auth, userAssetsRef } from "../../utils/firebaseClient";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { AssetDataContext } from "../../contexts/assetDataContext";
 
 type Asset = {
   Asset: string;
@@ -17,11 +27,21 @@ type Asset = {
   Price: string;
 };
 
+type UserAsset = {
+  amount: string;
+  asset_name: string;
+  asset_symbol: string;
+  storage_type: string;
+  purchase_date: Date;
+  uid: string;
+};
+
 function RiskReviewHeader() {
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
   const [isFAQModalOpen, setIsFAQModalOpen] = useState(false);
+  const [selectedStorageType, setSelectedStorageType] = useState("");
 
   const openFAQModal = () => setIsFAQModalOpen(true);
   const closeFAQModal = () => setIsFAQModalOpen(false);
@@ -29,6 +49,7 @@ function RiskReviewHeader() {
   const handleAddNewCrypto = () => setShowForm(true);
 
   const assetData = useContext(AssetDataContext);
+  const storageData = useContext(StorageDataContext);
 
   const handleAssetSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -39,12 +60,8 @@ function RiskReviewHeader() {
       e.currentTarget.elements.namedItem("purchaseDate") as HTMLInputElement
     ).value;
 
-    let value =
-      Number(amount) * Number(selectedAsset?.Price?.replace(/[^0-9.-]+/g, ""));
-
     if (!selectedAsset) return;
 
-    // Check if user is authenticated
     try {
       setLoading(true);
 
@@ -55,16 +72,35 @@ function RiskReviewHeader() {
       }
 
       const uid = user.uid;
+      const userAssetsQuery = query(
+        collection(db, "user_assets"),
+        where("uid", "==", uid),
+        where("asset_symbol", "==", selectedAsset.Symbol),
+        where("storage_type", "==", selectedStorageType)
+      );
 
-      // Add new asset to user's assets collection
-      await setDoc(doc(userAssetsRef), {
-        amount: amount,
-        asset_name: selectedAsset.Asset,
-        asset_symbol: selectedAsset.Symbol,
-        purchase_date: new Date(purchaseDate),
-        uid: uid,
-        value: value
-      });
+      const querySnapshot = await getDocs(userAssetsQuery);
+      if (!querySnapshot.empty) {
+        // Asset is present with the same storage type
+        const assetDoc = querySnapshot.docs[0];
+        const assetData = assetDoc.data() as UserAsset;
+
+        // Update the amount
+        const updatedAmount = parseFloat(amount) + parseFloat(assetData.amount);
+        await updateDoc(doc(db, "user_assets", assetDoc.id), {
+          amount: updatedAmount.toString()
+        });
+      } else {
+        // Asset is not present or has a different storage type, add a new document
+        await addDoc(collection(db, "user_assets"), {
+          amount: amount,
+          asset_name: selectedAsset.Asset,
+          asset_symbol: selectedAsset.Symbol,
+          storage_type: selectedStorageType,
+          purchase_date: new Date(purchaseDate),
+          uid: uid
+        });
+      }
 
       amount = "";
       purchaseDate = "";
@@ -85,17 +121,16 @@ function RiskReviewHeader() {
       (asset: Asset) => asset.Mcap === value
     );
     setSelectedAsset(asset);
+    // console.log("Selected Asset: ", asset);
+  };
+
+  const handleStorageTypeSelect = ({
+    target: { value }
+  }: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedStorageType(value);
   };
 
   const showLoading = !assetData.assetData;
-
-  // <-----------ATTENTION------------>
-  // <-----------ATTENTION------------>
-
-  // If the data is cached in redis, it will return data.cache, otherwise it will return data.data
-
-  // <-----------ATTENTION------------>
-  // <-----------ATTENTION------------>
 
   return (
     <div className="flex items-center py-5 gap-8">
@@ -155,10 +190,28 @@ function RiskReviewHeader() {
                   name="asset"
                   className="w-full border rounded px-3 py-2"
                 >
-                  <option value="">Select an asset</option>
+                  <option value="">Asset</option>
                   {assetData.assetData?.map(asset => (
                     <option key={asset.Mcap} value={asset.Mcap}>
                       {asset.Asset} ({asset.Symbol})
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="mb-4">
+                <select
+                  onChange={handleStorageTypeSelect}
+                  id="storage-select"
+                  name="storageType"
+                  className="w-full border rounded px-3 py-2"
+                >
+                  <option value="">Storage Type</option>
+                  {storageData.storageData?.map(storage => (
+                    <option
+                      key={storage.Storage_Method}
+                      value={storage.Storage_Method}
+                    >
+                      {storage.Storage_Method} ({storage.Rating})
                     </option>
                   ))}
                 </select>
@@ -191,6 +244,7 @@ function RiskReviewHeader() {
                   className="w-full border rounded px-3 py-2"
                 />
               </div>
+
               <div className="flex justify-end">
                 <button type="submit" className={`${styles.addButton}`}>
                   Add
