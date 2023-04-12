@@ -118,6 +118,9 @@ function RiskReviewTable() {
     }
   ];
 
+  const [showForm, setShowForm] = useState(false);
+  const [editPortfolioData, setEditPortfolioData] = useState(null);
+
   const [tableInitialised, setTableInitialised] = useState(false);
   const [dataTable, setDataTable] = useState(null);
 
@@ -136,7 +139,7 @@ function RiskReviewTable() {
         dataTable.destroy();
       }
     };
-  }, [riskReviews]);
+  }, [dataTable]);
 
   function intialiseTable() {
     if (!tableInitialised) {
@@ -227,6 +230,12 @@ function RiskReviewTable() {
 
               return output;
             }
+          },
+          {
+            select: 9,
+            render: function (assetId) {
+              return `<button class="bg-[#4b5563] text-white shadow-sm text-sm py-1 px-3 rounded-full" data-assetId=${assetId[0].data}>Edit</button>`;
+            }
           }
         ]
       });
@@ -249,11 +258,29 @@ function RiskReviewTable() {
         review.storage,
         review.risk,
         review.riskReview,
-        review.riskRecommendations.join(",")
+        review.riskRecommendations.join(","),
+        review.id
       ]);
     });
 
     dataTable.insert({ data: data });
+
+    // Edit button event listener
+    dataTable.dom.addEventListener("click", e => {
+      // if coming from asset edit button
+
+      if (e.target.getAttribute("data-assetId")) {
+        setShowForm(true);
+        let id = e.target.getAttribute("data-assetId");
+
+        // TODO: Get asset details by id from firebase/context
+        // TODO: Set editPortfolioData to asset details to show on the modal
+        console.log("assetId", id);
+        let asset = riskReviews.find(asset => asset.id == id);
+        console.log("object,", asset);
+        setEditPortfolioData(asset);
+      }
+    });
   }
 
   return (
@@ -310,9 +337,74 @@ function RiskReviewTable() {
               <th>Risk</th>
               <th>Risk Review</th>
               <th>Risk Recommendations</th>
+              <th>Actions</th>
             </tr>
           </thead>
         </table>
+      </div>
+      <div>
+        {showForm && (
+          <div className={`${styles.showForm} z-50`}>
+            <div className="bg-white p-8 rounded-lg">
+              <div className="flex justify-between gap-5 items-center mb-4">
+                <h3 className="text-xl font-medium">Edit Asset Details</h3>
+                <button className="bg-danger text-white py-2 px-4 rounded-lg">
+                  Delete
+                </button>
+              </div>
+              <form>
+                <div className="mb-4">
+                  <label
+                    htmlFor="amount-input"
+                    className="block text-gray-700 font-medium mb-2"
+                  >
+                    Amount Owned
+                  </label>
+                  <input
+                    type="number"
+                    id="amount-input"
+                    value={editPortfolioData?.amount}
+                    onChange={e => {
+                      setEditPortfolioData({
+                        ...editPortfolioData,
+                        amount: e.target.value
+                      });
+                    }}
+                    name="amount"
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label
+                    htmlFor="date-picker"
+                    className="block text-gray-700 font-medium mb-2"
+                  >
+                    Purchase Date
+                  </label>
+                  <input
+                    type="date"
+                    id="date-picker"
+                    value={editPortfolioData?.purchaseDate}
+                    name="purchaseDate"
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <button
+                    type="button"
+                    className={`${styles.cancelButton} hover:bg-opacity-80`}
+                    onClick={() => setShowForm(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button type="submit" className={`${styles.addButton}`}>
+                    Update
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
