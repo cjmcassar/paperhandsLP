@@ -121,7 +121,7 @@ function RiskReviewHeader() {
       (asset: Asset) => asset.Mcap === value
     );
     setSelectedAsset(asset);
-    console.log("Selected Asset: ", asset);
+    // console.log("Selected Asset: ", asset);
   };
 
   const handleStorageTypeSelect = ({
