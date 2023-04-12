@@ -1,5 +1,3 @@
-import { IconDefinition, IconProp } from "@fortawesome/fontawesome-svg-core";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useRouter } from "next/dist/client/router";
 
