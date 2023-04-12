@@ -4,8 +4,16 @@ import Pen from "../../public/img/dashboard/icons/pen.svg";
 import Question from "../../public/img/dashboard/icons/question.svg";
 import styles from "./RiskReviewHeader.module.css";
 import FAQModal from "../dashboard/FAQModal";
-import { doc, setDoc } from "firebase/firestore";
-import { auth, userAssetsRef } from "../../utils/firebaseClient";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where
+} from "firebase/firestore";
+import { auth, db } from "../../utils/firebaseClient";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { AssetDataContext } from "../../contexts/assetDataContext";
@@ -16,6 +24,15 @@ type Asset = {
   Symbol: string;
   Mcap: string;
   Price: string;
+};
+
+type UserAsset = {
+  amount: string;
+  asset_name: string;
+  asset_symbol: string;
+  storage_type: string;
+  purchase_date: Date;
+  uid: string;
 };
 
 function RiskReviewHeader() {
@@ -57,15 +74,35 @@ function RiskReviewHeader() {
       }
 
       const uid = user.uid;
+      const userAssetsQuery = query(
+        collection(db, "user_assets"),
+        where("uid", "==", uid),
+        where("asset_symbol", "==", selectedAsset.Symbol),
+        where("storage_type", "==", storageType)
+      );
 
-      await setDoc(doc(userAssetsRef), {
-        amount: amount,
-        asset_name: selectedAsset.Asset,
-        asset_symbol: selectedAsset.Symbol,
-        storage_type: storageType,
-        purchase_date: new Date(purchaseDate),
-        uid: uid
-      });
+      const querySnapshot = await getDocs(userAssetsQuery);
+      if (!querySnapshot.empty) {
+        // Asset is present with the same storage type
+        const assetDoc = querySnapshot.docs[0];
+        const assetData = assetDoc.data() as UserAsset;
+
+        // Update the amount
+        const updatedAmount = parseFloat(amount) + parseFloat(assetData.amount);
+        await updateDoc(doc(db, "user_assets", assetDoc.id), {
+          amount: updatedAmount.toString()
+        });
+      } else {
+        // Asset is not present or has a different storage type, add a new document
+        await addDoc(collection(db, "user_assets"), {
+          amount: amount,
+          asset_name: selectedAsset.Asset,
+          asset_symbol: selectedAsset.Symbol,
+          storage_type: storageType,
+          purchase_date: new Date(purchaseDate),
+          uid: uid
+        });
+      }
 
       amount = "";
       purchaseDate = "";
