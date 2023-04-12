@@ -37,7 +37,7 @@ function RiskReviewTable() {
     };
 
     fetchAssets();
-  }, [user]);
+  }, [userAssets]);
 
   const fetchUserAssets = async () => {
     if (!user) return [];
@@ -71,7 +71,7 @@ function RiskReviewTable() {
         dataTable.destroy();
       }
     };
-  }, [userAssets]);
+  }, [userAssets, dataTable]);
 
   function intialiseTable() {
     if (!tableInitialised) {
