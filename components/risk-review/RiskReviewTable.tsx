@@ -1,127 +1,62 @@
-import React, { useEffect, useRef, useState } from "react";
-import styles from "./RiskReviewTable.module.css";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { DataTable } from "simple-datatables";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
+
+import { auth, db } from "../../utils/firebaseClient";
+import { AssetDataContext } from "../../contexts/assetDataContext";
+import styles from "./RiskReviewTable.module.css";
+
+// 2. Update firebase rules to allows users to only read their own data
+
+// TODO: Refactor code to seperate into smaller components
+
+interface UserAsset {
+  uid: string;
+  asset_name: string;
+  asset_symbol: string;
+  amount: number;
+  storage_type: string;
+}
 
 function RiskReviewTable() {
-  const riskReviews = [
-    {
-      id: 1,
-      asset: "Bitcoin",
-      symbol: "BTC",
-      amount: "0.5",
-      value: "$11,443",
-      share: "41.6%",
-      storage: "Ledger Nano X",
-      risk: "Safe",
-      riskReview:
-        "Your Bitcoin assets are historically safe when using Ledger Nano X as the storage method.",
-      riskRecommendations: [
-        "No recommendations.",
-        "Your crypto is well-preserved & historically safe."
-      ]
-    },
-    {
-      id: 2,
-      asset: "Bitcoin",
-      symbol: "BTC",
-      amount: "0.2",
-      value: "$4,577",
-      share: "16.6%",
-      storage: "Ledger Nano X",
-      risk: "Safe",
-      riskReview:
-        "Your Bitcoin assets are historically safe when using Ledger Nano X as the storage method.",
-      riskRecommendations: [
-        "No recommendations.",
-        "Your crypto is well-preserved & historically safe."
-      ]
-    },
-    {
-      id: 3,
-      asset: "Binance Coin",
-      symbol: "BNB",
-      amount: "8",
-      value: "$2,486",
-      share: "9%",
-      storage: "Trezor",
-      risk: "Low Risk",
-      color: "#D1D369",
-      riskReview:
-        "Binance Coin is a low risk asset, while Trezor is a historically safe storage method.",
-      riskRecommendations: [
-        "No recommendations.",
-        "Your crypto is well-preserved & historically safe."
-      ]
-    },
-    {
-      id: 4,
-      asset: "Dogecoin",
-      symbol: "DOGE",
-      amount: "15000",
-      value: "$1,320",
-      share: "4.8%",
-      storage: "Coinbase",
-      risk: "Medium Risk",
-      riskReview:
-        "Dogecoin is a medium risk asset, while Coinbase is a medium risk storage method.",
-      riskRecommendations: [
-        "Cold wallets are the safest way to store your crypto over time.",
-        "Consider purchasing a Ledger or Trezor",
-        "Consider investing in less risky assets."
-      ]
-    },
-    {
-      id: 5,
-      asset: "Dopex",
-      symbol: "DPX",
-      amount: "15",
-      value: "$4,509",
-      share: "16.4%",
-      storage: "Kraken",
-      risk: "High Risk",
-      riskReview:
-        "Dopex is a high risk asset, while Kraken is a high risk storage method.",
-      riskRecommendations: [
-        "Cold wallets are the safest way to store your crypto over time.",
-        "Consider purchasing a Ledger or Trezor",
-        "Consider investing in less risky assets."
-      ]
-    },
-    {
-      id: 6,
-      asset: "TRON",
-      symbol: "TRX",
-      amount: "3000",
-      value: "$180",
-      share: "0.7%",
-      storage: "Armory",
-      risk: "Low Risk",
-      riskReview:
-        "TRON is a low risk asset, while Armory is a low risk storage method.",
-      riskRecommendations: [
-        "No recommendations.",
-        "Your crypto is well-preserved & historically safe."
-      ]
-    },
-    {
-      id: 7,
-      asset: "Dopex",
-      symbol: "DPX",
-      amount: "10",
-      value: "$3,006",
-      share: "10.9%",
-      storage: "Ledger Nano X",
-      risk: "High Risk",
-      riskReview:
-        "Dopex is a high risk asset, while Ledger Nano X is a historically safe storage method.",
-      riskRecommendations: ["Consider investing in less risky assets."]
-    }
-  ];
+  const [user] = useAuthState(auth);
+  const assetData = useContext(AssetDataContext);
+  const tableRef = useRef<HTMLTableElement | null>(null);
 
+  const [userAssets, setUserAssets] = useState<UserAsset[]>([]);
   const [tableInitialised, setTableInitialised] = useState(false);
-  const [dataTable, setDataTable] = useState(null);
+  const [dataTable, setDataTable] = useState<DataTable | null>(null);
 
-  const tableRef = useRef(null);
+  // Fetch and set user assets
+
+  useEffect(() => {
+    const fetchAssets = async () => {
+      const assets = await fetchUserAssets();
+      setUserAssets(assets);
+    };
+
+    fetchAssets();
+  }, [userAssets]);
+
+  const fetchUserAssets = async () => {
+    if (!user) return [];
+
+    const userAssets: UserAsset[] = [];
+    const userAssetsQuery = query(
+      collection(db, "user_assets"),
+      where("uid", "==", user.uid)
+    );
+
+    const querySnapshot = await getDocs(userAssetsQuery);
+    querySnapshot.forEach(doc => {
+      userAssets.push(doc.data() as UserAsset);
+    });
+
+    return userAssets;
+  };
+
+  // Initialize and populate the data table
 
   useEffect(() => {
     if (!tableInitialised) {
@@ -136,11 +71,11 @@ function RiskReviewTable() {
         dataTable.destroy();
       }
     };
-  }, [riskReviews]);
+  }, [userAssets, dataTable]);
 
   function intialiseTable() {
     if (!tableInitialised) {
-      const dataTableSearch = new DataTable(tableRef.current, {
+      const dataTableSearch = new DataTable(tableRef.current!, {
         searchable: true,
         fixedHeight: false,
         columns: [
@@ -236,24 +171,41 @@ function RiskReviewTable() {
   }
 
   function populateTable() {
-    dataTable.destroy();
-    dataTable.init();
-    const data = [];
-    riskReviews.forEach(review => {
-      data.push([
-        review.asset,
-        review.symbol,
-        review.amount,
-        review.value,
-        review.share,
-        review.storage,
-        review.risk,
-        review.riskReview,
-        review.riskRecommendations.join(",")
-      ]);
+    dataTable!.destroy();
+    dataTable!.init();
+    const data: (string | number)[][] = [];
+    userAssets.forEach(review => {
+      if (assetData.assetData) {
+        const assetDetails = assetData.assetData.find(
+          asset => asset.Symbol === review.asset_symbol
+        );
+
+        if (assetDetails) {
+          const risk = assetDetails.Rating;
+          const riskReview = assetDetails.Asset_Review;
+          const priceWithoutUSD = assetDetails.Price.replace("$", "").replace(
+            ",",
+            ""
+          );
+          const priceAsNumber = parseFloat(priceWithoutUSD);
+          const value = `$${(priceAsNumber * review.amount).toFixed(2)}`;
+
+          if (risk && riskReview && value) {
+            data.push([
+              review.asset_name,
+              review.asset_symbol,
+              review.amount,
+              value,
+              review.storage_type,
+              risk,
+              riskReview
+            ]);
+          }
+        }
+      }
     });
 
-    dataTable.insert({ data: data });
+    dataTable!.insert({ data: data });
   }
 
   return (
@@ -305,11 +257,9 @@ function RiskReviewTable() {
               <th>Symbol</th>
               <th>Amount</th>
               <th>Value</th>
-              <th>Share</th>
               <th>Storage</th>
               <th>Risk</th>
               <th>Risk Review</th>
-              <th>Risk Recommendations</th>
             </tr>
           </thead>
         </table>
