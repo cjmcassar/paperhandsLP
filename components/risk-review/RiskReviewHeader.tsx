@@ -1,9 +1,6 @@
 import React, { useContext, useState } from "react";
-import Plus from "../../public/img/dashboard/icons/plus.svg";
-import Pen from "../../public/img/dashboard/icons/pen.svg";
-import Question from "../../public/img/dashboard/icons/question.svg";
-import styles from "./RiskReviewHeader.module.css";
-import FAQModal from "../dashboard/FAQModal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import {
   addDoc,
   collection,
@@ -14,10 +11,14 @@ import {
   where
 } from "firebase/firestore";
 import { auth, db } from "../../utils/firebaseClient";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { AssetDataContext } from "../../contexts/assetDataContext";
 import { StorageDataContext } from "../../contexts/storageDataContext";
+
+import Plus from "../../public/img/dashboard/icons/plus.svg";
+import Pen from "../../public/img/dashboard/icons/pen.svg";
+import Question from "../../public/img/dashboard/icons/question.svg";
+import styles from "./RiskReviewHeader.module.css";
+import FAQModal from "../dashboard/FAQModal";
 
 type Asset = {
   Asset: string;
@@ -40,6 +41,7 @@ function RiskReviewHeader() {
   const [loading, setLoading] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
   const [isFAQModalOpen, setIsFAQModalOpen] = useState(false);
+  const [selectedStorageType, setSelectedStorageType] = useState("");
 
   const openFAQModal = () => setIsFAQModalOpen(true);
   const closeFAQModal = () => setIsFAQModalOpen(false);
@@ -58,10 +60,6 @@ function RiskReviewHeader() {
       e.currentTarget.elements.namedItem("purchaseDate") as HTMLInputElement
     ).value;
 
-    let storageType = (
-      e.currentTarget.elements.namedItem("storageType") as HTMLInputElement
-    ).value;
-
     if (!selectedAsset) return;
 
     try {
@@ -78,7 +76,7 @@ function RiskReviewHeader() {
         collection(db, "user_assets"),
         where("uid", "==", uid),
         where("asset_symbol", "==", selectedAsset.Symbol),
-        where("storage_type", "==", storageType)
+        where("storage_type", "==", selectedStorageType)
       );
 
       const querySnapshot = await getDocs(userAssetsQuery);
@@ -98,7 +96,7 @@ function RiskReviewHeader() {
           amount: amount,
           asset_name: selectedAsset.Asset,
           asset_symbol: selectedAsset.Symbol,
-          storage_type: storageType,
+          storage_type: selectedStorageType,
           purchase_date: new Date(purchaseDate),
           uid: uid
         });
@@ -123,6 +121,13 @@ function RiskReviewHeader() {
       (asset: Asset) => asset.Mcap === value
     );
     setSelectedAsset(asset);
+    console.log("Selected Asset: ", asset);
+  };
+
+  const handleStorageTypeSelect = ({
+    target: { value }
+  }: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedStorageType(value);
   };
 
   const showLoading = !assetData.assetData;
@@ -195,7 +200,7 @@ function RiskReviewHeader() {
               </div>
               <div className="mb-4">
                 <select
-                  onChange={handleAssetSelect}
+                  onChange={handleStorageTypeSelect}
                   id="storage-select"
                   name="storageType"
                   className="w-full border rounded px-3 py-2"
