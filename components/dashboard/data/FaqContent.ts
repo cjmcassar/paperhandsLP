@@ -7,7 +7,7 @@ const faqContent = [
   {
     question: "How do I get started with Paperhands?",
     answer:
-      "To get started, simply create an account with Paperhands, connect your supported exchange accounts or wallets, and our platform will automatically track your portfolio and provide risk management insights."
+      "To get started, simply create an account with Paperhands, input your crypto assets and your storage method, and our platform will automatically track your portfolio and provide risk management insights."
   },
   {
     question: "Which cryptocurrencies does Paperhands support?",
@@ -28,16 +28,6 @@ const faqContent = [
     question: "Which exchanges and wallets are supported by Paperhands?",
     answer:
       "Paperhands supports a variety of popular cryptocurrency exchanges and wallets. For an up-to-date list of supported platforms, please refer to our documentation or contact our support team."
-  },
-  {
-    question: "How much does Paperhands cost?",
-    answer:
-      "Paperhands offers different pricing plans to suit the needs of various users, from casual investors to professional traders. Please visit our pricing page for more information on our available plans and their respective features."
-  },
-  {
-    question: "Do you have a mobile app?",
-    answer:
-      "Yes, Paperhands offers a mobile app for both iOS and Android devices. You can download the app from the App Store or Google Play Store and access your portfolio and risk management tools on-the-go."
   }
 ];
 
