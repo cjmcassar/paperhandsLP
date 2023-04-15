@@ -5,7 +5,9 @@ import { useAuthState } from "react-firebase-hooks/auth";
 
 import { auth, db } from "../../utils/firebaseClient";
 import { AssetDataContext } from "../../contexts/assetDataContext";
+import { StorageDataContext } from "contexts/storageDataContext";
 import styles from "./RiskReviewTable.module.css";
+import { format, fromUnixTime } from "date-fns";
 
 interface UserAsset {
   uid: string;
@@ -18,6 +20,7 @@ interface UserAsset {
 function RiskReviewTable() {
   const [user] = useAuthState(auth);
   const assetData = useContext(AssetDataContext);
+  const storageData = useContext(StorageDataContext);
   const tableRef = useRef<HTMLTableElement | null>(null);
 
   const [userAssets, setUserAssets] = useState<UserAsset[]>([]);
@@ -74,7 +77,6 @@ function RiskReviewTable() {
     };
   }, [dataTable, userAssets, assetData]);
 
-
   function intialiseTable() {
     if (!tableInitialised) {
       const dataTableSearch = new DataTable(tableRef.current!, {
@@ -107,18 +109,12 @@ function RiskReviewTable() {
           },
           {
             select: 4,
-            render: function (share) {
-              return `<span class=" text-white my-2 text-xs 2xl:text-sm"> ${share[0].data}</span>`;
-            }
-          },
-          {
-            select: 5,
             render: function (storage) {
               return `<span class=" text-white my-2 text-xs 2xl:text-sm"> ${storage[0].data}</span>`;
             }
           },
           {
-            select: 6,
+            select: 5,
             render: function (riskLevel) {
               let color: string;
               switch (riskLevel[0].data) {
@@ -145,28 +141,28 @@ function RiskReviewTable() {
             }
           },
           {
-            select: 7,
+            select: 6,
             render: function (riskReview) {
               return `<span class=" text-white my-2 text-xs 2xl:text-sm"> ${riskReview[0].data}</span>`;
             }
           },
-          {
-            select: 8,
-            render: function (riskRecommendations) {
-              const recommendations = riskRecommendations[0].data.split(",");
+          // {
+          //   select: 7,
+          //   render: function (riskRecommendations) {
+          //     const recommendations = riskRecommendations[0].data.split(",");
 
-              let output = `<div>`;
-              recommendations.forEach(
-                (recommendation: string) =>
-                  (output += `<p class=" text-white my-2 text-xs 2xl:text-sm"> ${recommendation}</p>`)
-              );
-              output += `</div>`;
+          //     let output = `<div>`;
+          //     recommendations.forEach(
+          //       (recommendation: string) =>
+          //         (output += `<p class=" text-white my-2 text-xs 2xl:text-sm"> ${recommendation}</p>`)
+          //     );
+          //     output += `</div>`;
 
-              return output;
-            }
-          },
+          //     return output;
+          //   }
+          // },
           {
-            select: 9,
+            select: 7,
             render: function (assetId) {
               return `<button class="bg-[#4b5563] text-white shadow-sm text-sm py-1 px-3 rounded-full" data-assetId=${assetId[0].data}>Edit</button>`;
             }
@@ -179,7 +175,6 @@ function RiskReviewTable() {
   }
 
   function populateTable() {
-
     dataTable!.destroy();
     dataTable!.init();
     const data: (string | number)[][] = [];
@@ -198,7 +193,7 @@ function RiskReviewTable() {
           );
           const priceAsNumber = parseFloat(priceWithoutUSD);
           const value = `$${(priceAsNumber * review.amount).toFixed(2)}`;
-
+          console.log("revie", review);
           if (risk && riskReview && value) {
             data.push([
               review.asset_name,
@@ -207,7 +202,8 @@ function RiskReviewTable() {
               value,
               review.storage_type,
               risk,
-              riskReview
+              riskReview,
+              review.uid
             ]);
           }
         }
@@ -215,6 +211,21 @@ function RiskReviewTable() {
     });
 
     dataTable!.insert({ data: data });
+
+    // Edit button event listener
+    dataTable.dom.addEventListener("click", e => {
+      // if coming from asset edit button
+      if (e.target.getAttribute("data-assetId")) {
+        setShowForm(true);
+        let uid = e.target.getAttribute("data-assetId");
+
+        // TODO: Get asset details by id from firebase/context
+        // TODO: Set editPortfolioData to asset details to show on the modal
+        let userAsset = userAssets.find(asset => asset.uid == uid);
+        console.log("object,", userAsset);
+        setEditPortfolioData(userAsset);
+      }
+    });
   }
 
   return (
@@ -269,22 +280,66 @@ function RiskReviewTable() {
               <th>Storage</th>
               <th>Risk</th>
               <th>Risk Review</th>
-
+              <th>Actions</th>
             </tr>
           </thead>
         </table>
       </div>
       <div>
         {showForm && (
-          <div className={`${styles.showForm} z-50`}>
-            <div className="bg-white p-8 rounded-lg">
-              <div className="flex justify-between gap-5 items-center mb-4">
-                <h3 className="text-xl font-medium">Edit Asset Details</h3>
-                <button className="bg-danger text-white py-2 px-4 rounded-lg">
+          <div className={`${styles.showForm} z-50 `}>
+            <div className="bg-white p-8 rounded-lg w-5/12">
+              <div className="flex justify-between items-center gap-5 mb-4">
+                <h3 className="text-xl font-medium">Update Crypto</h3>
+                <button className="bg-danger text-white px-4 py-2 rounded-lg">
                   Delete
                 </button>
               </div>
               <form>
+                {/* <pre>{JSON.stringify(editPortfolioData)}</pre> */}
+                <div className="mb-4">
+                  <label
+                    htmlFor="asset-select"
+                    className="block text-gray-700 font-medium mb-2"
+                  >
+                    Asset
+                  </label>
+                  <select
+                    disabled={true}
+                    id="asset-select"
+                    name="asset"
+                    className="w-full border rounded px-3 py-2"
+                  >
+                    <option selected disabled={true}>
+                      {editPortfolioData?.asset_name}
+                    </option>
+                  </select>
+                </div>
+                <div className="mb-4">
+                  <label
+                    htmlFor="asset-select"
+                    className="block text-gray-700 font-medium mb-2"
+                  >
+                    Storage Type
+                  </label>
+                  <select
+                    id="storage-select"
+                    name="storageType"
+                    className="w-full border rounded px-3 py-2"
+                  >
+                    <option value={editPortfolioData?.storage_type} selected>
+                      {editPortfolioData?.storage_type}
+                    </option>
+                    {storageData?.storageData?.map(storage => (
+                      <option
+                        key={storage.Storage_Method}
+                        value={storage.Storage_Method}
+                      >
+                        {storage.Storage_Method} ({storage.Rating})
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 <div className="mb-4">
                   <label
                     htmlFor="amount-input"
@@ -295,6 +350,7 @@ function RiskReviewTable() {
                   <input
                     type="number"
                     id="amount-input"
+                    name="amount"
                     value={editPortfolioData?.amount}
                     onChange={e => {
                       setEditPortfolioData({
@@ -302,7 +358,6 @@ function RiskReviewTable() {
                         amount: e.target.value
                       });
                     }}
-                    name="amount"
                     className="w-full border rounded px-3 py-2"
                   />
                 </div>
@@ -316,21 +371,28 @@ function RiskReviewTable() {
                   <input
                     type="date"
                     id="date-picker"
-                    value={editPortfolioData?.purchaseDate}
+                    value={
+                      editPortfolioData &&
+                      format(
+                        fromUnixTime(editPortfolioData?.purchase_date.seconds),
+                        "yyyy-MM-dd"
+                      )
+                    }
                     name="purchaseDate"
                     className="w-full border rounded px-3 py-2"
                   />
                 </div>
-                <div className="flex justify-end gap-2">
+
+                <div className="flex justify-end">
+                  <button type="submit" className={`${styles.addButton}`}>
+                    Update
+                  </button>
                   <button
                     type="button"
                     className={`${styles.cancelButton} hover:bg-opacity-80`}
                     onClick={() => setShowForm(false)}
                   >
                     Cancel
-                  </button>
-                  <button type="submit" className={`${styles.addButton}`}>
-                    Update
                   </button>
                 </div>
               </form>
