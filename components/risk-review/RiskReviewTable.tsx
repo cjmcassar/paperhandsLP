@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { DataTable } from "simple-datatables";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { doc, deleteDoc } from "firebase/firestore";
+import { doc, deleteDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../utils/firebaseClient";
 import { AssetDataContext } from "../../contexts/assetDataContext";
 import { StorageDataContext } from "contexts/storageDataContext";
@@ -238,6 +238,25 @@ function RiskReviewTable() {
       }
     });
   }
+
+  const assetUpdate = e => {
+    e.preventDefault();
+    const docRef = doc(db, "user_assets", editPortfolioData?.id);
+    updateDoc(docRef, {
+      // asset_name: editPortfolioData?.asset_name,
+      amount: editPortfolioData?.amount,
+      storage_type: editPortfolioData?.storage_type,
+      purchase_date: new Date(editPortfolioData?.purchase_date)
+    })
+      .then(() => {
+        setShowForm(false);
+        setEditPortfolioData(null);
+        console.log("Document successfully updated!");
+      })
+      .catch(error => {
+        console.error("Error updating document: ", error);
+      });
+  };
 
   const assetDelete = e => {
     const docRef = doc(db, "user_assets", editPortfolioData?.id);
