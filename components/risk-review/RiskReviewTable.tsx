@@ -381,9 +381,6 @@ function RiskReviewTable() {
                         });
                       }}
                     >
-                      <option value={editPortfolioData?.storage_type}>
-                        {editPortfolioData?.storage_type}
-                      </option>
                       {storageData?.storageData?.map(storage => (
                         <option
                           key={storage.Storage_Method}
