@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -94,13 +94,28 @@ function NavigationFooter() {
 }
 
 export default function Sidebar() {
-  const [collapseShow, setCollapseShow] = useState("hidden");
+  const [collapseShow, setCollapseShow] = useState(false);
 
   const toggleCollapse = () => {
-    setCollapseShow(prevCollapseShow =>
-      prevCollapseShow === "hidden" ? "visible" : "hidden"
-    );
+    setCollapseShow(!collapseShow);
   };
+
+  const handleClickOutside = event => {
+    if (
+      collapseShow &&
+      !event.target.closest(`.${styles.sidebar}`) &&
+      !event.target.closest(`.${styles.toggler}`)
+    ) {
+      setCollapseShow(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [collapseShow]);
 
   return (
     <>
@@ -108,22 +123,23 @@ export default function Sidebar() {
         <div className={styles.container}>
           <Toggler onClick={toggleCollapse} />
           <Brand />
-          {/* Collapse */}
           <div
             className={`${styles.collapse} ${
-              collapseShow === "hidden" ? styles.hidden : ""
+              collapseShow ? styles.visible : styles.drawer
             } ${styles.collapseShadow} bg-darkGrey `}
           >
             <NavigationItems />
             <NavigationFooter />
-            <CollapseHeader
-              onClose={() => {
-                setCollapseShow("hidden");
-              }}
-            />
           </div>
         </div>
       </nav>
+      <style jsx>{`
+        @media (min-width: 768px) {
+          .${styles.collapse} {
+            transform: none;
+          }
+        }
+      `}</style>
     </>
   );
 }
