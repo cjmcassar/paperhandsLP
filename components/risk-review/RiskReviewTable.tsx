@@ -59,7 +59,6 @@ function RiskReviewTable() {
   useEffect(() => {
     if (!tableInitialised) {
       intialiseTable();
-      setTableInitialised(true);
     } else {
       populateTable();
     }
@@ -69,7 +68,7 @@ function RiskReviewTable() {
         dataTable.destroy();
       }
     };
-  }, [dataTable, userAssets]);
+  }, [dataTable, userAssets, assetData]);
 
   function intialiseTable() {
     if (!tableInitialised) {
