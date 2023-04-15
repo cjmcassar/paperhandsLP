@@ -65,9 +65,9 @@ function RiskReviewTable() {
           id: doc.id
         };
         userAssets.push(data as UserAsset);
-        console.log("User assets fetched: ", userAssets);
+        // console.log("User assets fetched: ", userAssets);
       });
-      console.log("object", userAssets);
+      // console.log("object", userAssets);
       setUserAssets(userAssets);
     });
 
@@ -205,7 +205,7 @@ function RiskReviewTable() {
           );
           const priceAsNumber = parseFloat(priceWithoutUSD);
           const value = `$${(priceAsNumber * review.amount).toFixed(2)}`;
-          console.log("revie", review);
+          // console.log("review", review);
           if (risk && riskReview && value) {
             data.push([
               review.asset_name,
@@ -231,10 +231,8 @@ function RiskReviewTable() {
         setShowForm(true);
         let id = e.target.getAttribute("data-assetId");
 
-        // TODO: Get asset details by id from firebase/context
-        // TODO: Set editPortfolioData to asset details to show on the modal
         let userAsset = userAssets.find(asset => asset.id == id);
-        console.log("object,", userAsset);
+        // console.log("object,", userAsset);
         setEditPortfolioData(userAsset);
       }
     });
