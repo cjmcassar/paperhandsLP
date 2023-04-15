@@ -40,11 +40,11 @@ export default function Navbar() {
     <nav className={styles.navbar} navbar-scroll="false">
       <div className=" flex items-center justify-between w-full px-4 py-1 mx-auto flex-wrap-inherit">
         <NavbarTitle />
-        <div className="flex items-center mt-2 grow sm:mt-0 sm:mr-6 md:mr-0 lg:flex lg:basis-auto">
+        {/* <div className="flex items-center mt-2 grow sm:mt-0 sm:mr-6 md:mr-0 lg:flex lg:basis-auto">
           <div className="flex items-center md:ml-auto md:pr-4">
             <SearchBar />
           </div>
-        </div>
+        </div> */}
       </div>
     </nav>
   );

@@ -1,15 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { DataTable } from "simple-datatables";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 import { auth, db } from "../../utils/firebaseClient";
 import { AssetDataContext } from "../../contexts/assetDataContext";
 import styles from "./RiskReviewTable.module.css";
-
-// 2. Update firebase rules to allows users to only read their own data
-
-// TODO: Refactor code to seperate into smaller components
 
 interface UserAsset {
   uid: string;
@@ -28,40 +24,41 @@ function RiskReviewTable() {
   const [tableInitialised, setTableInitialised] = useState(false);
   const [dataTable, setDataTable] = useState<DataTable | null>(null);
 
-  // Fetch and set user assets
-
   useEffect(() => {
-    const fetchAssets = async () => {
-      const assets = await fetchUserAssets();
-      setUserAssets(assets);
-    };
+    if (user) {
+      const unsubscribe = fetchUserAssets();
 
-    fetchAssets();
-  }, [userAssets]);
+      return () => {
+        if (unsubscribe) {
+          unsubscribe();
+        }
+      };
+    }
+  }, [user]);
 
-  const fetchUserAssets = async () => {
-    if (!user) return [];
+  const fetchUserAssets = () => {
+    if (!user) return;
 
-    const userAssets: UserAsset[] = [];
     const userAssetsQuery = query(
       collection(db, "user_assets"),
       where("uid", "==", user.uid)
     );
 
-    const querySnapshot = await getDocs(userAssetsQuery);
-    querySnapshot.forEach(doc => {
-      userAssets.push(doc.data() as UserAsset);
+    const unsubscribe = onSnapshot(userAssetsQuery, querySnapshot => {
+      const userAssets: UserAsset[] = [];
+      querySnapshot.forEach(doc => {
+        userAssets.push(doc.data() as UserAsset);
+        console.log("User assets fetched: ", userAssets);
+      });
+      setUserAssets(userAssets);
     });
 
-    return userAssets;
+    return unsubscribe;
   };
-
-  // Initialize and populate the data table
 
   useEffect(() => {
     if (!tableInitialised) {
       intialiseTable();
-      setTableInitialised(true);
     } else {
       populateTable();
     }
@@ -71,7 +68,7 @@ function RiskReviewTable() {
         dataTable.destroy();
       }
     };
-  }, [userAssets, dataTable]);
+  }, [dataTable, userAssets, assetData]);
 
   function intialiseTable() {
     if (!tableInitialised) {
