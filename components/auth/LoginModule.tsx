@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import LoginFormModal from "./components/LoginFormModal";
-import SignUpModal from "./components/SignUpFormModal";
 import { getAuth } from "firebase/auth";
 
 import { useRouter } from "next/dist/client/router";
