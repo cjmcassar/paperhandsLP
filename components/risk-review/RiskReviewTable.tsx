@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { DataTable } from "simple-datatables";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
-
+import { doc, deleteDoc } from "firebase/firestore";
 import { auth, db } from "../../utils/firebaseClient";
 import { AssetDataContext } from "../../contexts/assetDataContext";
 import { StorageDataContext } from "contexts/storageDataContext";
@@ -15,6 +15,8 @@ interface UserAsset {
   asset_symbol: string;
   amount: number;
   storage_type: string;
+  purchase_date: string;
+  id: string;
 }
 
 function RiskReviewTable() {
@@ -54,9 +56,18 @@ function RiskReviewTable() {
     const unsubscribe = onSnapshot(userAssetsQuery, querySnapshot => {
       const userAssets: UserAsset[] = [];
       querySnapshot.forEach(doc => {
-        userAssets.push(doc.data() as UserAsset);
+        const data = {
+          ...doc.data(),
+          purchase_date: format(
+            fromUnixTime(doc.data().purchase_date.seconds),
+            "yyyy-MM-dd"
+          ),
+          id: doc.id
+        };
+        userAssets.push(data as UserAsset);
         console.log("User assets fetched: ", userAssets);
       });
+      console.log("object", userAssets);
       setUserAssets(userAssets);
     });
 
@@ -203,7 +214,7 @@ function RiskReviewTable() {
               review.storage_type,
               risk,
               riskReview,
-              review.uid
+              review.id
             ]);
           }
         }
@@ -217,16 +228,28 @@ function RiskReviewTable() {
       // if coming from asset edit button
       if (e.target.getAttribute("data-assetId")) {
         setShowForm(true);
-        let uid = e.target.getAttribute("data-assetId");
+        let id = e.target.getAttribute("data-assetId");
 
         // TODO: Get asset details by id from firebase/context
         // TODO: Set editPortfolioData to asset details to show on the modal
-        let userAsset = userAssets.find(asset => asset.uid == uid);
+        let userAsset = userAssets.find(asset => asset.id == id);
         console.log("object,", userAsset);
         setEditPortfolioData(userAsset);
       }
     });
   }
+
+  const assetDelete = e => {
+    const docRef = doc(db, "user_assets", editPortfolioData?.id);
+    deleteDoc(docRef)
+      .then(() => {
+        setShowForm(false);
+        console.log("Document successfully deleted!");
+      })
+      .catch(error => {
+        console.error("Error removing document: ", error);
+      });
+  };
 
   return (
     <>
@@ -291,111 +314,123 @@ function RiskReviewTable() {
             <div className="bg-white p-8 rounded-lg w-5/12">
               <div className="flex justify-between items-center gap-5 mb-4">
                 <h3 className="text-xl font-medium">Update Crypto</h3>
-                <button className="bg-danger text-white px-4 py-2 rounded-lg">
+                <button
+                  className="bg-danger text-white px-4 py-2 rounded-lg"
+                  onClick={assetDelete}
+                >
                   Delete
                 </button>
               </div>
-              <form>
-                {/* <pre>{JSON.stringify(editPortfolioData)}</pre> */}
-                <div className="mb-4">
-                  <label
-                    htmlFor="asset-select"
-                    className="block text-gray-700 font-medium mb-2"
-                  >
-                    Asset
-                  </label>
-                  <select
-                    disabled={true}
-                    id="asset-select"
-                    name="asset"
-                    className="w-full border rounded px-3 py-2"
-                  >
-                    <option selected disabled={true}>
-                      {editPortfolioData?.asset_name}
-                    </option>
-                  </select>
-                </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="asset-select"
-                    className="block text-gray-700 font-medium mb-2"
-                  >
-                    Storage Type
-                  </label>
-                  <select
-                    id="storage-select"
-                    name="storageType"
-                    className="w-full border rounded px-3 py-2"
-                  >
-                    <option value={editPortfolioData?.storage_type} selected>
-                      {editPortfolioData?.storage_type}
-                    </option>
-                    {storageData?.storageData?.map(storage => (
-                      <option
-                        key={storage.Storage_Method}
-                        value={storage.Storage_Method}
-                      >
-                        {storage.Storage_Method} ({storage.Rating})
+              {editPortfolioData && (
+                <form onSubmit={assetUpdate}>
+                  <div className="mb-4">
+                    <label
+                      htmlFor="asset-select"
+                      className="block text-gray-700 font-medium mb-2"
+                    >
+                      Asset
+                    </label>
+                    <select
+                      disabled={true}
+                      id="asset-select"
+                      name="asset"
+                      className="w-full border rounded px-3 py-2"
+                      defaultValue={editPortfolioData?.asset_name}
+                    >
+                      <option value={editPortfolioData?.asset_name}>
+                        {editPortfolioData?.asset_name}
                       </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="amount-input"
-                    className="block text-gray-700 font-medium mb-2"
-                  >
-                    Amount Owned
-                  </label>
-                  <input
-                    type="number"
-                    id="amount-input"
-                    name="amount"
-                    value={editPortfolioData?.amount}
-                    onChange={e => {
-                      setEditPortfolioData({
-                        ...editPortfolioData,
-                        amount: e.target.value
-                      });
-                    }}
-                    className="w-full border rounded px-3 py-2"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="date-picker"
-                    className="block text-gray-700 font-medium mb-2"
-                  >
-                    Purchase Date
-                  </label>
-                  <input
-                    type="date"
-                    id="date-picker"
-                    value={
-                      editPortfolioData &&
-                      format(
-                        fromUnixTime(editPortfolioData?.purchase_date.seconds),
-                        "yyyy-MM-dd"
-                      )
-                    }
-                    name="purchaseDate"
-                    className="w-full border rounded px-3 py-2"
-                  />
-                </div>
+                    </select>
+                  </div>
+                  <div className="mb-4">
+                    <label
+                      htmlFor="asset-select"
+                      className="block text-gray-700 font-medium mb-2"
+                    >
+                      Storage Type
+                    </label>
+                    <select
+                      id="storage-select"
+                      name="storageType"
+                      className="w-full border rounded px-3 py-2"
+                      defaultValue={editPortfolioData?.storage_type}
+                      onChange={e => {
+                        setEditPortfolioData({
+                          ...editPortfolioData,
+                          storage_type: e.target.value
+                        });
+                      }}
+                    >
+                      <option value={editPortfolioData?.storage_type}>
+                        {editPortfolioData?.storage_type}
+                      </option>
+                      {storageData?.storageData?.map(storage => (
+                        <option
+                          key={storage.Storage_Method}
+                          value={storage.Storage_Method}
+                        >
+                          {storage.Storage_Method} ({storage.Rating})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="mb-4">
+                    <label
+                      htmlFor="amount-input"
+                      className="block text-gray-700 font-medium mb-2"
+                    >
+                      Amount Owned
+                    </label>
+                    <input
+                      type="number"
+                      id="amount-input"
+                      name="amount"
+                      value={editPortfolioData?.amount}
+                      onChange={e => {
+                        setEditPortfolioData({
+                          ...editPortfolioData,
+                          amount: e.target.value
+                        });
+                      }}
+                      className="w-full border rounded px-3 py-2"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label
+                      htmlFor="date-picker"
+                      className="block text-gray-700 font-medium mb-2"
+                    >
+                      Purchase Date
+                    </label>
+                    <input
+                      type="date"
+                      id="date-picker"
+                      value={editPortfolioData?.purchase_date}
+                      onChange={e => {
+                        setEditPortfolioData({
+                          ...editPortfolioData,
+                          purchase_date: e.target.value
+                        });
+                      }}
+                      name="purchaseDate"
+                      className="w-full border rounded px-3 py-2"
+                    />
+                  </div>
 
-                <div className="flex justify-end">
-                  <button type="submit" className={`${styles.addButton}`}>
-                    Update
-                  </button>
-                  <button
-                    type="button"
-                    className={`${styles.cancelButton} hover:bg-opacity-80`}
-                    onClick={() => setShowForm(false)}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </form>
+                  <div className="flex justify-end">
+                    <button type="submit" className={`${styles.addButton}`}>
+                      Update
+                    </button>
+                    <button
+                      type="button"
+                      className={`${styles.cancelButton} hover:bg-opacity-80`}
+                      onClick={() => setShowForm(false)}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              )}
             </div>
           </div>
         )}
