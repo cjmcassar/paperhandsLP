@@ -129,16 +129,16 @@ function RiskReviewTable() {
             render: function (riskLevel) {
               let color: string;
               switch (riskLevel[0].data) {
-                case "Safe":
+                case "1 - Historically Safe":
                   color = "#8DAAF5";
                   break;
-                case "Low Risk":
+                case "2 - Low Risk":
                   color = "#62FF97";
                   break;
-                case "Medium Risk":
+                case "3 - Medium Risk":
                   color = "#FFF507";
                   break;
-                case "High Risk":
+                case "4 - High Risk":
                   color = "#FC62FF";
                   break;
                 default:
@@ -157,6 +157,7 @@ function RiskReviewTable() {
               return `<span class=" text-white my-2 text-xs 2xl:text-sm"> ${riskReview[0].data}</span>`;
             }
           },
+          // TODO: When we have recommendations, customize this
           // {
           //   select: 7,
           //   render: function (riskRecommendations) {
