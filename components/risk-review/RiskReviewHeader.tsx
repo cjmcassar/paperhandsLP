@@ -15,7 +15,7 @@ import { AssetDataContext } from "../../contexts/assetDataContext";
 import { StorageDataContext } from "../../contexts/storageDataContext";
 
 import Plus from "../../public/img/dashboard/icons/plus.svg";
-import Pen from "../../public/img/dashboard/icons/pen.svg";
+// import Pen from "../../public/img/dashboard/icons/pen.svg";
 import Question from "../../public/img/dashboard/icons/question.svg";
 import styles from "./RiskReviewHeader.module.css";
 import FAQModal from "../dashboard/FAQModal";
@@ -158,10 +158,10 @@ function RiskReviewHeader() {
           <span className="text-xs">Add New Crypto</span>
         </button>
 
-        <button className={`${styles.customButton} hover:border-primary`}>
+        {/* <button className={`${styles.customButton} hover:border-primary`}>
           <Pen width="22" height="22" />
           <span className="text-xs">Edit Portfolio</span>
-        </button>
+        </button> */}
         <button
           onClick={openFAQModal}
           className={`${styles.customButton} hover:border-primary`}
