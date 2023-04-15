@@ -6,26 +6,26 @@ const riskLevelData = [
     id: 1,
     riskLevel: "High Risk",
     share: 27.3,
-    color: "#FC62FF",
+    color: "#FC62FF"
   },
   {
     id: 2,
     riskLevel: "Medium Risk",
     share: 4.8,
-    color: "#FFF507",
+    color: "#FFF507"
   },
   {
     id: 3,
     riskLevel: "Low Risk",
     share: 0.7,
-    color: "#62FF97",
+    color: "#62FF97"
   },
   {
     id: 4,
     riskLevel: "Safe",
     share: 48.2,
-    color: "#8DAAF5",
-  },
+    color: "#8DAAF5"
+  }
 ];
 
 export default function DoughnutChart() {
@@ -39,25 +39,25 @@ export default function DoughnutChart() {
         new Chart(ctx, {
           type: "doughnut",
           data: {
-            labels: riskLevelData.map((data) => data.riskLevel),
+            labels: riskLevelData.map(data => data.riskLevel),
             datasets: [
               {
                 label: "High Risk",
                 borderWidth: 0,
                 backgroundColor: ["#FC62FF", "#FFF507", "#62FF97", "#8DAAF5"],
-                data: riskLevelData.map((data) => data.share),
+                data: riskLevelData.map(data => data.share),
 
                 hoverBorderWidth: 2,
-                hoverBorderColor: "#7B62FF",
-              },
-            ],
+                hoverBorderColor: "#7B62FF"
+              }
+            ]
           },
           options: {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
               legend: {
-                display: false,
+                display: false
               },
               tooltip: {
                 enabled: true,
@@ -70,11 +70,11 @@ export default function DoughnutChart() {
                 callbacks: {
                   label: function (context) {
                     return context.label + ": " + context.parsed + "%";
-                  },
-                },
-              },
-            },
-          },
+                  }
+                }
+              }
+            }
+          }
         });
       }
     }
@@ -82,7 +82,7 @@ export default function DoughnutChart() {
 
   return (
     <div
-      className={` gap-6 flex align-center bg-[#1a1c24] rounded-lg p-5 w-6/12 font-bold`}
+      className={` gap-6 flex align-center bg-[#1a1c24] rounded-lg p-5 w-full font-bold`}
     >
       <div className="w-6/12">
         <div className="bg-[#404040] rounded-2xl overflow-hidden">
@@ -93,7 +93,7 @@ export default function DoughnutChart() {
             <span className=" w-6/12 px-3 py-2">Share</span>
           </div>
 
-          {riskLevelData.map((data) => (
+          {riskLevelData.map(data => (
             <div
               key={data.id}
               className="flex text-center border-b-2 last:border-b-0 border-[#5B5B5B] bg-[#363636]"
