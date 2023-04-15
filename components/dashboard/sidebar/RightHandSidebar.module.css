@@ -57,6 +57,12 @@
   z-index: 50;
 }
 
+@media (max-width: 767px) {
+  .nav {
+    display: none;
+  }
+}
+
 .listItem {
   display: flex;
   align-items: center;
