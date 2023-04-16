@@ -104,21 +104,23 @@ function Notifications() {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(
-      query(
-        collection(getFirestore(), "notifications"),
-        where("userId", "==", auth.currentUser.uid)
-      ),
-      snapshot => {
-        const newNotifications = snapshot.docs.map(doc => doc.data());
-        setNotifications(newNotifications);
-      }
-    );
+    if (auth.currentUser) {
+      const unsubscribe = onSnapshot(
+        query(
+          collection(getFirestore(), "notifications"),
+          where("uid", "==", auth.currentUser.uid)
+        ),
+        snapshot => {
+          const newNotifications = snapshot.docs.map(doc => doc.data());
+          setNotifications(newNotifications);
+        }
+      );
 
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+      return () => {
+        unsubscribe();
+      };
+    }
+  }, [auth.currentUser]);
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
