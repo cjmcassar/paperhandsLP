@@ -32,7 +32,22 @@ const CryptoHistory: React.FC<CryptoHistoryProps> = ({ transactions }) => {
           {
             select: 0,
             render: function (type) {
-              return `<span class="font-bold text-white my-2 text-xs 2xl:text-sm"> ${type[0].data}</span>`;
+              let color: string;
+              switch (type[0].data) {
+                case "buy":
+                  color = "#62FF97";
+                  break;
+                case "sell":
+                  color = "#FF6262";
+                  break;
+                default:
+                  color = "white";
+              }
+              return `<span style="color:${
+                color || "white"
+              }" class="font-bold my-2 text-xs 2xl:text-sm"> ${
+                type[0].data
+              }</span>`;
             }
           },
           {
@@ -95,7 +110,6 @@ const CryptoHistory: React.FC<CryptoHistoryProps> = ({ transactions }) => {
   useEffect(() => {
     if (!tableInitialised) {
       initialiseTable();
-      setTableInitialised(true);
     } else {
       populateTable();
     }
@@ -110,7 +124,6 @@ const CryptoHistory: React.FC<CryptoHistoryProps> = ({ transactions }) => {
   return (
     <>
       <div className="overflow-x-auto rounded-lg">
-        <h2>Crypto History</h2>
         <table
           ref={tableRef}
           className={`${styles.CryptoHistoryTable} w-full sm:text-sm text-white  border-collapse`}

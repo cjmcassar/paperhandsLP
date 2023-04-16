@@ -48,15 +48,16 @@
   color: #fff;
 }
 .datatable-selector {
-  color: #000;
-  background-color: #e5e7eb;
+  color: #ffffff;
+  background-color: #1a1c24;
   border-radius: 5px;
   margin-right: 6px;
 }
 
 .datatable-search .datatable-input {
+  color: #fff;
+  background-color: #1a1c24;
   border-radius: 5px;
-  background-color: #e5e7eb;
 }
 
 .datatable-info {
