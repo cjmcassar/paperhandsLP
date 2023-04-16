@@ -121,8 +121,8 @@ export default function Sidebar() {
     <>
       <nav className={`${styles.sidebar} bg-darkGrey`}>
         <div className={styles.container}>
-          <Toggler onClick={toggleCollapse} />
           <Brand />
+          <Toggler onClick={toggleCollapse} />
           <div
             className={`${styles.collapse} ${
               collapseShow ? styles.visible : styles.drawer
@@ -134,7 +134,7 @@ export default function Sidebar() {
         </div>
       </nav>
       <style jsx>{`
-        @media (min-width: 768px) {
+        @media (min-width: 1024px) {
           .${styles.collapse} {
             transform: none;
           }

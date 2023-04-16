@@ -35,17 +35,17 @@ export default function DashboardLayout({ children }) {
     <div>
       <Sidebar />
 
-      <div className="relative md:ml-56 md:mr-64 bg-dark w-auto">
+      <div className="lg:fixed relative z-30 lg:pl-56 bg-dark w-full">
         <Navbar />
       </div>
 
-      <div className="md:p-10 md:ml-56 md:mr-64  flex-1 bg-dark min-h-screen">
+      <div className="px-4 lg:p-10 lg:pl-64 lg:pr-72 lg:pt-20 flex-1 bg-dark min-h-screen">
         {children}
       </div>
 
       <RightHandSidebar />
 
-      <div className="md:ml-56 md:mr-64">
+      <div className="bg-darkGrey lg:pl-56 lg:pr-64">
         <Footer />
       </div>
     </div>
