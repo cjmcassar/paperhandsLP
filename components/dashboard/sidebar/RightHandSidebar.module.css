@@ -24,7 +24,6 @@
   width: 16rem;
   padding-top: 2rem;
   z-index: 20;
-  overflow: scroll;
 }
 
 @media (max-width: 1023px) {
