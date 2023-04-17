@@ -227,9 +227,9 @@ function RiskReviewTable() {
     // Edit button event listener
     dataTable.dom.addEventListener("click", e => {
       // if coming from asset edit button
-      if (e.target.getAttribute("data-assetId")) {
+      if ((e.target as HTMLElement).getAttribute("data-assetId")) {
         setShowForm(true);
-        let id = e.target.getAttribute("data-assetId");
+        let id = (e.target as HTMLElement).getAttribute("data-assetId");
 
         let userAsset = userAssets.find(asset => asset.id == id);
         // console.log("object,", userAsset);
