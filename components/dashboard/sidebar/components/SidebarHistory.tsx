@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Eth from "../../../../public/img/brands/eth.svg";
-import Matic from "../../../../public/img/brands/matic.svg";
-import NFT from "../../../../public/img/dashboard/icons/nft.svg";
 import { query, collection, where, onSnapshot } from "firebase/firestore";
 import { auth, db } from "utils/firebaseClient";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -83,10 +80,8 @@ export default function SidebarHistory() {
       const userAssets: UserAsset[] = [];
       querySnapshot.forEach(doc => {
         userAssets.push(doc.data() as UserAsset);
-        console.log("User assets fetched: ", userAssets);
       });
       setUserAssets(userAssets);
-      console.log("User assets fetched: ", userAssets);
     });
 
     return unsubscribe;
@@ -118,43 +113,6 @@ export default function SidebarHistory() {
           );
         })}
       </ul>
-      {/* <ul className="w-full">
-        <SidebarHistoryItem
-          icon={<Eth width="12.5px" height="20.5px" />}
-          title="Bought Eth"
-          date="July 4, 2023"
-          value="+1.55"
-          valueColor="text-green-600"
-        />
-        <SidebarHistoryItem
-          icon={<Matic width="32px" height="32px" />}
-          title="Bought Matic"
-          date="July 2, 2023"
-          value="+10.55"
-          valueColor="text-green-600"
-        />
-        <SidebarHistoryItem
-          icon={<Eth width="12.5px" height="20.5px" />}
-          title="Sold Eth"
-          date="June 4, 2023"
-          value="+1.55"
-          valueColor="text-red-600"
-        />
-        <SidebarHistoryItem
-          icon={<NFT fill="white" width="23.55px" height="23.54px" />}
-          title="Bought NFT"
-          date="May 4, 2023"
-          value="+1.55"
-          valueColor="text-green-600"
-        />
-        <SidebarHistoryItem
-          icon={<Eth width="12.5px" height="20.5px" />}
-          title="Sold Eth"
-          date="June 4, 2023"
-          value="+1.55"
-          valueColor="text-red-600"
-        />
-      </ul> */}
     </div>
   );
 }

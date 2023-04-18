@@ -65,9 +65,7 @@ function RiskReviewTable() {
           id: doc.id
         };
         userAssets.push(data as UserAsset);
-        // console.log("User assets fetched: ", userAssets);
       });
-      // console.log("object", userAssets);
       setUserAssets(userAssets);
     });
 
@@ -157,22 +155,6 @@ function RiskReviewTable() {
               return `<span class=" text-white my-2 text-xs 2xl:text-sm"> ${riskReview[0].data}</span>`;
             }
           },
-          // TODO: When we have recommendations, customize this
-          // {
-          //   select: 7,
-          //   render: function (riskRecommendations) {
-          //     const recommendations = riskRecommendations[0].data.split(",");
-
-          //     let output = `<div>`;
-          //     recommendations.forEach(
-          //       (recommendation: string) =>
-          //         (output += `<p class=" text-white my-2 text-xs 2xl:text-sm"> ${recommendation}</p>`)
-          //     );
-          //     output += `</div>`;
-
-          //     return output;
-          //   }
-          // },
           {
             select: 7,
             render: function (assetId) {
