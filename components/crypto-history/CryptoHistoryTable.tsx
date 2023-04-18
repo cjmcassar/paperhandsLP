@@ -1,8 +1,25 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./CryptoHistoryTable.module.css";
 import { DataTable } from "simple-datatables";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, db } from "utils/firebaseClient";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 
-export interface CryptoTransaction {
+interface PurchaseDate {
+  seconds: number;
+  nanoseconds: number;
+}
+
+interface UserAsset {
+  uid: string;
+  asset_name: string;
+  asset_symbol: string;
+  amount: number;
+  storage_type: string;
+  purchase_date: PurchaseDate;
+}
+
+interface CryptoTransaction {
   id: number;
   date: string;
   crypto: string;
@@ -12,18 +29,46 @@ export interface CryptoTransaction {
   type: "buy" | "sell";
 }
 
-interface CryptoHistoryProps {
-  transactions: CryptoTransaction[];
-}
-
-const CryptoHistory: React.FC<CryptoHistoryProps> = ({ transactions }) => {
+const CryptoHistory: React.FC = () => {
   const tableRef = useRef<HTMLTableElement>(null);
   const [dataTable, setDataTable] = useState<DataTable>();
   const [tableInitialised, setTableInitialised] = useState(false);
 
-  console.log("objectf", transactions);
+  const [user] = useAuthState(auth);
+  const [userAssets, setUserAssets] = useState<UserAsset[]>([]);
 
-  function initialiseTable() {
+  useEffect(() => {
+    if (user) {
+      const unsubscribe = fetchUserAssets();
+
+      return () => {
+        if (unsubscribe) {
+          unsubscribe();
+        }
+      };
+    }
+  }, [user]);
+
+  const fetchUserAssets = () => {
+    if (!user) return;
+
+    const userAssetsQuery = query(
+      collection(db, "user_assets"),
+      where("uid", "==", user.uid)
+    );
+
+    const unsubscribe = onSnapshot(userAssetsQuery, querySnapshot => {
+      const userAssets: UserAsset[] = [];
+      querySnapshot.forEach(doc => {
+        userAssets.push(doc.data() as UserAsset);
+      });
+      setUserAssets(userAssets);
+    });
+
+    return unsubscribe;
+  };
+
+  function initialiseTable(transactions: CryptoTransaction[]) {
     if (!tableInitialised) {
       const dataTableSearch = new DataTable(tableRef.current, {
         searchable: true,
@@ -84,11 +129,11 @@ const CryptoHistory: React.FC<CryptoHistoryProps> = ({ transactions }) => {
       });
       setDataTable(dataTableSearch);
       setTableInitialised(true);
-      populateTable();
+      populateTable(transactions);
     }
   }
 
-  function populateTable() {
+  function populateTable(transactions: CryptoTransaction[]) {
     if (dataTable) {
       dataTable.destroy();
       dataTable.init();
@@ -107,19 +152,35 @@ const CryptoHistory: React.FC<CryptoHistoryProps> = ({ transactions }) => {
     }
   }
 
-  useEffect(() => {
-    if (!tableInitialised) {
-      initialiseTable();
-    } else {
-      populateTable();
-    }
+  // TODO: 1. add buy/sell transaction into firebase.
+  // 2. add the value of the asset at point of sale to firebase
 
-    return () => {
-      if (dataTable) {
-        dataTable.destroy();
-      }
-    };
-  }, [dataTable]);
+  useEffect(() => {
+    const transactions = userAssets.map((asset, index) => {
+      const date = new Date(asset.purchase_date.seconds * 1000);
+      const formattedDate = date.toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+      });
+      console.log("userAssets: ", userAssets);
+      return {
+        id: index,
+        date: formattedDate,
+        crypto: asset.asset_name,
+        symbol: asset.asset_symbol,
+        amount: asset.amount
+        // value: asset.value,
+        // sale_type: asset.sale
+      } as CryptoTransaction;
+    });
+
+    if (!tableInitialised) {
+      initialiseTable(transactions);
+    } else {
+      populateTable(transactions);
+    }
+  }, [userAssets]);
 
   return (
     <>
