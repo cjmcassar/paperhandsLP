@@ -37,7 +37,7 @@ const LoginFormModal: React.FC<LoginFormModalProps> = ({ onClose }) => {
       );
 
       const user = userCredential.user;
-      console.log("User logged in ----->", user);
+
       onClose();
     } catch (error) {
       const errorCode = error.code;
