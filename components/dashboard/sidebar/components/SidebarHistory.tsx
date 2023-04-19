@@ -109,6 +109,7 @@ export default function SidebarHistory() {
               new Date(a.transaction_date).getTime()
             );
           })
+          .slice(0, 5)
           .map(asset => {
             const date = new Date(asset.transaction_date);
             const formattedDate = date.toLocaleDateString("en-US", {
