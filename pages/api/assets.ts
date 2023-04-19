@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     }
 
     const auth = await getGoogleAuth();
-    const data = await fetchData(auth, process.env.SHEET_ID, "Assets!A2:G");
+    const data = await fetchData(auth, process.env.SHEET_ID, "Assets!A2:H");
     console.log("handler");
 
     // Cache the data in Redis
@@ -55,7 +55,8 @@ async function fetchData(auth, sheetId, range) {
       Price,
       Rating,
       Asset_Review,
-      Asset_Recommendation
+      Asset_Recommendation,
+      Asset_ID
     ] = row;
     return {
       Mcap,
@@ -64,7 +65,8 @@ async function fetchData(auth, sheetId, range) {
       Price,
       Rating,
       Asset_Review,
-      Asset_Recommendation
+      Asset_Recommendation,
+      Asset_ID
     };
   });
 
