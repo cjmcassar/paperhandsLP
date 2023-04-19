@@ -113,63 +113,63 @@ function Settings() {
   );
 }
 
-function Notifications() {
-  const auth = getAuth();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [notifications, setNotifications] = useState([]);
+// function Notifications() {
+//   const auth = getAuth();
+//   const [dropdownOpen, setDropdownOpen] = useState(false);
+//   const [notifications, setNotifications] = useState([]);
 
-  useEffect(() => {
-    const unsubscribe = onSnapshot(
-      query(
-        collection(getFirestore(), "notifications"),
-        where("userId", "==", auth.currentUser.uid)
-      ),
-      snapshot => {
-        const newNotifications = snapshot.docs.map(doc => doc.data());
-        setNotifications(newNotifications);
-      }
-    );
+//   useEffect(() => {
+//     const unsubscribe = onSnapshot(
+//       query(
+//         collection(getFirestore(), "notifications"),
+//         where("userId", "==", auth.currentUser.uid)
+//       ),
+//       snapshot => {
+//         const newNotifications = snapshot.docs.map(doc => doc.data());
+//         setNotifications(newNotifications);
+//       }
+//     );
 
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+//     return () => {
+//       unsubscribe();
+//     };
+//   }, []);
 
-  const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
-  };
+//   const toggleDropdown = () => {
+//     setDropdownOpen(!dropdownOpen);
+//   };
 
-  // need to update with pagination to only show 5 most recent notifications
-  return (
-    <li className={`${styles.listItem}  px-4`}>
-      <div>
-        <button
-          className="cursor-pointer p-0 text-sm text-white transition-all ease-nav-brand"
-          onClick={toggleDropdown}
-        >
-          <div className={`${styles.iconBorder} bg-lightGrey`}>
-            <FontAwesomeIcon
-              className={styles.iconSize}
-              icon={faBell as IconProp}
-            />
-          </div>
-        </button>
-        {dropdownOpen && (
-          <div className={`${styles.dropdownMenu} bg-phLightGray`}>
-            {notifications.map((notification, index) => (
-              <Link key={index} href="#">
-                <a className={styles.dropdownItem}>
-                  {notification.asset} risk score changed to{" "}
-                  {notification.newRiskScore}
-                </a>
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
-    </li>
-  );
-}
+//   // need to update with pagination to only show 5 most recent notifications
+//   return (
+//     <li className={`${styles.listItem}  px-4`}>
+//       <div>
+//         <button
+//           className="cursor-pointer p-0 text-sm text-white transition-all ease-nav-brand"
+//           onClick={toggleDropdown}
+//         >
+//           <div className={`${styles.iconBorder} bg-lightGrey`}>
+//             <FontAwesomeIcon
+//               className={styles.iconSize}
+//               icon={faBell as IconProp}
+//             />
+//           </div>
+//         </button>
+//         {dropdownOpen && (
+//           <div className={`${styles.dropdownMenu} bg-phLightGray`}>
+//             {notifications.map((notification, index) => (
+//               <Link key={index} href="#">
+//                 <a className={styles.dropdownItem}>
+//                   {notification.asset} risk score changed to{" "}
+//                   {notification.newRiskScore}
+//                 </a>
+//               </Link>
+//             ))}
+//           </div>
+//         )}
+//       </div>
+//     </li>
+//   );
+// }
 
 // function SearchBar() {
 //   return (
@@ -202,7 +202,7 @@ export default function Navbar() {
         <ul className="relative z-50 flex flex-row justify-start gap-3 mb-0 list-none">
           <UserSignIn />
           {/* <Settings /> */}
-          <Notifications />
+          {/* <Notifications /> */}
         </ul>
       </div>
     </nav>
