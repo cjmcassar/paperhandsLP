@@ -75,15 +75,6 @@ function NavigationFooter() {
   return (
     <ul className="mt-auto md:flex-col md:min-w-full flex flex-col list-none md:mb-4 text-lg ">
       <Divider />
-
-      <li className="items-center mb-5">
-        {/* <SidebarItem
-					href="/settings"
-					iconSrc="/img/dashboard/icons/settings.svg"
-				>
-					Settings
-				</SidebarItem> */}
-      </li>
       <li className="items-center mb-5">
         <SidebarItem href="/contact" iconSrc="/img/dashboard/icons/contact.svg">
           Contact Us
