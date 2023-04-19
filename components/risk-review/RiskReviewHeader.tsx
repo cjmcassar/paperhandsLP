@@ -54,6 +54,9 @@ function RiskReviewHeader() {
   const assetData = useContext(AssetDataContext);
   const storageData = useContext(StorageDataContext);
 
+  // TODO: update the asset in the to remove ,transaction_date ,transaction_price ,transaction_type since
+  // those are shown in the transactions subcollection
+
   const handleAssetSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let asset_input_amount = parseFloat(
@@ -100,9 +103,6 @@ function RiskReviewHeader() {
           asset_name: selectedAsset.Asset,
           asset_symbol: selectedAsset.Symbol,
           storage_type: selectedStorageType,
-          transaction_price: selectedAsset.Price,
-          transaction_type: "buy",
-          transaction_date: new Date(transactionDate),
           uid: uid
         });
       }
@@ -229,7 +229,7 @@ function RiskReviewHeader() {
                   htmlFor="amount-input"
                   className="block text-gray-700 font-medium mb-2"
                 >
-                  Amount Owned
+                  Amount
                 </label>
                 <input
                   type="number"
@@ -244,7 +244,7 @@ function RiskReviewHeader() {
                   htmlFor="date-picker"
                   className="block text-gray-700 font-medium mb-2"
                 >
-                  transaction Date
+                  Transaction Date
                 </label>
                 <input
                   type="date"
