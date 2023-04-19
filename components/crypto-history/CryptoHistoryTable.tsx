@@ -1,14 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import styles from "./CryptoHistoryTable.module.css";
-import { DataTable } from "simple-datatables";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, db } from "utils/firebaseClient";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
 
-interface PurchaseDate {
-  seconds: number;
-  nanoseconds: number;
-}
+import { auth, db } from "utils/firebaseClient";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { collection, query, where, getDocs } from "firebase/firestore";
+
+import { DataTable } from "simple-datatables";
+
+import styles from "./CryptoHistoryTable.module.css";
+import { format, fromUnixTime } from "date-fns";
 
 interface UserAsset {
   uid: string;
@@ -16,7 +15,10 @@ interface UserAsset {
   asset_symbol: string;
   amount: number;
   storage_type: string;
-  purchase_date: PurchaseDate;
+  transaction_amount: number;
+  transaction_price: string;
+  transaction_type: "buy" | "sell";
+  transaction_date: string;
 }
 
 interface CryptoTransaction {
@@ -25,7 +27,7 @@ interface CryptoTransaction {
   crypto: string;
   symbol: string;
   amount: number;
-  value: number;
+  value: string;
   type: "buy" | "sell";
 }
 
@@ -39,17 +41,11 @@ const CryptoHistory: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      const unsubscribe = fetchUserAssets();
-
-      return () => {
-        if (unsubscribe) {
-          unsubscribe();
-        }
-      };
+      fetchUserTransactions();
     }
   }, [user]);
 
-  const fetchUserAssets = () => {
+  const fetchUserTransactions = async () => {
     if (!user) return;
 
     const userAssetsQuery = query(
@@ -57,15 +53,32 @@ const CryptoHistory: React.FC = () => {
       where("uid", "==", user.uid)
     );
 
-    const unsubscribe = onSnapshot(userAssetsQuery, querySnapshot => {
-      const userAssets: UserAsset[] = [];
-      querySnapshot.forEach(doc => {
-        userAssets.push(doc.data() as UserAsset);
+    const userAssetsSnapshots = await getDocs(userAssetsQuery);
+    const userAssets: UserAsset[] = [];
+    const transactionsPromises: Promise<void>[] = [];
+
+    userAssetsSnapshots.forEach(userAssetDoc => {
+      const userAsset = userAssetDoc.data() as UserAsset;
+      const transactionsPromise = getDocs(
+        collection(userAssetDoc.ref, "transactions")
+      ).then(transactionsSnapshots => {
+        transactionsSnapshots.forEach(transactionDoc => {
+          const transactionData = transactionDoc.data();
+          userAssets.push({
+            ...userAsset,
+            ...transactionData,
+            transaction_date: format(
+              fromUnixTime(transactionData.transaction_date.seconds),
+              "yyyy-MM-dd"
+            )
+          });
+        });
       });
-      setUserAssets(userAssets);
+      transactionsPromises.push(transactionsPromise);
     });
 
-    return unsubscribe;
+    await Promise.all(transactionsPromises);
+    setUserAssets(userAssets);
   };
 
   function initialiseTable(transactions: CryptoTransaction[]) {
@@ -152,26 +165,16 @@ const CryptoHistory: React.FC = () => {
     }
   }
 
-  // TODO: 1. add buy/sell transaction into firebase.
-  // 2. add the value of the asset at point of sale to firebase
-
   useEffect(() => {
     const transactions = userAssets.map((asset, index) => {
-      const date = new Date(asset.purchase_date.seconds * 1000);
-      const formattedDate = date.toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric"
-      });
-      console.log("userAssets: ", userAssets);
       return {
         id: index,
-        date: formattedDate,
+        date: asset.transaction_date,
         crypto: asset.asset_name,
         symbol: asset.asset_symbol,
-        amount: asset.amount
-        // value: asset.value,
-        // sale_type: asset.sale
+        amount: asset.transaction_amount,
+        value: asset.transaction_price,
+        type: asset.transaction_type
       } as CryptoTransaction;
     });
 
