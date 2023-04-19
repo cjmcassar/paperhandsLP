@@ -1,21 +1,34 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { DataTable } from "simple-datatables";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { doc, deleteDoc, updateDoc } from "firebase/firestore";
-import { auth, db } from "../../utils/firebaseClient";
 import { AssetDataContext } from "../../contexts/assetDataContext";
 import { StorageDataContext } from "contexts/storageDataContext";
-import styles from "./RiskReviewTable.module.css";
+
+import { auth, db } from "../../utils/firebaseClient";
+import { useAuthState } from "react-firebase-hooks/auth";
+import {
+  collection,
+  onSnapshot,
+  query,
+  where,
+  doc,
+  deleteDoc,
+  updateDoc,
+  getDoc,
+  addDoc
+} from "firebase/firestore";
+
+import { DataTable } from "simple-datatables";
 import { format, fromUnixTime } from "date-fns";
+
+import styles from "./RiskReviewTable.module.css";
 
 interface UserAsset {
   uid: string;
   asset_name: string;
   asset_symbol: string;
-  amount: number;
+  total_amount: number;
   storage_type: string;
-  purchase_date: string;
+  transaction_date: string;
+  transaction_type: "buy" | "sell";
   id: string;
 }
 
@@ -26,6 +39,7 @@ function RiskReviewTable() {
   const tableRef = useRef<HTMLTableElement | null>(null);
 
   const [userAssets, setUserAssets] = useState<UserAsset[]>([]);
+  const [transactionType, settransactionType] = useState<"buy" | "sell">("buy");
 
   const [showForm, setShowForm] = useState(false);
   const [editPortfolioData, setEditPortfolioData] = useState(null);
@@ -50,7 +64,8 @@ function RiskReviewTable() {
 
     const userAssetsQuery = query(
       collection(db, "user_assets"),
-      where("uid", "==", user.uid)
+      where("uid", "==", user.uid),
+      where("transaction_type", "==", "buy")
     );
 
     const unsubscribe = onSnapshot(userAssetsQuery, querySnapshot => {
@@ -58,8 +73,8 @@ function RiskReviewTable() {
       querySnapshot.forEach(doc => {
         const data = {
           ...doc.data(),
-          purchase_date: format(
-            fromUnixTime(doc.data().purchase_date.seconds),
+          transaction_date: format(
+            fromUnixTime(doc.data().transaction_date.seconds),
             "yyyy-MM-dd"
           ),
           id: doc.id
@@ -85,6 +100,30 @@ function RiskReviewTable() {
       }
     };
   }, [dataTable, userAssets, assetData]);
+
+  async function logTransaction(transactionData) {
+    const transactionsRef = collection(
+      db,
+      "user_assets",
+      editPortfolioData?.id,
+      "transactions"
+    );
+
+    const transactionDoc = {
+      transaction_amount: transactionData.transaction_amount,
+      transaction_price: transactionData.transaction_price,
+      transaction_type: transactionData.transaction_type,
+      transaction_date: transactionData.transaction_date,
+      uid: transactionData.uid
+    };
+
+    try {
+      await addDoc(transactionsRef, transactionDoc);
+      console.log("Transaction successfully logged!");
+    } catch (error) {
+      console.error("Error logging transaction: ", error);
+    }
+  }
 
   function intialiseTable() {
     if (!tableInitialised) {
@@ -186,19 +225,21 @@ function RiskReviewTable() {
             ""
           );
           const priceAsNumber = parseFloat(priceWithoutUSD);
-          const value = `$${(priceAsNumber * review.amount).toFixed(2)}`;
-          // console.log("review", review);
+          const value = `$${(priceAsNumber * review.total_amount).toFixed(2)}`;
+
           if (risk && riskReview && value) {
-            data.push([
-              review.asset_name,
-              review.asset_symbol,
-              review.amount,
-              value,
-              review.storage_type,
-              risk,
-              riskReview,
-              review.id
-            ]);
+            if (review.total_amount > 0) {
+              data.push([
+                review.asset_name,
+                review.asset_symbol,
+                review.total_amount,
+                value,
+                review.storage_type,
+                risk,
+                riskReview,
+                review.id
+              ]);
+            }
           }
         }
       }
@@ -206,30 +247,56 @@ function RiskReviewTable() {
 
     dataTable!.insert({ data: data });
 
-    // Edit button event listener
     dataTable.dom.addEventListener("click", e => {
-      // if coming from asset edit button
       if ((e.target as HTMLElement).getAttribute("data-assetId")) {
         setShowForm(true);
         let id = (e.target as HTMLElement).getAttribute("data-assetId");
 
         let userAsset = userAssets.find(asset => asset.id == id);
-        // console.log("object,", userAsset);
         setEditPortfolioData(userAsset);
       }
     });
   }
 
-  const assetUpdate = e => {
+  const assetUpdate = async e => {
     e.preventDefault();
+
     const docRef = doc(db, "user_assets", editPortfolioData?.id);
+
+    const existingAsset = await getDoc(docRef);
+    const existingAssetData = existingAsset.data();
+
+    if (!existingAssetData) return;
+
+    let newAmount = parseFloat(editPortfolioData?.amount);
+
+    if (transactionType === "sell") {
+      newAmount = existingAssetData.amount - newAmount;
+    } else {
+      newAmount = existingAssetData.amount + newAmount;
+    }
+
+    if (newAmount < 0) {
+      console.error("Error: New amount is negative.");
+      return;
+    }
+
     updateDoc(docRef, {
-      // asset_name: editPortfolioData?.asset_name,
-      amount: editPortfolioData?.amount,
+      amount: newAmount,
       storage_type: editPortfolioData?.storage_type,
-      purchase_date: new Date(editPortfolioData?.purchase_date)
+      transaction_date: new Date(editPortfolioData?.transaction_date),
+      transaction_type: transactionType
     })
       .then(() => {
+        const transactionData = {
+          transaction_amount: editPortfolioData?.amount,
+          transaction_price: editPortfolioData?.transaction_price, // Make sure you have the transaction_price in editPortfolioData
+          transaction_type: transactionType,
+          transaction_date: new Date(),
+          uid: user.uid
+        };
+        logTransaction(transactionData);
+
         setShowForm(false);
         setEditPortfolioData(null);
         console.log("Document successfully updated!");
@@ -373,6 +440,26 @@ function RiskReviewTable() {
                   </div>
                   <div className="mb-4">
                     <label
+                      htmlFor="transaction-type-select"
+                      className="block text-gray-700 font-medium mb-2"
+                    >
+                      transaction Type
+                    </label>
+                    <select
+                      id="transaction-type-select"
+                      name="transactionType"
+                      className="w-full border rounded px-3 py-2"
+                      value={transactionType}
+                      onChange={e =>
+                        settransactionType(e.target.value as "buy" | "sell")
+                      }
+                    >
+                      <option value="buy">Buy</option>
+                      <option value="sell">Sell</option>
+                    </select>
+                  </div>
+                  <div className="mb-4">
+                    <label
                       htmlFor="amount-input"
                       className="block text-gray-700 font-medium mb-2"
                     >
@@ -397,19 +484,19 @@ function RiskReviewTable() {
                       htmlFor="date-picker"
                       className="block text-gray-700 font-medium mb-2"
                     >
-                      Purchase Date
+                      transaction Date
                     </label>
                     <input
                       type="date"
                       id="date-picker"
-                      value={editPortfolioData?.purchase_date}
+                      value={editPortfolioData?.transaction_date}
                       onChange={e => {
                         setEditPortfolioData({
                           ...editPortfolioData,
-                          purchase_date: e.target.value
+                          transaction_date: e.target.value
                         });
                       }}
-                      name="purchaseDate"
+                      name="transactionDate"
                       className="w-full border rounded px-3 py-2"
                     />
                   </div>
