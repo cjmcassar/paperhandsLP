@@ -64,19 +64,20 @@ function RiskReviewTable() {
 
     const userAssetsQuery = query(
       collection(db, "user_assets"),
-      where("uid", "==", user.uid),
-      where("transaction_type", "==", "buy")
+      where("uid", "==", user.uid)
     );
 
     const unsubscribe = onSnapshot(userAssetsQuery, querySnapshot => {
       const userAssets: UserAsset[] = [];
       querySnapshot.forEach(doc => {
+        const docData = doc.data();
+        const transactionDateSeconds = docData.transaction_date?.seconds;
+
         const data = {
-          ...doc.data(),
-          transaction_date: format(
-            fromUnixTime(doc.data().transaction_date.seconds),
-            "yyyy-MM-dd"
-          ),
+          ...docData,
+          transaction_date: transactionDateSeconds
+            ? format(fromUnixTime(transactionDateSeconds), "yyyy-MM-dd")
+            : "",
           id: doc.id
         };
         userAssets.push(data as UserAsset);
@@ -262,44 +263,68 @@ function RiskReviewTable() {
     e.preventDefault();
 
     const docRef = doc(db, "user_assets", editPortfolioData?.id);
-
-    const existingAsset = await getDoc(docRef);
-    const existingAssetData = existingAsset.data();
+    const existingAssetData = (await getDoc(docRef)).data();
 
     if (!existingAssetData) return;
 
-    let newAmount = parseFloat(editPortfolioData?.amount);
+    const totalAmount = parseFloat(existingAssetData?.total_amount);
+    if (isNaN(totalAmount)) {
+      console.error("Error: Amount is not a valid number.");
+      return;
+    }
 
+    const currentAsset = assetData.assetData.find(
+      asset => asset.Symbol === editPortfolioData?.asset_symbol
+    );
+    if (!currentAsset) {
+      console.error("Error: Asset not found in assetData context.");
+      return;
+    }
+
+    const currentPrice = currentAsset.Price;
+
+    const transactionPrice = currentPrice;
+    if (transactionPrice === undefined) {
+      console.error("Error: Transaction price is undefined.");
+      return;
+    }
+
+    let transactionAmount = parseFloat(editPortfolioData?.amount);
+
+    let newAmount = transactionAmount;
     if (transactionType === "sell") {
-      newAmount = existingAssetData.amount - newAmount;
+      newAmount = totalAmount - newAmount;
     } else {
-      newAmount = existingAssetData.amount + newAmount;
+      newAmount = totalAmount + newAmount;
     }
 
     if (newAmount < 0) {
       console.error("Error: New amount is negative.");
+      alert(
+        "Error: New amount is negative. Please check the transaction amount."
+      );
       return;
     }
 
     updateDoc(docRef, {
-      amount: newAmount,
-      storage_type: editPortfolioData?.storage_type,
-      transaction_date: new Date(editPortfolioData?.transaction_date),
-      transaction_type: transactionType
+      total_amount: newAmount,
+      storage_type: editPortfolioData?.storage_type
     })
       .then(() => {
+        console.log("Document successfully updated!");
+
         const transactionData = {
-          transaction_amount: editPortfolioData?.amount,
-          transaction_price: editPortfolioData?.transaction_price, // Make sure you have the transaction_price in editPortfolioData
+          transaction_amount: transactionAmount,
+          transaction_price: transactionPrice,
           transaction_type: transactionType,
           transaction_date: new Date(),
           uid: user.uid
         };
+
         logTransaction(transactionData);
 
         setShowForm(false);
         setEditPortfolioData(null);
-        console.log("Document successfully updated!");
       })
       .catch(error => {
         console.error("Error updating document: ", error);
@@ -463,7 +488,7 @@ function RiskReviewTable() {
                       htmlFor="amount-input"
                       className="block text-gray-700 font-medium mb-2"
                     >
-                      Amount Owned
+                      Transaction Amount
                     </label>
                     <input
                       type="number"
@@ -484,7 +509,7 @@ function RiskReviewTable() {
                       htmlFor="date-picker"
                       className="block text-gray-700 font-medium mb-2"
                     >
-                      transaction Date
+                      Transaction Date
                     </label>
                     <input
                       type="date"
