@@ -514,7 +514,7 @@ function RiskReviewTable() {
                       onChange={e => {
                         setEditPortfolioData({
                           ...editPortfolioData,
-                          amount: parseFloat(e.target.value)
+                          amount: parseFloat(e.target.value) || NaN
                         });
                       }}
                       className="w-full border rounded px-3 py-2"
