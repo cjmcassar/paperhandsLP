@@ -42,7 +42,14 @@ function RiskReviewTable() {
   const [transactionType, settransactionType] = useState<"buy" | "sell">("buy");
 
   const [showForm, setShowForm] = useState(false);
-  const [editPortfolioData, setEditPortfolioData] = useState(null);
+  const [editPortfolioData, setEditPortfolioData] = useState({
+    id: "",
+    asset_symbol: "",
+    asset_name: "",
+    storage_type: "",
+    amount: 0,
+    transaction_date: ""
+  });
 
   const [tableInitialised, setTableInitialised] = useState(false);
   const [dataTable, setDataTable] = useState<DataTable | null>(null);
@@ -254,7 +261,16 @@ function RiskReviewTable() {
         let id = (e.target as HTMLElement).getAttribute("data-assetId");
 
         let userAsset = userAssets.find(asset => asset.id == id);
-        setEditPortfolioData(userAsset);
+        if (userAsset) {
+          setEditPortfolioData({
+            id: userAsset.id,
+            asset_symbol: userAsset.asset_symbol,
+            asset_name: userAsset.asset_name,
+            storage_type: userAsset.storage_type,
+            amount: 0,
+            transaction_date: userAsset.transaction_date
+          });
+        }
       }
     });
   }
@@ -289,7 +305,7 @@ function RiskReviewTable() {
       return;
     }
 
-    let transactionAmount = parseFloat(editPortfolioData?.amount);
+    let transactionAmount = editPortfolioData?.amount;
 
     let newAmount = transactionAmount;
     if (transactionType === "sell") {
@@ -427,7 +443,7 @@ function RiskReviewTable() {
                       id="asset-select"
                       name="asset"
                       className="w-full border rounded px-3 py-2"
-                      defaultValue={editPortfolioData?.asset_name}
+                      value={editPortfolioData.asset_name}
                     >
                       <option value={editPortfolioData?.asset_name}>
                         {editPortfolioData?.asset_name}
@@ -445,7 +461,7 @@ function RiskReviewTable() {
                       id="storage-select"
                       name="storageType"
                       className="w-full border rounded px-3 py-2"
-                      defaultValue={editPortfolioData?.storage_type}
+                      value={editPortfolioData.storage_type}
                       onChange={e => {
                         setEditPortfolioData({
                           ...editPortfolioData,
@@ -494,11 +510,11 @@ function RiskReviewTable() {
                       type="number"
                       id="amount-input"
                       name="amount"
-                      value={editPortfolioData?.amount}
+                      value={editPortfolioData.amount}
                       onChange={e => {
                         setEditPortfolioData({
                           ...editPortfolioData,
-                          amount: e.target.value
+                          amount: parseFloat(e.target.value)
                         });
                       }}
                       className="w-full border rounded px-3 py-2"
