@@ -55,7 +55,6 @@ const SignUpFormModal: React.FC<SignUpModalProps> = ({
     }
 
     if (password === confirmPassword) {
-      // console.log("email:", email);
       try {
         const userCredential = await createUserWithEmailAndPassword(
           auth,
@@ -63,7 +62,6 @@ const SignUpFormModal: React.FC<SignUpModalProps> = ({
           password
         );
         const user = userCredential.user;
-        console.log("User created ----->", user);
         await onSubmit(e);
       } catch (error) {
         const errorCode = error.code;

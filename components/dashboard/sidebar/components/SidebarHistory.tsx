@@ -1,22 +1,18 @@
 import React, { useEffect, useState } from "react";
-import Eth from "../../../../public/img/brands/eth.svg";
-import Matic from "../../../../public/img/brands/matic.svg";
-import NFT from "../../../../public/img/dashboard/icons/nft.svg";
-import { query, collection, where, onSnapshot } from "firebase/firestore";
+import { query, collection, where, getDocs } from "firebase/firestore";
 import { auth, db } from "utils/firebaseClient";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { format, fromUnixTime } from "date-fns";
 
-interface PurchaseDate {
-  seconds: number;
-  nanoseconds: number;
-}
 interface UserAsset {
   uid: string;
   asset_name: string;
   asset_symbol: string;
   amount: number;
   storage_type: string;
-  purchase_date: PurchaseDate;
+  transaction_date: string;
+  transaction_amount: number;
+  transaction_type: "buy" | "sell";
 }
 
 function SidebarHistoryItem({ icon, title, date, value, valueColor }) {
@@ -61,17 +57,11 @@ export default function SidebarHistory() {
 
   useEffect(() => {
     if (user) {
-      const unsubscribe = fetchUserAssets();
-
-      return () => {
-        if (unsubscribe) {
-          unsubscribe();
-        }
-      };
+      fetchUserTransactions();
     }
   }, [user]);
 
-  const fetchUserAssets = () => {
+  const fetchUserTransactions = async () => {
     if (!user) return;
 
     const userAssetsQuery = query(
@@ -79,17 +69,32 @@ export default function SidebarHistory() {
       where("uid", "==", user.uid)
     );
 
-    const unsubscribe = onSnapshot(userAssetsQuery, querySnapshot => {
-      const userAssets: UserAsset[] = [];
-      querySnapshot.forEach(doc => {
-        userAssets.push(doc.data() as UserAsset);
-        console.log("User assets fetched: ", userAssets);
+    const userAssetsSnapshots = await getDocs(userAssetsQuery);
+    const userAssets: UserAsset[] = [];
+    const transactionsPromises: Promise<void>[] = [];
+
+    userAssetsSnapshots.forEach(userAssetDoc => {
+      const userAsset = userAssetDoc.data() as UserAsset;
+      const transactionsPromise = getDocs(
+        collection(userAssetDoc.ref, "transactions")
+      ).then(transactionsSnapshots => {
+        transactionsSnapshots.forEach(transactionDoc => {
+          const transactionData = transactionDoc.data();
+          userAssets.push({
+            ...userAsset,
+            ...transactionData,
+            transaction_date: format(
+              fromUnixTime(transactionData.transaction_date.seconds),
+              "yyyy-MM-dd"
+            )
+          });
+        });
       });
-      setUserAssets(userAssets);
-      console.log("User assets fetched: ", userAssets);
+      transactionsPromises.push(transactionsPromise);
     });
 
-    return unsubscribe;
+    await Promise.all(transactionsPromises);
+    setUserAssets(userAssets);
   };
   return (
     <div className="w-full text-white mb-10">
@@ -97,64 +102,42 @@ export default function SidebarHistory() {
         History
       </h1>
       <ul className="w-full">
-        {userAssets.map(asset => {
-          const { purchase_date } = asset;
-          const date = new Date(purchase_date.seconds * 1000); // convert seconds to milliseconds
-          const formattedDate = date.toLocaleDateString("en-US", {
-            month: "long",
-            day: "numeric",
-            year: "numeric"
-          });
-          const dayWithSuffix = getDayWithSuffix(date.getDate());
-          return (
-            <SidebarHistoryItem
-              key={asset.asset_symbol}
-              icon={asset.asset_symbol}
-              title={`Bought ${asset.asset_name}`}
-              date={`${formattedDate.replace(/\d+/, dayWithSuffix)}`}
-              value={`+${asset.amount}`}
-              valueColor="text-green-600"
-            />
-          );
-        })}
+        {userAssets
+          .sort((a, b) => {
+            return (
+              new Date(b.transaction_date).getTime() -
+              new Date(a.transaction_date).getTime()
+            );
+          })
+          .slice(0, 5)
+          .map(asset => {
+            const date = new Date(asset.transaction_date);
+            const formattedDate = date.toLocaleDateString("en-US", {
+              month: "long",
+              day: "numeric",
+              year: "numeric"
+            });
+            const dayWithSuffix = getDayWithSuffix(date.getDate());
+
+            const isBuy = asset.transaction_type === "buy";
+            const transactionAmount = Number(asset.transaction_amount);
+            const value = isBuy
+              ? `+${transactionAmount.toFixed(2)}`
+              : `-${transactionAmount.toFixed(2)}`;
+            const valueColor = isBuy ? "text-green-600" : "text-red-600";
+
+            return (
+              <SidebarHistoryItem
+                key={asset.asset_symbol}
+                icon={asset.asset_symbol}
+                title={`${isBuy ? "Bought" : "Sold"} ${asset.asset_name}`}
+                date={`${formattedDate.replace(/\d+/, dayWithSuffix)}`}
+                value={value}
+                valueColor={valueColor}
+              />
+            );
+          })}
       </ul>
-      {/* <ul className="w-full">
-        <SidebarHistoryItem
-          icon={<Eth width="12.5px" height="20.5px" />}
-          title="Bought Eth"
-          date="July 4, 2023"
-          value="+1.55"
-          valueColor="text-green-600"
-        />
-        <SidebarHistoryItem
-          icon={<Matic width="32px" height="32px" />}
-          title="Bought Matic"
-          date="July 2, 2023"
-          value="+10.55"
-          valueColor="text-green-600"
-        />
-        <SidebarHistoryItem
-          icon={<Eth width="12.5px" height="20.5px" />}
-          title="Sold Eth"
-          date="June 4, 2023"
-          value="+1.55"
-          valueColor="text-red-600"
-        />
-        <SidebarHistoryItem
-          icon={<NFT fill="white" width="23.55px" height="23.54px" />}
-          title="Bought NFT"
-          date="May 4, 2023"
-          value="+1.55"
-          valueColor="text-green-600"
-        />
-        <SidebarHistoryItem
-          icon={<Eth width="12.5px" height="20.5px" />}
-          title="Sold Eth"
-          date="June 4, 2023"
-          value="+1.55"
-          valueColor="text-red-600"
-        />
-      </ul> */}
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -10,14 +11,16 @@ import {
   updateDoc,
   where
 } from "firebase/firestore";
+
 import { auth, db } from "../../utils/firebaseClient";
 import { AssetDataContext } from "../../contexts/assetDataContext";
 import { StorageDataContext } from "../../contexts/storageDataContext";
 
 import Plus from "../../public/img/dashboard/icons/plus.svg";
-// import Pen from "../../public/img/dashboard/icons/pen.svg";
 import Question from "../../public/img/dashboard/icons/question.svg";
+
 import styles from "./RiskReviewHeader.module.css";
+
 import FAQModal from "../dashboard/FAQModal";
 
 type Asset = {
@@ -28,11 +31,11 @@ type Asset = {
 };
 
 type UserAsset = {
-  amount: string;
+  amount: number;
   asset_name: string;
   asset_symbol: string;
   storage_type: string;
-  purchase_date: Date;
+  transaction_date: Date;
   uid: string;
 };
 
@@ -51,13 +54,16 @@ function RiskReviewHeader() {
   const assetData = useContext(AssetDataContext);
   const storageData = useContext(StorageDataContext);
 
+  // TODO: update the asset in the to remove ,transaction_date ,transaction_price ,transaction_type since
+  // those are shown in the transactions subcollection
+
   const handleAssetSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    let amount = (
-      e.currentTarget.elements.namedItem("amount") as HTMLInputElement
-    ).value;
-    let purchaseDate = (
-      e.currentTarget.elements.namedItem("purchaseDate") as HTMLInputElement
+    let asset_input_amount = parseFloat(
+      (e.currentTarget.elements.namedItem("amount") as HTMLInputElement).value
+    );
+    let transactionDate = (
+      e.currentTarget.elements.namedItem("transactionDate") as HTMLInputElement
     ).value;
 
     if (!selectedAsset) return;
@@ -80,30 +86,38 @@ function RiskReviewHeader() {
       );
 
       const querySnapshot = await getDocs(userAssetsQuery);
+      let assetDocRef;
       if (!querySnapshot.empty) {
-        // Asset is present with the same storage type
         const assetDoc = querySnapshot.docs[0];
         const assetData = assetDoc.data() as UserAsset;
 
-        // Update the amount
-        const updatedAmount = parseFloat(amount) + parseFloat(assetData.amount);
+        const updatedAmount = asset_input_amount + assetData.amount;
         await updateDoc(doc(db, "user_assets", assetDoc.id), {
-          amount: updatedAmount.toString()
+          total_amount: updatedAmount
         });
+
+        assetDocRef = doc(db, "user_assets", assetDoc.id);
       } else {
-        // Asset is not present or has a different storage type, add a new document
-        await addDoc(collection(db, "user_assets"), {
-          amount: amount,
+        assetDocRef = await addDoc(collection(db, "user_assets"), {
+          total_amount: asset_input_amount,
           asset_name: selectedAsset.Asset,
           asset_symbol: selectedAsset.Symbol,
           storage_type: selectedStorageType,
-          purchase_date: new Date(purchaseDate),
           uid: uid
         });
       }
 
-      amount = "";
-      purchaseDate = "";
+      await addDoc(collection(assetDocRef, "transactions"), {
+        transaction_amount: asset_input_amount,
+        storage_type: selectedStorageType,
+        transaction_price: selectedAsset.Price,
+        transaction_type: "buy",
+        transaction_date: new Date(transactionDate),
+        uid: uid
+      });
+
+      asset_input_amount = null;
+      transactionDate = "";
       setSelectedAsset(null);
       setShowForm(false);
       console.log("Document successfully written!");
@@ -121,7 +135,6 @@ function RiskReviewHeader() {
       (asset: Asset) => asset.Mcap === value
     );
     setSelectedAsset(asset);
-    // console.log("Selected Asset: ", asset);
   };
 
   const handleStorageTypeSelect = ({
@@ -157,11 +170,6 @@ function RiskReviewHeader() {
           <Plus width="22" height="22" />
           <span className="text-xs">Add New Crypto</span>
         </button>
-
-        {/* <button className={`${styles.customButton} hover:border-primary`}>
-          <Pen width="22" height="22" />
-          <span className="text-xs">Edit Portfolio</span>
-        </button> */}
         <button
           onClick={openFAQModal}
           className={`${styles.customButton} hover:border-primary`}
@@ -221,13 +229,14 @@ function RiskReviewHeader() {
                   htmlFor="amount-input"
                   className="block text-gray-700 font-medium mb-2"
                 >
-                  Amount Owned
+                  Amount
                 </label>
                 <input
                   type="number"
                   id="amount-input"
                   name="amount"
                   className="w-full border rounded px-3 py-2"
+                  step="any"
                 />
               </div>
               <div className="mb-4">
@@ -235,12 +244,12 @@ function RiskReviewHeader() {
                   htmlFor="date-picker"
                   className="block text-gray-700 font-medium mb-2"
                 >
-                  Purchase Date
+                  Transaction Date
                 </label>
                 <input
                   type="date"
                   id="date-picker"
-                  name="purchaseDate"
+                  name="transactionDate"
                   className="w-full border rounded px-3 py-2"
                 />
               </div>

@@ -1,29 +1,87 @@
 import React, { useEffect, useRef, useState } from "react";
-import styles from "./CryptoHistoryTable.module.css";
+
+import { auth, db } from "utils/firebaseClient";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { collection, query, where, getDocs } from "firebase/firestore";
+
 import { DataTable } from "simple-datatables";
 
-export interface CryptoTransaction {
+import styles from "./CryptoHistoryTable.module.css";
+import { format, fromUnixTime } from "date-fns";
+
+interface UserAsset {
+  uid: string;
+  asset_name: string;
+  asset_symbol: string;
+  amount: number;
+  storage_type: string;
+  transaction_amount: number;
+  transaction_price: string;
+  transaction_type: "buy" | "sell";
+  transaction_date: string;
+}
+
+interface CryptoTransaction {
   id: number;
   date: string;
   crypto: string;
   symbol: string;
   amount: number;
-  value: number;
+  value: string;
   type: "buy" | "sell";
 }
 
-interface CryptoHistoryProps {
-  transactions: CryptoTransaction[];
-}
-
-const CryptoHistory: React.FC<CryptoHistoryProps> = ({ transactions }) => {
+const CryptoHistory: React.FC = () => {
   const tableRef = useRef<HTMLTableElement>(null);
   const [dataTable, setDataTable] = useState<DataTable>();
   const [tableInitialised, setTableInitialised] = useState(false);
 
-  console.log("objectf", transactions);
+  const [user] = useAuthState(auth);
+  const [userAssets, setUserAssets] = useState<UserAsset[]>([]);
 
-  function initialiseTable() {
+  useEffect(() => {
+    if (user) {
+      fetchUserTransactions();
+    }
+  }, [user]);
+
+  const fetchUserTransactions = async () => {
+    if (!user) return;
+
+    const userAssetsQuery = query(
+      collection(db, "user_assets"),
+      where("uid", "==", user.uid)
+    );
+
+    const userAssetsSnapshots = await getDocs(userAssetsQuery);
+    const userAssets: UserAsset[] = [];
+    const transactionsPromises: Promise<void>[] = [];
+
+    userAssetsSnapshots.forEach(userAssetDoc => {
+      const userAsset = userAssetDoc.data() as UserAsset;
+      const transactionsPromise = getDocs(
+        collection(userAssetDoc.ref, "transactions")
+      ).then(transactionsSnapshots => {
+        transactionsSnapshots.forEach(transactionDoc => {
+          const transactionData = transactionDoc.data();
+          userAssets.push({
+            ...userAsset,
+            ...transactionData,
+            transaction_date: format(
+              fromUnixTime(transactionData.transaction_date.seconds),
+              "yyyy-MM-dd"
+            )
+          });
+        });
+      });
+      transactionsPromises.push(transactionsPromise);
+    });
+
+    await Promise.all(transactionsPromises);
+    setUserAssets(userAssets);
+  };
+
+  function initialiseTable(transactions: CryptoTransaction[]) {
     if (!tableInitialised) {
       const dataTableSearch = new DataTable(tableRef.current, {
         searchable: true,
@@ -84,11 +142,11 @@ const CryptoHistory: React.FC<CryptoHistoryProps> = ({ transactions }) => {
       });
       setDataTable(dataTableSearch);
       setTableInitialised(true);
-      populateTable();
+      populateTable(transactions);
     }
   }
 
-  function populateTable() {
+  function populateTable(transactions: CryptoTransaction[]) {
     if (dataTable) {
       dataTable.destroy();
       dataTable.init();
@@ -108,18 +166,24 @@ const CryptoHistory: React.FC<CryptoHistoryProps> = ({ transactions }) => {
   }
 
   useEffect(() => {
-    if (!tableInitialised) {
-      initialiseTable();
-    } else {
-      populateTable();
-    }
+    const transactions = userAssets.map((asset, index) => {
+      return {
+        id: index,
+        date: asset.transaction_date,
+        crypto: asset.asset_name,
+        symbol: asset.asset_symbol,
+        amount: asset.transaction_amount,
+        value: asset.transaction_price,
+        type: asset.transaction_type
+      } as CryptoTransaction;
+    });
 
-    return () => {
-      if (dataTable) {
-        dataTable.destroy();
-      }
-    };
-  }, [dataTable]);
+    if (!tableInitialised) {
+      initialiseTable(transactions);
+    } else {
+      populateTable(transactions);
+    }
+  }, [userAssets]);
 
   return (
     <>
