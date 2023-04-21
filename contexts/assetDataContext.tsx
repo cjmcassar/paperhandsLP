@@ -10,6 +10,7 @@ type AssetData = {
   Asset_Recommendation: string;
   Asset_Review: string;
   Rating: string;
+  Asset_ID: number;
 };
 
 // Define the context type
