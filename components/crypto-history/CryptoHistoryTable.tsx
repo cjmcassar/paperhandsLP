@@ -19,10 +19,11 @@ interface UserAsset {
   transaction_price: string;
   transaction_type: "buy" | "sell";
   transaction_date: string;
+  transaction_id: string;
 }
 
 interface CryptoTransaction {
-  id: number;
+  id: string;
   date: string;
   crypto: string;
   symbol: string;
@@ -70,7 +71,8 @@ const CryptoHistory: React.FC = () => {
             transaction_date: format(
               fromUnixTime(transactionData.transaction_date.seconds),
               "yyyy-MM-dd"
-            )
+            ),
+            transaction_id: transactionDoc.id
           });
         });
       });
@@ -168,7 +170,7 @@ const CryptoHistory: React.FC = () => {
   useEffect(() => {
     const transactions = userAssets.map((asset, index) => {
       return {
-        id: index,
+        id: asset.transaction_id,
         date: asset.transaction_date,
         crypto: asset.asset_name,
         symbol: asset.asset_symbol,
@@ -178,6 +180,10 @@ const CryptoHistory: React.FC = () => {
       } as CryptoTransaction;
     });
 
+    console.log(
+      "transaction ids: ",
+      transactions.map(t => t.id)
+    );
     if (!tableInitialised) {
       initialiseTable(transactions);
     } else {

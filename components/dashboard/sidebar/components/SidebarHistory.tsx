@@ -13,6 +13,7 @@ interface UserAsset {
   transaction_date: string;
   transaction_amount: number;
   transaction_type: "buy" | "sell";
+  transaction_id: string;
 }
 
 function SidebarHistoryItem({ icon, title, date, value, valueColor }) {
@@ -86,7 +87,8 @@ export default function SidebarHistory() {
             transaction_date: format(
               fromUnixTime(transactionData.transaction_date.seconds),
               "yyyy-MM-dd"
-            )
+            ),
+            transaction_id: transactionDoc.id
           });
         });
       });
@@ -128,7 +130,7 @@ export default function SidebarHistory() {
 
             return (
               <SidebarHistoryItem
-                key={asset.asset_symbol}
+                key={asset.transaction_id}
                 icon={asset.asset_symbol}
                 title={`${isBuy ? "Bought" : "Sold"} ${asset.asset_name}`}
                 date={`${formattedDate.replace(/\d+/, dayWithSuffix)}`}
