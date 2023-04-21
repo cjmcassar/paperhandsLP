@@ -1,5 +1,6 @@
 import { google } from "googleapis";
 import { Redis } from "@upstash/redis";
+import base64url from "base64url";
 
 const client = new Redis({
   url: process.env.NEXT_PUBLIC_UPSTASH_URL,
@@ -34,7 +35,13 @@ export default async function handler(req, res) {
 }
 
 async function getGoogleAuth() {
+  const credentialsJson = base64url.decode(
+    process.env.GOOGLE_APPLICATION_CREDENTIALS_BASE64
+  );
+  const credentials = JSON.parse(credentialsJson);
+
   const auth = await google.auth.getClient({
+    credentials,
     scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"]
   });
   return auth;
