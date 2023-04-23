@@ -9,6 +9,8 @@ const RiskLabel = ({ color, text }) => (
   </div>
 );
 
+// TODO: get user data from firebase user_assets collection
+
 export default function LineChart() {
   const chartContainer = useRef(null);
 
