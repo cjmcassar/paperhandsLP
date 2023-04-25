@@ -1,6 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import styles from "./LineChart.module.css";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { query, collection, where, onSnapshot } from "firebase/firestore";
+import { db, auth } from "utils/firebaseClient";
+import { format, fromUnixTime } from "date-fns";
 
 const RiskLabel = ({ color, text }) => (
   <div className="flex gap-2 items-center">
@@ -9,23 +13,89 @@ const RiskLabel = ({ color, text }) => (
   </div>
 );
 
+interface UserAsset {
+  uid: string;
+  asset_name: string;
+  asset_symbol: string;
+  total_amount: number;
+  storage_type: string;
+  transaction_date: string;
+  transaction_type: "buy" | "sell";
+  id: string;
+}
+
 // TODO: get user data from firebase user_assets collection
 
 export default function LineChart() {
   const chartContainer = useRef(null);
+  const [user] = useAuthState(auth);
+  const [userAssets, setUserAssets] = useState<UserAsset[]>([]);
+  const [lineChart, setLineChart] = useState(null);
+
+  useEffect(() => {
+    if (user) {
+      const unsubscribe = fetchUserAssets();
+
+      return () => {
+        if (unsubscribe) {
+          unsubscribe();
+        }
+      };
+    }
+  }, [user]);
+
+  const fetchUserAssets = () => {
+    if (!user) return;
+
+    const userAssetsQuery = query(
+      collection(db, "user_assets"),
+      where("uid", "==", user.uid)
+    );
+
+    const unsubscribe = onSnapshot(userAssetsQuery, querySnapshot => {
+      const userAssets: UserAsset[] = [];
+      querySnapshot.forEach(doc => {
+        const docData = doc.data();
+        const transactionDateSeconds = docData.transaction_date?.seconds;
+
+        const data = {
+          ...docData,
+          transaction_date: transactionDateSeconds
+            ? format(fromUnixTime(transactionDateSeconds), "yyyy-MM-dd")
+            : "",
+          id: doc.id
+        };
+        userAssets.push(data as UserAsset);
+      });
+      setUserAssets(userAssets);
+    });
+
+    return unsubscribe;
+  };
+
+  // Process user assets to get data for the line chart
+  const processData = (): number[][] => {
+    // Initialize empty data arrays
+    const highRiskData: number[] = new Array(12).fill(0);
+    const mediumRiskData: number[] = new Array(12).fill(0);
+    const lowRiskData: number[] = new Array(12).fill(0);
+
+    return [highRiskData, mediumRiskData, lowRiskData];
+  };
+
+  const [highRiskData, mediumRiskData, lowRiskData] = processData();
 
   useEffect(() => {
     if (chartContainer.current) {
       const ctx = chartContainer.current.getContext("2d");
+      const gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+
+      gradientStroke.addColorStop(1, "rgba(94, 114, 228, 0.2)");
+      gradientStroke.addColorStop(0.2, "rgba(94, 114, 228, 0.0)");
+      gradientStroke.addColorStop(0, "rgba(94, 114, 228, 0)");
 
       if (ctx) {
-        const gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
-
-        gradientStroke.addColorStop(1, "rgba(94, 114, 228, 0.2)");
-        gradientStroke.addColorStop(0.2, "rgba(94, 114, 228, 0.0)");
-        gradientStroke.addColorStop(0, "rgba(94, 114, 228, 0)");
-
-        new Chart(ctx, {
+        const chartInstance = new Chart(ctx, {
           type: "line",
           data: {
             labels: [
@@ -51,7 +121,7 @@ export default function LineChart() {
                 // fill: true,
                 // backgroundColor: gradientStroke,
                 borderWidth: 2,
-                data: [0, 25, 76, 50, 40, 300, 220, 500, 250, 400, 230, 500]
+                data: highRiskData
               },
               {
                 label: "Medium Risk",
@@ -61,7 +131,7 @@ export default function LineChart() {
                 // fill: true,
                 // backgroundColor: gradientStroke,
                 borderWidth: 2,
-                data: [0, 90, 34, 40, 76, 76, 50, 76, 56, 230, 500, 230]
+                data: mediumRiskData
               },
               {
                 label: "Low Risk",
@@ -71,7 +141,7 @@ export default function LineChart() {
                 // fill: true,
                 // backgroundColor: gradientStroke,
                 borderWidth: 2,
-                data: [0, 50, 30, 76, 30, 34, 230, 230, 40, 76, 76, 150]
+                data: lowRiskData
               }
             ]
           },
@@ -133,9 +203,20 @@ export default function LineChart() {
             }
           }
         });
+
+        setLineChart(chartInstance);
       }
     }
   }, []);
+
+  useEffect(() => {
+    if (lineChart) {
+      lineChart.data.datasets[0].data = highRiskData;
+      lineChart.data.datasets[1].data = mediumRiskData;
+      lineChart.data.datasets[2].data = lowRiskData;
+      lineChart.update();
+    }
+  }, [lineChart, userAssets]);
 
   return (
     <div className={styles.outerContainer}>
