@@ -1,0 +1,52 @@
+.iconSize {
+  font-size: 1.5rem;
+}
+
+.iconBorder {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #1a1c24;
+  border-radius: 0.625rem;
+  padding: 0.5rem;
+}
+
+.iconBorder:hover {
+  background-color: #2d3748;
+  color: #ffffff;
+}
+
+.nav {
+  position: fixed;
+  top: 5rem;
+  bottom: 5rem;
+  right: 0;
+  border-radius: 2rem;
+  width: 16rem;
+  padding-top: 2rem;
+  z-index: 20;
+  overflow: auto;
+}
+
+@media (max-width: 1023px) {
+  .nav {
+    display: none;
+  }
+}
+
+.listItem {
+  display: flex;
+  align-items: center;
+}
+
+.listItemLink {
+  padding: 0.5rem 0;
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+  transition: all 0.2s ease-in-out;
+}
+
+.nft path {
+  fill: currentColor;
+}

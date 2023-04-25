@@ -1,0 +1,73 @@
+.container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.assetCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 190.5px;
+  height: 223.5px;
+  background-color: #1a1c24;
+  border-radius: 35px;
+  margin: 10px;
+}
+
+@media (max-width: 767px) {
+  .assetCard {
+    width: calc(50% - 20px);
+  }
+}
+
+@media (max-width: 480px) {
+  .assetCard {
+    width: 100%;
+  }
+}
+
+.assetCard .description {
+  color: white;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  margin-top: 10px;
+}
+
+.assetCard .icon {
+  margin-top: 10px;
+}
+
+.assetCard .symbol {
+  margin-top: 10px;
+}
+
+.assetCard .amount {
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-top: 10px;
+}
+
+.assetCard .label {
+  font-weight: medium;
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+.textWhite {
+  color: white;
+}
+
+.textGreen {
+  color: #62ff97;
+}
+
+.textRed {
+  color: #ff6262;
+}
+
+.textYellow {
+  color: #fff962;
+}

@@ -1,0 +1,32 @@
+.latestOperationsTitle {
+	text-transform: capitalize;
+	color: white;
+	font-weight: bold;
+	font-size: 1.875rem;
+}
+
+.latestOperationsTitle.sm\\:text-lg {
+	font-size: 1.125rem;
+}
+
+.buttonGroup {
+	display: flex;
+	gap: 1rem;
+	font-size: 1.125rem;
+	color: white;
+}
+
+.buttonGroup.sm\\:text-xs {
+	font-size: 0.75rem;
+}
+
+.customButton {
+	transition-property: background-color, border-color, color, fill, stroke;
+	transition-duration: 300ms;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.75rem;
+	border-radius: 9999px;
+	border-width: 4px;
+	padding: 0.25rem 0.5rem;
+}

@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "simple-datatables/dist/style.css";
+
+@layer base {
+  html,
+  body {
+    @apply dark:bg-dark;
+  }
+}
+
+/* simple-datatables styles */
+.datatable-container {
+  background-color: #363636;
+  border-radius: 10px;
+}
+
+.datatable-table {
+  background-color: #363636;
+  border-radius: 10px;
+  min-width: 840px;
+}
+
+.datatable-table tbody tr:nth-child(odd) {
+  background-color: #292929;
+}
+
+.datatable-table th {
+  color: #fff;
+}
+.datatable-table > thead > tr > th,
+.datatable-table > tbody > tr > td {
+  vertical-align: middle;
+}
+
+.datatable-sorter {
+  color: #fff;
+  font-size: 12px;
+}
+.datatable-sorter::before {
+  border-top-color: #fff;
+}
+.datatable-sorter::after {
+  border-bottom-color: #fff;
+}
+.datatable-dropdown label {
+  color: #fff;
+}
+.datatable-selector {
+  color: #ffffff;
+  background-color: #1a1c24;
+  border-radius: 5px;
+  margin-right: 6px;
+}
+
+.datatable-search .datatable-input {
+  color: #fff;
+  background-color: #1a1c24;
+  border-radius: 5px;
+}
+
+.datatable-info {
+  color: #fff;
+}
+
+.datatable-pagination-list-item a {
+  color: #fff;
+}
+.datatable-pagination .datatable-active a,
+.datatable-pagination .datatable-active a:focus,
+.datatable-pagination .datatable-active a:hover,
+.datatable-pagination a:focus,
+.datatable-pagination a:hover {
+  background-color: transparent;
+  border: 1px solid #fff;
+  border-radius: 5px;
+}
