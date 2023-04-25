@@ -43,7 +43,7 @@ export default function DashboardLayout({ children }) {
         {children}
       </div>
 
-      <RightHandSidebar />
+      {/* <RightHandSidebar /> */}
 
       <div className="bg-darkGrey lg:pl-56 lg:pr-64">
         <Footer />
