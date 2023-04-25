@@ -4,13 +4,13 @@ import RiskReviewHeader from "./RiskReviewHeader";
 import RiskReviewTable from "./RiskReviewTable";
 
 function RiskReview() {
-	return (
-		<>
-			<RiskReviewHeader />
-			<RiskReviewTable />
-			<RiskLevelCharts />
-		</>
-	);
+  return (
+    <>
+      <RiskReviewHeader />
+      <RiskReviewTable />
+      {/* <RiskLevelCharts /> */}
+    </>
+  );
 }
 
 export default RiskReview;

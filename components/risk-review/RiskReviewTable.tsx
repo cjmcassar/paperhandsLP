@@ -357,7 +357,7 @@ function RiskReviewTable() {
                       htmlFor="transaction-type-select"
                       className="block text-gray-700 font-medium mb-2"
                     >
-                      transaction Type
+                      Transaction Type
                     </label>
                     <select
                       id="transaction-type-select"

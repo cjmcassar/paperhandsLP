@@ -18,7 +18,7 @@ function Toggler({ onClick }) {
 
 function Brand() {
   return (
-    <Link href="/dashboard">
+    <Link href="/risk-review">
       <button className={styles.brand}>Paperhands</button>
     </Link>
   );
@@ -46,14 +46,14 @@ function CollapseHeader({ onClose }) {
 function NavigationItems() {
   return (
     <ul className="md:flex-col md:min-w-full flex flex-col list-none text-lg">
-      <li className="items-center mb-3">
+      {/* <li className="items-center mb-3">
         <SidebarItem
           href="/dashboard"
           iconSrc="/img/dashboard/icons/dashboard.svg"
         >
           Dashboard
         </SidebarItem>
-      </li>
+      </li> */}
       <li className="items-center mb-3">
         <SidebarItem
           href="/risk-review"
@@ -62,11 +62,11 @@ function NavigationItems() {
           Risk Review
         </SidebarItem>
       </li>
-      <li className="items-center mb-3">
+      {/* <li className="items-center mb-3">
         <SidebarItem href="/history" iconSrc="/img/dashboard/icons/history.svg">
           History
         </SidebarItem>
-      </li>
+      </li> */}
     </ul>
   );
 }
@@ -76,7 +76,10 @@ function NavigationFooter() {
     <ul className="mt-auto md:flex-col md:min-w-full flex flex-col list-none md:mb-4 text-lg ">
       <Divider />
       <li className="items-center mb-5">
-        <SidebarItem href="/contact" iconSrc="/img/dashboard/icons/contact.svg">
+        <SidebarItem
+          href="mailto:infoattww@gmail.com?subject=Feedback%20for%20Paperhands"
+          iconSrc="/img/dashboard/icons/contact.svg"
+        >
           Contact Us
         </SidebarItem>
       </li>

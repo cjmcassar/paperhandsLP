@@ -18,7 +18,7 @@ const SignInWithGoogle: React.FC<LoginButtonProps> = ({ providerName }) => {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
 
-      router.push("/dashboard");
+      router.push("/risk-review");
     } catch (error) {
       // Handle login error here (e.g., display an error message)
       console.error("Login error: ", error);
