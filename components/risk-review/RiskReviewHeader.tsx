@@ -55,9 +55,6 @@ function RiskReviewHeader() {
   const assetData = useContext(AssetDataContext);
   const storageData = useContext(StorageDataContext);
 
-  // TODO: update the asset in the to remove ,transaction_date ,transaction_price ,transaction_type since
-  // those are shown in the transactions subcollection
-
   const handleAssetSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let asset_input_amount = parseFloat(
@@ -157,17 +154,23 @@ function RiskReviewHeader() {
         >
           Risk Review
           {showLoading && (
-            <FontAwesomeIcon
-              icon={faSpinner}
-              className="fa-spin ml-4 text-gray-500"
-            />
+            <>
+              <FontAwesomeIcon
+                icon={faSpinner}
+                className="fa-spin ml-4 text-gray-500"
+              />
+              <span className="text-gray-500 ml-2 text-sm">Loading Assets</span>
+            </>
           )}
         </h2>
       </div>
       <div className={`${styles.buttonGroup}`}>
         <button
-          className={`${styles.customButton} hover:border-primary`}
+          className={`${styles.customButton} hover:border-primary ${
+            showLoading ? "opacity-50 cursor-default hover:border-white" : ""
+          }`}
           onClick={handleAddNewCrypto}
+          disabled={showLoading}
         >
           <Plus width="22" height="22" />
           <span className="text-xs">Add New Crypto</span>
