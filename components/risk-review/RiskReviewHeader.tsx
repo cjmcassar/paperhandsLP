@@ -22,6 +22,7 @@ import Question from "../../public/img/dashboard/icons/question.svg";
 import styles from "./RiskReviewHeader.module.css";
 
 import FAQModal from "../dashboard/FAQModal";
+import { parseISO } from "date-fns";
 
 type Asset = {
   Asset: string;
@@ -62,9 +63,11 @@ function RiskReviewHeader() {
     let asset_input_amount = parseFloat(
       (e.currentTarget.elements.namedItem("amount") as HTMLInputElement).value
     );
-    let transactionDate = (
+    let dateString = (
       e.currentTarget.elements.namedItem("transactionDate") as HTMLInputElement
     ).value;
+
+    let transactionDate = parseISO(dateString);
 
     if (!selectedAsset) return;
 
@@ -106,18 +109,17 @@ function RiskReviewHeader() {
           uid: uid
         });
       }
-
       await addDoc(collection(assetDocRef, "transactions"), {
         transaction_amount: asset_input_amount,
         storage_type: selectedStorageType,
         transaction_price: selectedAsset.Price,
         transaction_type: "buy",
-        transaction_date: new Date(transactionDate),
+        transaction_date: transactionDate,
         uid: uid
       });
 
       asset_input_amount = null;
-      transactionDate = "";
+      dateString = "";
       setSelectedAsset(null);
       setShowForm(false);
       console.log("Document successfully written!");

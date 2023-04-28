@@ -86,7 +86,7 @@ export default function SidebarHistory() {
             ...transactionData,
             transaction_date: format(
               fromUnixTime(transactionData.transaction_date.seconds),
-              "yyyy-MM-dd"
+              "MMMM do, yyyy"
             ),
             transaction_id: transactionDoc.id
           });
@@ -133,7 +133,7 @@ export default function SidebarHistory() {
                 key={asset.transaction_id}
                 icon={asset.asset_symbol}
                 title={`${isBuy ? "Bought" : "Sold"} ${asset.asset_name}`}
-                date={`${formattedDate.replace(/\d+/, dayWithSuffix)}`}
+                date={asset.transaction_date}
                 value={value}
                 valueColor={valueColor}
               />
