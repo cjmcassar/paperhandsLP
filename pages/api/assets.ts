@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     }
 
     const auth = await getGoogleAuth();
-    const data = await fetchData(auth, process.env.SHEET_ID, "Assets!A2:H");
+    const data = await fetchData(auth, process.env.SHEET_ID, "Assets!A2:H121");
     console.log("handler");
 
     // Cache the data in Redis
