@@ -32,7 +32,7 @@ type Asset = {
 };
 
 type UserAsset = {
-  amount: number;
+  total_amount: number;
   asset_name: string;
   asset_symbol: string;
   storage_type: string;
@@ -91,7 +91,7 @@ function RiskReviewHeader() {
         const assetDoc = querySnapshot.docs[0];
         const assetData = assetDoc.data() as UserAsset;
 
-        const updatedAmount = asset_input_amount + assetData.amount;
+        const updatedAmount = asset_input_amount + assetData.total_amount;
         await updateDoc(doc(db, "user_assets", assetDoc.id), {
           total_amount: updatedAmount
         });
