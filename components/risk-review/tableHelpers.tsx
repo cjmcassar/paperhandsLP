@@ -112,12 +112,12 @@ export function populateTable(
   dataTable!.destroy();
   dataTable!.init();
   const data: (string | number)[][] = [];
+
   userAssets.forEach(review => {
     if (assetData.assetData) {
       const assetDetails = assetData.assetData.find(
         asset => asset.Symbol === review.asset_symbol
       );
-
       if (assetDetails) {
         const risk = assetDetails.Rating;
         const riskReview = assetDetails.Asset_Review;
@@ -126,13 +126,12 @@ export function populateTable(
           ""
         );
         const priceAsNumber = parseFloat(priceWithoutUSD);
-        const value = `$${(priceAsNumber * review.amount).toFixed(2)}`;
-        // console.log("review", review);
+        const value = `$${(priceAsNumber * review.total_amount).toFixed(2)}`;
         if (risk && riskReview && value) {
           data.push([
             review.asset_name,
             review.asset_symbol,
-            review.amount,
+            review.total_amount,
             value,
             review.storage_type,
             risk,
@@ -143,7 +142,6 @@ export function populateTable(
       }
     }
   });
-
   dataTable!.insert({ data: data });
 
   // Edit button event listener
@@ -154,7 +152,6 @@ export function populateTable(
       let id = (e.target as HTMLElement).getAttribute("data-assetId");
 
       let userAsset = userAssets.find(asset => asset.id == id);
-      // console.log("object,", userAsset);
       setEditPortfolioData(userAsset);
     }
   });

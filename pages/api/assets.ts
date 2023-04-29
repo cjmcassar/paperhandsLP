@@ -1,5 +1,6 @@
 import { google } from "googleapis";
 import { Redis } from "@upstash/redis";
+import base64url from "base64url";
 
 const client = new Redis({
   url: process.env.NEXT_PUBLIC_UPSTASH_URL,
@@ -18,7 +19,7 @@ export default async function handler(req, res) {
     }
 
     const auth = await getGoogleAuth();
-    const data = await fetchData(auth, process.env.SHEET_ID, "Assets!A2:H");
+    const data = await fetchData(auth, process.env.SHEET_ID, "Assets!A2:H121");
     console.log("handler");
 
     // Cache the data in Redis
@@ -27,12 +28,20 @@ export default async function handler(req, res) {
     res.status(200).json({ data });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
   }
 }
 
 async function getGoogleAuth() {
+  const credentialsJson = base64url.decode(
+    process.env.GOOGLE_APPLICATION_CREDENTIALS_BASE64
+  );
+  const credentials = JSON.parse(credentialsJson);
+
   const auth = await google.auth.getClient({
+    credentials,
     scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"]
   });
   return auth;

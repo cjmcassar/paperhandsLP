@@ -22,6 +22,7 @@ import Question from "../../public/img/dashboard/icons/question.svg";
 import styles from "./RiskReviewHeader.module.css";
 
 import FAQModal from "../dashboard/FAQModal";
+import { parseISO } from "date-fns";
 
 type Asset = {
   Asset: string;
@@ -31,7 +32,7 @@ type Asset = {
 };
 
 type UserAsset = {
-  amount: number;
+  total_amount: number;
   asset_name: string;
   asset_symbol: string;
   storage_type: string;
@@ -54,17 +55,16 @@ function RiskReviewHeader() {
   const assetData = useContext(AssetDataContext);
   const storageData = useContext(StorageDataContext);
 
-  // TODO: update the asset in the to remove ,transaction_date ,transaction_price ,transaction_type since
-  // those are shown in the transactions subcollection
-
   const handleAssetSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let asset_input_amount = parseFloat(
       (e.currentTarget.elements.namedItem("amount") as HTMLInputElement).value
     );
-    let transactionDate = (
+    let dateString = (
       e.currentTarget.elements.namedItem("transactionDate") as HTMLInputElement
     ).value;
+
+    let transactionDate = parseISO(dateString);
 
     if (!selectedAsset) return;
 
@@ -91,7 +91,7 @@ function RiskReviewHeader() {
         const assetDoc = querySnapshot.docs[0];
         const assetData = assetDoc.data() as UserAsset;
 
-        const updatedAmount = asset_input_amount + assetData.amount;
+        const updatedAmount = asset_input_amount + assetData.total_amount;
         await updateDoc(doc(db, "user_assets", assetDoc.id), {
           total_amount: updatedAmount
         });
@@ -106,18 +106,17 @@ function RiskReviewHeader() {
           uid: uid
         });
       }
-
       await addDoc(collection(assetDocRef, "transactions"), {
         transaction_amount: asset_input_amount,
         storage_type: selectedStorageType,
         transaction_price: selectedAsset.Price,
         transaction_type: "buy",
-        transaction_date: new Date(transactionDate),
+        transaction_date: transactionDate,
         uid: uid
       });
 
       asset_input_amount = null;
-      transactionDate = "";
+      dateString = "";
       setSelectedAsset(null);
       setShowForm(false);
       console.log("Document successfully written!");
@@ -155,17 +154,23 @@ function RiskReviewHeader() {
         >
           Risk Review
           {showLoading && (
-            <FontAwesomeIcon
-              icon={faSpinner}
-              className="fa-spin ml-4 text-gray-500"
-            />
+            <>
+              <FontAwesomeIcon
+                icon={faSpinner}
+                className="fa-spin ml-4 text-gray-500"
+              />
+              <span className="text-gray-500 ml-2 text-sm">Loading Assets</span>
+            </>
           )}
         </h2>
       </div>
       <div className={`${styles.buttonGroup}`}>
         <button
-          className={`${styles.customButton} hover:border-primary`}
+          className={`${styles.customButton} hover:border-primary ${
+            showLoading ? "opacity-50 cursor-default hover:border-white" : ""
+          }`}
           onClick={handleAddNewCrypto}
+          disabled={showLoading}
         >
           <Plus width="22" height="22" />
           <span className="text-xs">Add New Crypto</span>

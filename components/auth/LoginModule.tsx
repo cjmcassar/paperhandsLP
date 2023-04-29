@@ -12,7 +12,7 @@ function LoginModule() {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
-        router.push("/dashboard");
+        router.push("/risk-review");
       }
     });
     return () => unsubscribe();
