@@ -266,7 +266,7 @@ function RiskReviewTable() {
           </div>
         </div>
       </div>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto  tour-step-2">
         <table
           ref={tableRef}
           className={`${styles.riskReviewTable} min-w-full divide-y divide-gray-200 sm:text-sm text-white`}
