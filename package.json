@@ -30,6 +30,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@headlessui/react": "^1.2.0",
     "@heroicons/react": "^1.0.1",
+    "@reactour/tour": "^3.4.0",
     "@tailwindcss/aspect-ratio": "^0.2.1",
     "@types/chart.js": "^2.9.37",
     "@types/redis": "^4.0.11",
