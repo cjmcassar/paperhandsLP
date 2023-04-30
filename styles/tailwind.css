@@ -76,3 +76,14 @@
   border: 1px solid #fff;
   border-radius: 5px;
 }
+
+/* Manual styling for React Tour */
+/* TODO: use Reactour way to handle styling */
+
+.reactour__popover {
+  background-color: #1a1c24 !important;
+  border-radius: 10px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border: 1px solid gray;
+}
