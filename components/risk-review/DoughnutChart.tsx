@@ -138,10 +138,8 @@ export default function DoughnutChart() {
   }
 
   function populateDonutChart() {
-    const data: DonutChartData[] = [];
-    const riskCounts: { [riskLevel: number]: number } = {};
-
-    let totalCount = 0;
+    const riskLevels: { [riskLevel: string]: number } = {};
+    let totalValue = 0;
 
     userAssets.forEach(review => {
       const assetDetails = assetData.assetData?.find(
@@ -149,76 +147,63 @@ export default function DoughnutChart() {
       );
 
       if (assetDetails) {
+        const price = parseFloat(assetDetails.Price.replace(/[$,]/g, ""));
+
+        const assetValue = price * review.total_amount;
         const risk = assetDetails.Rating.replace(/^[\d\s-]+/, "");
 
-        let color = "";
+        totalValue += assetValue;
 
-        switch (risk) {
-          case "High Risk":
-            color = "#FC62FF";
-            break;
-          case "Medium Risk":
-            color = "#FFF507";
-            break;
-          case "Low Risk":
-            color = "#62FF97";
-            break;
-          case "Historically Safe":
-            color = "#8DAAF5";
-            break;
-          default:
-            color = "gray";
-            break;
-        }
-
-        data.push({
-          risk: risk,
-          color: color,
-          percentage: 0
-        });
-        totalCount++;
-        if (risk in riskCounts) {
-          riskCounts[risk]++;
+        if (risk in riskLevels) {
+          riskLevels[risk] += assetValue;
         } else {
-          riskCounts[risk] = 1;
+          riskLevels[risk] = assetValue;
         }
       }
     });
 
-    const riskPercentages: { [riskLevel: number]: string } = {};
+    const riskLevelPercents: { [riskLevel: string]: number } = {};
 
-    Object.entries(riskCounts).forEach(([riskLevel, count]) => {
-      const percentage = ((count / totalCount) * 100).toFixed(2);
-      riskPercentages[riskLevel] = parseFloat(percentage);
+    Object.entries(riskLevels).forEach(([riskLevel, value]) => {
+      riskLevelPercents[riskLevel] = (value / totalValue) * 100;
     });
 
-    data.forEach(row => {
-      row.percentage = riskPercentages[row.risk];
-    });
+    const data: DonutChartData[] = [];
 
-    function filterUniqueByKey(array, key) {
-      const seen = {};
-      return array.filter(item => {
-        const value = item[key];
-        if (seen[value]) {
-          return false;
-        } else {
-          seen[value] = true;
-          return true;
-        }
+    Object.entries(riskLevelPercents).forEach(([risk, percentage]) => {
+      let color = "";
+
+      switch (risk) {
+        case "High Risk":
+          color = "#FC62FF";
+          break;
+        case "Medium Risk":
+          color = "#FFF507";
+          break;
+        case "Low Risk":
+          color = "#62FF97";
+          break;
+        case "Historically Safe":
+          color = "#8DAAF5";
+          break;
+        default:
+          color = "gray";
+          break;
+      }
+
+      data.push({
+        risk: risk,
+        color: color,
+        percentage: parseFloat(percentage.toFixed(2))
       });
-    }
+    });
 
-    const uniqueData = filterUniqueByKey(data, "risk");
-
-    setDonutData(uniqueData);
+    setDonutData(data);
 
     if (dataChart) {
-      dataChart.data.labels = uniqueData.map(data => data.risk);
-      dataChart.data.datasets[0].backgroundColor = uniqueData.map(
-        data => data.color
-      );
-      dataChart.data.datasets[0].data = uniqueData.map(data => data.percentage);
+      dataChart.data.labels = data.map(data => data.risk);
+      dataChart.data.datasets[0].backgroundColor = data.map(data => data.color);
+      dataChart.data.datasets[0].data = data.map(data => data.percentage);
       dataChart.update();
     }
   }
