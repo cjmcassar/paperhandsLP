@@ -92,7 +92,7 @@ export function initializeTable(
         {
           select: 7,
           render: function (assetId) {
-            return `<button class="bg-[#4b5563] text-white shadow-sm text-sm py-1 px-3 rounded-full" data-assetId=${assetId[0].data}>Edit</button>`;
+            return `<button class="bg-[#4b5563] text-white shadow-sm text-sm py-1 px-3 rounded-full" data-assetId=${assetId[0].data}>Buy/Sell</button>`;
           }
         }
       ]
