@@ -155,7 +155,6 @@ function RiskReviewTable() {
     if (!existingAssetData) return;
 
     const totalAmount = parseFloat(existingAssetData?.total_amount);
-    console.log("totalAmount", totalAmount);
     if (isNaN(totalAmount)) {
       console.error("Error: Amount is not a valid number.");
       return;
@@ -178,7 +177,6 @@ function RiskReviewTable() {
     }
 
     let transactionAmount = editPortfolioData?.amount;
-    console.log("transactionAmount", transactionAmount);
 
     let newAmount = transactionAmount;
     if (transactionType === "sell") {
