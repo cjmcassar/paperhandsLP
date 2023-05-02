@@ -383,12 +383,25 @@ function RiskReviewTable() {
                       type="number"
                       id="amount-input"
                       name="amount"
-                      value={editPortfolioData.amount}
+                      value={
+                        editPortfolioData.amount !== null
+                          ? editPortfolioData.amount
+                          : ""
+                      }
                       onChange={e => {
-                        setEditPortfolioData({
-                          ...editPortfolioData,
-                          amount: parseFloat(e.target.value) || NaN
-                        });
+                        const inputValue = e.target.value.trim();
+                        const parsedValue = parseFloat(inputValue);
+                        if (!isNaN(parsedValue)) {
+                          setEditPortfolioData({
+                            ...editPortfolioData,
+                            amount: parsedValue
+                          });
+                        } else {
+                          setEditPortfolioData({
+                            ...editPortfolioData,
+                            amount: null
+                          });
+                        }
                       }}
                       className="w-full border rounded px-3 py-2"
                     />
