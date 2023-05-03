@@ -239,28 +239,28 @@ function RiskReviewTable() {
           <div className="flex gap-2 items-center">
             <div
               className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: "#CA4B4B" }}
+              style={{ backgroundColor: "#FF6262" }}
             ></div>
             <div>High Risk</div>
           </div>
           <div className="flex gap-2 items-center">
             <div
               className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: "#D4955A" }}
+              style={{ backgroundColor: "#FFF962" }}
             ></div>
             <div>Medium Risk</div>
           </div>
           <div className="flex gap-2 items-center">
             <div
               className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: "#D1D369" }}
+              style={{ backgroundColor: "#62FF97" }}
             ></div>
             <div>Low Risk</div>
           </div>
           <div className="flex gap-2 items-center">
             <div
               className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: "#8DAAF5" }}
+              style={{ backgroundColor: "#7B62FF" }}
             ></div>
             <div>Historically Safe</div>
           </div>

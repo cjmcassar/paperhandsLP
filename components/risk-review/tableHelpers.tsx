@@ -48,16 +48,16 @@ export function initializeTable(
             let color: string;
             switch (riskLevel[0].data) {
               case "1 - Historically Safe":
-                color = "#8DAAF5";
+                color = "#7B62FF";
                 break;
               case "2 - Low Risk":
                 color = "#62FF97";
                 break;
               case "3 - Medium Risk":
-                color = "#FFF507";
+                color = "#FFF962";
                 break;
               case "4 - High Risk":
-                color = "#FC62FF";
+                color = "#FF6262";
                 break;
               default:
                 color = "white";

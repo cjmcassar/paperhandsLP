@@ -175,16 +175,16 @@ export default function DoughnutChart() {
 
       switch (risk) {
         case "High Risk":
-          color = "#FC62FF";
+          color = "#FF6262";
           break;
         case "Medium Risk":
-          color = "#FFF507";
+          color = "#FFF962";
           break;
         case "Low Risk":
           color = "#62FF97";
           break;
         case "Historically Safe":
-          color = "#8DAAF5";
+          color = "#7B62FF";
           break;
         default:
           color = "gray";
