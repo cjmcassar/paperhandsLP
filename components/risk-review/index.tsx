@@ -8,7 +8,7 @@ function RiskReview() {
     <>
       <RiskReviewHeader />
       <RiskReviewTable />
-      {/* <RiskLevelCharts /> */}
+      <RiskLevelCharts />
     </>
   );
 }
