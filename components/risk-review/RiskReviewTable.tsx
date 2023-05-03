@@ -155,7 +155,6 @@ function RiskReviewTable() {
     if (!existingAssetData) return;
 
     const totalAmount = parseFloat(existingAssetData?.total_amount);
-    console.log("totalAmount", totalAmount);
     if (isNaN(totalAmount)) {
       console.error("Error: Amount is not a valid number.");
       return;
@@ -178,7 +177,6 @@ function RiskReviewTable() {
     }
 
     let transactionAmount = editPortfolioData?.amount;
-    console.log("transactionAmount", transactionAmount);
 
     let newAmount = transactionAmount;
     if (transactionType === "sell") {
@@ -239,34 +237,34 @@ function RiskReviewTable() {
           <div className="flex gap-2 items-center">
             <div
               className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: "#CA4B4B" }}
+              style={{ backgroundColor: "#FF6262" }}
             ></div>
             <div>High Risk</div>
           </div>
           <div className="flex gap-2 items-center">
             <div
               className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: "#D4955A" }}
+              style={{ backgroundColor: "#FFF962" }}
             ></div>
             <div>Medium Risk</div>
           </div>
           <div className="flex gap-2 items-center">
             <div
               className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: "#D1D369" }}
+              style={{ backgroundColor: "#62FF97" }}
             ></div>
             <div>Low Risk</div>
           </div>
           <div className="flex gap-2 items-center">
             <div
               className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: "#8DAAF5" }}
+              style={{ backgroundColor: "#7B62FF" }}
             ></div>
             <div>Historically Safe</div>
           </div>
         </div>
       </div>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto  tour-step-2">
         <table
           ref={tableRef}
           className={`${styles.riskReviewTable} min-w-full divide-y divide-gray-200 sm:text-sm text-white`}
@@ -383,12 +381,25 @@ function RiskReviewTable() {
                       type="number"
                       id="amount-input"
                       name="amount"
-                      value={editPortfolioData.amount}
+                      value={
+                        editPortfolioData.amount !== null
+                          ? editPortfolioData.amount
+                          : ""
+                      }
                       onChange={e => {
-                        setEditPortfolioData({
-                          ...editPortfolioData,
-                          amount: parseFloat(e.target.value) || NaN
-                        });
+                        const inputValue = e.target.value.trim();
+                        const parsedValue = parseFloat(inputValue);
+                        if (!isNaN(parsedValue)) {
+                          setEditPortfolioData({
+                            ...editPortfolioData,
+                            amount: parsedValue
+                          });
+                        } else {
+                          setEditPortfolioData({
+                            ...editPortfolioData,
+                            amount: null
+                          });
+                        }
                       }}
                       className="w-full border rounded px-3 py-2"
                     />
