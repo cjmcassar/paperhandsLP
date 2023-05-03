@@ -102,7 +102,8 @@ function RiskReviewHeader() {
           asset_name: selectedAsset.Asset,
           asset_symbol: selectedAsset.Symbol,
           storage_type: selectedStorageType,
-          uid: uid
+          uid: uid,
+          transaction_date: transactionDate
         });
       }
       await addDoc(collection(assetDocRef, "transactions"), {

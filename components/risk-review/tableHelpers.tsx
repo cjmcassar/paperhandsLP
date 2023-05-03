@@ -92,7 +92,7 @@ export function initializeTable(
         {
           select: 7,
           render: function (assetId) {
-            return `<button class="bg-[#4b5563] text-white shadow-sm text-sm py-1 px-3 rounded-full" data-assetId=${assetId[0].data}>Edit</button>`;
+            return `<button class="bg-[#4b5563] text-white shadow-sm text-sm py-1 px-3 rounded-full" data-assetId=${assetId[0].data}>Buy / Sell</button>`;
           }
         }
       ]
@@ -152,7 +152,17 @@ export function populateTable(
       let id = (e.target as HTMLElement).getAttribute("data-assetId");
 
       let userAsset = userAssets.find(asset => asset.id == id);
-      setEditPortfolioData(userAsset);
+      // setEditPortfolioData(userAsset);
+      if (userAsset) {
+        setEditPortfolioData({
+          id: userAsset.id,
+          asset_symbol: userAsset.asset_symbol,
+          asset_name: userAsset.asset_name,
+          storage_type: userAsset.storage_type,
+          amount: 0,
+          transaction_date: userAsset.transaction_date
+        });
+      }
     }
   });
 }
