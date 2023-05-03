@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -103,7 +102,8 @@ function RiskReviewHeader() {
           asset_name: selectedAsset.Asset,
           asset_symbol: selectedAsset.Symbol,
           storage_type: selectedStorageType,
-          uid: uid
+          uid: uid,
+          transaction_date: transactionDate
         });
       }
       await addDoc(collection(assetDocRef, "transactions"), {
@@ -166,14 +166,14 @@ function RiskReviewHeader() {
       </div>
       <div className={`${styles.buttonGroup}`}>
         <button
-          className={`${styles.customButton} hover:border-primary ${
+          className={`${styles.customButton} tour-step-1 hover:border-primary ${
             showLoading ? "opacity-50 cursor-default hover:border-white" : ""
           }`}
           onClick={handleAddNewCrypto}
           disabled={showLoading}
         >
           <Plus width="22" height="22" />
-          <span className="text-xs">Add New Crypto</span>
+          <span className="tour-step-1 text-xs">Add New Crypto</span>
         </button>
         <button
           onClick={openFAQModal}

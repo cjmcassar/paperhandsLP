@@ -152,7 +152,17 @@ export function populateTable(
       let id = (e.target as HTMLElement).getAttribute("data-assetId");
 
       let userAsset = userAssets.find(asset => asset.id == id);
-      setEditPortfolioData(userAsset);
+      // setEditPortfolioData(userAsset);
+      if (userAsset) {
+        setEditPortfolioData({
+          id: userAsset.id,
+          asset_symbol: userAsset.asset_symbol,
+          asset_name: userAsset.asset_name,
+          storage_type: userAsset.storage_type,
+          amount: 0,
+          transaction_date: userAsset.transaction_date
+        });
+      }
     }
   });
 }
