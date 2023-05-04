@@ -7,18 +7,38 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 500;
 }
 
 .modalContent {
   width: 80%;
   max-width: 600px;
-  background-color: #1a1c24;
   padding: 20px;
   border-radius: 10px;
   overflow-y: auto;
   max-height: 80%;
+}
+/* width */
+.modalContent::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+.modalContent::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 20px;
+}
+
+/* Handle */
+.modalContent::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 20px;
+}
+
+/* Handle on hover */
+.modalContent::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 .modalHeader {
@@ -33,11 +53,16 @@
 }
 
 .closeButton {
-  background-color: transparent;
+  background-color: rgba(229, 231, 235);
   border: none;
-  color: white;
+  color: rgba(75, 85, 99);
   font-size: 1.5rem;
   cursor: pointer;
+  padding: 2px 15px;
+  border-radius: 10px;
+}
+.closeButton:hover {
+  background-color: rgb(209, 210, 213);
 }
 
 .faqItem {

@@ -56,6 +56,7 @@ function RiskReviewHeader() {
 
   const handleAssetSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
     let asset_input_amount = parseFloat(
       (e.currentTarget.elements.namedItem("amount") as HTMLInputElement).value
     );
@@ -68,8 +69,6 @@ function RiskReviewHeader() {
     if (!selectedAsset) return;
 
     try {
-      setLoading(true);
-
       const user = auth.currentUser;
       if (!user) {
         console.log("User is not authenticated.");
@@ -187,13 +186,15 @@ function RiskReviewHeader() {
 
       {showForm && (
         <div className={`${styles.showForm} z-50`}>
-          <div className="bg-white p-8 rounded-lg">
-            <h3 className="text-xl font-medium mb-4">Add New Crypto</h3>
+          <div className="bg-gray-800 p-8 rounded-lg  w-5/12">
+            <h3 className="text-xl text-white font-medium mb-4">
+              Add New Crypto
+            </h3>
             <form onSubmit={handleAssetSubmit}>
               <div className="mb-4">
                 <label
                   htmlFor="asset-select"
-                  className="block text-gray-700 font-medium mb-2"
+                  className="block text-white font-medium mb-2"
                 >
                   Asset
                 </label>
@@ -201,7 +202,7 @@ function RiskReviewHeader() {
                   onChange={handleAssetSelect}
                   id="asset-select"
                   name="asset"
-                  className="w-full border rounded px-3 py-2"
+                  className="bg-LightGrey text-white w-full border rounded px-3 py-2"
                 >
                   <option value="">Asset</option>
                   {assetData.assetData?.map(asset => (
@@ -216,7 +217,7 @@ function RiskReviewHeader() {
                   onChange={handleStorageTypeSelect}
                   id="storage-select"
                   name="storageType"
-                  className="w-full border rounded px-3 py-2"
+                  className="bg-LightGrey text-white w-full border rounded px-3 py-2"
                 >
                   <option value="">Storage Type</option>
                   {storageData.storageData?.map(storage => (
@@ -232,7 +233,7 @@ function RiskReviewHeader() {
               <div className="mb-4">
                 <label
                   htmlFor="amount-input"
-                  className="block text-gray-700 font-medium mb-2"
+                  className="block text-white font-medium mb-2"
                 >
                   Amount
                 </label>
@@ -240,28 +241,42 @@ function RiskReviewHeader() {
                   type="number"
                   id="amount-input"
                   name="amount"
-                  className="w-full border rounded px-3 py-2"
+                  defaultValue="0"
+                  style={{ colorScheme: "dark" }}
+                  className="bg-LightGrey text-white w-full border rounded px-3 py-2"
                   step="any"
                 />
               </div>
               <div className="mb-4">
                 <label
                   htmlFor="date-picker"
-                  className="block text-gray-700 font-medium mb-2"
+                  className="block text-white font-medium mb-2"
                 >
                   Transaction Date
                 </label>
                 <input
                   type="date"
                   id="date-picker"
+                  style={{ colorScheme: "dark" }}
                   name="transactionDate"
-                  className="w-full border rounded px-3 py-2"
+                  className="bg-LightGrey text-white w-full border rounded px-3 py-2"
                 />
               </div>
 
               <div className="flex justify-end">
-                <button type="submit" className={`${styles.addButton}`}>
-                  Add
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className={`${styles.addButton}`}
+                >
+                  {loading ? (
+                    <FontAwesomeIcon
+                      icon={faSpinner}
+                      className="fa-spin text-white"
+                    />
+                  ) : (
+                    "Add"
+                  )}
                 </button>
                 <button
                   type="button"

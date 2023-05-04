@@ -9,7 +9,7 @@ const FAQModal = ({ isOpen, onClose }) => {
 
   return (
     <div className={styles.modal}>
-      <div className={styles.modalContent}>
+      <div className={`${styles.modalContent} bg-gray-800`}>
         <div className={styles.modalHeader}>
           <h2 className={styles.modalTitle}>FAQs</h2>
           <button className={styles.closeButton} onClick={onClose}>

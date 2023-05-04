@@ -13,6 +13,7 @@ import {
   deleteDoc,
   updateDoc,
   getDoc,
+  Timestamp,
   addDoc
 } from "firebase/firestore";
 
@@ -21,6 +22,8 @@ import { format, fromUnixTime } from "date-fns";
 import { initializeTable, populateTable } from "./tableHelpers";
 
 import styles from "./RiskReviewTable.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 interface UserAsset {
   uid: string;
@@ -39,11 +42,15 @@ function RiskReviewTable() {
   const storageData = useContext(StorageDataContext);
   const tableRef = useRef<HTMLTableElement | null>(null);
 
+  const [loading, setLoading] = useState(false);
   const [userAssets, setUserAssets] = useState<UserAsset[]>([]);
   const [transactionType, settransactionType] = useState<"buy" | "sell">("buy");
 
-  const [showForm, setShowForm] = useState(false);
-  const [editPortfolioData, setEditPortfolioData] = useState({
+  const [showBuySellForm, setShowBuySellForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [showDeleteForm, setShowDeleteForm] = useState(false);
+
+  const [buySellData, setBuySellData] = useState({
     id: "",
     asset_symbol: "",
     asset_name: "",
@@ -51,6 +58,16 @@ function RiskReviewTable() {
     amount: 0,
     transaction_date: ""
   });
+  const [editPortfolioData, setEditPortfolioData] = useState({
+    id: "",
+    asset_symbol: "",
+    asset_name: "",
+    storage_type: "",
+    total_amount: 0,
+    transaction_date: ""
+  });
+
+  const [deletePortfolioData, setDeletePortfolioData] = useState(null);
 
   const [tableInitialized, setTableInitialized] = useState(false);
   const [dataTable, setDataTable] = useState<DataTable | null>(null);
@@ -110,8 +127,12 @@ function RiskReviewTable() {
         dataTable,
         userAssets,
         assetData,
-        setShowForm,
-        setEditPortfolioData
+        setShowBuySellForm,
+        setShowEditForm,
+        setShowDeleteForm,
+        setBuySellData,
+        setEditPortfolioData,
+        setDeletePortfolioData
       );
     }
 
@@ -126,7 +147,7 @@ function RiskReviewTable() {
     const transactionsRef = collection(
       db,
       "user_assets",
-      editPortfolioData?.id,
+      buySellData?.id,
       "transactions"
     );
 
@@ -146,10 +167,11 @@ function RiskReviewTable() {
     }
   }
 
-  const assetUpdate = async e => {
+  const assetBuySell = async e => {
     e.preventDefault();
+    setLoading(true);
 
-    const docRef = doc(db, "user_assets", editPortfolioData?.id);
+    const docRef = doc(db, "user_assets", buySellData?.id);
     const existingAssetData = (await getDoc(docRef)).data();
 
     if (!existingAssetData) return;
@@ -161,7 +183,7 @@ function RiskReviewTable() {
     }
 
     const currentAsset = assetData.assetData.find(
-      asset => asset.Symbol === editPortfolioData?.asset_symbol
+      asset => asset.Symbol === buySellData?.asset_symbol
     );
     if (!currentAsset) {
       console.error("Error: Asset not found in assetData context.");
@@ -176,7 +198,7 @@ function RiskReviewTable() {
       return;
     }
 
-    let transactionAmount = editPortfolioData?.amount;
+    let transactionAmount = buySellData?.amount;
 
     let newAmount = transactionAmount;
     if (transactionType === "sell") {
@@ -195,7 +217,9 @@ function RiskReviewTable() {
 
     updateDoc(docRef, {
       total_amount: newAmount,
-      storage_type: editPortfolioData?.storage_type
+      transaction_date: Timestamp.fromDate(
+        new Date(buySellData.transaction_date)
+      )
     })
       .then(() => {
         console.log("Document successfully updated!");
@@ -210,23 +234,69 @@ function RiskReviewTable() {
 
         logTransaction(transactionData);
 
-        setShowForm(false);
+        setLoading(false);
+        setShowBuySellForm(false);
+        setBuySellData(null);
+      })
+      .catch(error => {
+        console.error("Error updating document: ", error);
+        setLoading(false);
+      });
+  };
+
+  const assetUpdate = async e => {
+    e.preventDefault();
+    setLoading(true);
+
+    const docRef = doc(db, "user_assets", editPortfolioData?.id);
+
+    let newAmount = editPortfolioData?.total_amount;
+
+    if (newAmount < 0) {
+      console.error("Error: New amount is negative.");
+      alert("Error: New amount is negative. Please enter the correct amount");
+      return;
+    }
+
+    updateDoc(docRef, {
+      total_amount: newAmount,
+      storage_type: editPortfolioData?.storage_type,
+      transaction_date: Timestamp.fromDate(new Date())
+    })
+      .then(() => {
+        console.log("Document successfully updated!");
+
+        setLoading(false);
+        setShowEditForm(false);
         setEditPortfolioData(null);
       })
       .catch(error => {
         console.error("Error updating document: ", error);
+        setLoading(false);
       });
   };
 
-  const assetDelete = e => {
-    const docRef = doc(db, "user_assets", editPortfolioData?.id);
+  const assetDelete = () => {
+    setLoading(true);
+    const docRef = doc(
+      db,
+      "user_assets",
+      deletePortfolioData ?? editPortfolioData?.id
+    );
     deleteDoc(docRef)
       .then(() => {
-        setShowForm(false);
+        // if deletes from delete form
+        setShowDeleteForm(false);
+
+        // if deletes from edit form
+        setShowEditForm(false);
+
         console.log("Document successfully deleted!");
+        setLoading(false);
       })
       .catch(error => {
         console.error("Error removing document: ", error);
+        setLoading(false);
       });
   };
 
@@ -288,16 +358,188 @@ function RiskReviewTable() {
         </table>
       </div>
       <div>
-        {showForm && (
+        {showBuySellForm && (
           <div className={`${styles.showForm} z-50 `}>
-            <div className="bg-white p-8 rounded-lg w-5/12">
+            <div className="bg-gray-800 p-8 rounded-lg w-5/12">
               <div className="flex justify-between items-center gap-5 mb-4">
-                <h3 className="text-xl font-medium">Update Crypto</h3>
+                <h3 className="text-xl text-white font-medium">
+                  Buy/Sell Crypto
+                </h3>
+              </div>
+              {buySellData && (
+                <form onSubmit={assetBuySell}>
+                  <div className="mb-4">
+                    <label
+                      htmlFor="asset-select"
+                      className="block text-white font-medium mb-2"
+                    >
+                      Asset
+                    </label>
+                    <input
+                      type="text"
+                      value={buySellData.asset_name}
+                      disabled={true}
+                      className="bg-LightGrey text-gray-400 w-full border rounded px-3 py-2"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label
+                      htmlFor="asset-select"
+                      className="block text-white font-medium mb-2"
+                    >
+                      Storage Type
+                    </label>
+                    {/* <select
+                      id="storage-select"
+                      name="storageType"
+                      className="bg-LightGrey text-white w-full border rounded px-3 py-2"
+                      value={buySellData.storage_type}
+                      onChange={e => {
+                        setBuySellData({
+                          ...buySellData,
+                          storage_type: e.target.value
+                        });
+                      }}
+                    >
+                      {storageData?.storageData?.map(storage => (
+                        <option
+                          key={storage.Storage_Method}
+                          value={storage.Storage_Method}
+                        >
+                          {storage.Storage_Method} ({storage.Rating})
+                        </option>
+                      ))}
+                    </select> */}
+                    <input
+                      type="text"
+                      value={buySellData.storage_type}
+                      disabled={true}
+                      className="bg-LightGrey text-gray-400 w-full border rounded px-3 py-2"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label
+                      htmlFor="transaction-type-select"
+                      className="block text-white font-medium mb-2"
+                    >
+                      Transaction Type
+                    </label>
+                    <select
+                      id="transaction-type-select"
+                      name="transactionType"
+                      className="bg-LightGrey text-white w-full border rounded px-3 py-2"
+                      value={transactionType}
+                      onChange={e =>
+                        settransactionType(e.target.value as "buy" | "sell")
+                      }
+                    >
+                      <option value="buy">Buy</option>
+                      <option value="sell">Sell</option>
+                    </select>
+                  </div>
+                  <div className="mb-4">
+                    <label
+                      htmlFor="amount-input"
+                      className="block text-white font-medium mb-2"
+                    >
+                      Transaction Amount
+                    </label>
+                    <input
+                      style={{ colorScheme: "dark" }}
+                      type="number"
+                      id="amount-input"
+                      name="amount"
+                      value={buySellData.amount}
+                      onChange={e => {
+                        const inputValue = e.target.value.trim();
+                        const parsedValue = parseFloat(inputValue);
+                        if (!isNaN(parsedValue)) {
+                          setBuySellData({
+                            ...buySellData,
+                            amount: parsedValue
+                          });
+                        } else {
+                          setBuySellData({
+                            ...buySellData,
+                            amount: 0
+                          });
+                        }
+                      }}
+                      className="bg-LightGrey text-white w-full border rounded px-3 py-2"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label
+                      htmlFor="date-picker"
+                      className="block text-white font-medium mb-2"
+                    >
+                      Transaction Date
+                    </label>
+                    <input
+                      type="date"
+                      id="date-picker"
+                      required={true}
+                      style={{ colorScheme: "dark" }}
+                      onChange={e => {
+                        setBuySellData({
+                          ...buySellData,
+                          transaction_date: e.target.value
+                        });
+                      }}
+                      name="transactionDate"
+                      className="bg-LightGrey text-white w-full border rounded px-3 py-2"
+                    />
+                  </div>
+
+                  <div className="flex justify-end">
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className={`${styles.addButton}`}
+                    >
+                      {loading ? (
+                        <FontAwesomeIcon
+                          icon={faSpinner}
+                          className="fa-spin text-white"
+                        />
+                      ) : (
+                        "Save"
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      className={`${styles.cancelButton} hover:bg-opacity-80`}
+                      onClick={() => setShowBuySellForm(false)}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+      <div>
+        {showEditForm && (
+          <div className={`${styles.showForm} z-50 `}>
+            <div className="bg-gray-800 p-8 rounded-lg w-5/12">
+              <div className="flex justify-between items-center gap-5 mb-4">
+                <h3 className="text-xl text-white font-medium">
+                  Update Crypto
+                </h3>
                 <button
                   className="bg-danger text-white px-4 py-2 rounded-lg"
                   onClick={assetDelete}
                 >
-                  Delete
+                  {loading ? (
+                    <FontAwesomeIcon
+                      icon={faSpinner}
+                      className="fa-spin text-white"
+                    />
+                  ) : (
+                    "Delete"
+                  )}
                 </button>
               </div>
               {editPortfolioData && (
@@ -305,33 +547,39 @@ function RiskReviewTable() {
                   <div className="mb-4">
                     <label
                       htmlFor="asset-select"
-                      className="block text-gray-700 font-medium mb-2"
+                      className="block text-white font-medium mb-2"
                     >
                       Asset
                     </label>
-                    <select
+                    {/* <select
                       disabled={true}
                       id="asset-select"
                       name="asset"
-                      className="w-full border rounded px-3 py-2"
+                      className="bg-LightGrey text-white w-full border rounded px-3 py-2"
                       value={editPortfolioData.asset_name}
                     >
                       <option value={editPortfolioData?.asset_name}>
                         {editPortfolioData?.asset_name}
                       </option>
-                    </select>
+                    </select> */}
+                    <input
+                      type="text"
+                      value={editPortfolioData.asset_name}
+                      disabled={true}
+                      className="bg-LightGrey text-gray-400 w-full border rounded px-3 py-2"
+                    />
                   </div>
                   <div className="mb-4">
                     <label
                       htmlFor="asset-select"
-                      className="block text-gray-700 font-medium mb-2"
+                      className="block text-white font-medium mb-2"
                     >
                       Storage Type
                     </label>
                     <select
                       id="storage-select"
                       name="storageType"
-                      className="w-full border rounded px-3 py-2"
+                      className="bg-LightGrey text-white w-full border rounded px-3 py-2"
                       value={editPortfolioData.storage_type}
                       onChange={e => {
                         setEditPortfolioData({
@@ -352,94 +600,104 @@ function RiskReviewTable() {
                   </div>
                   <div className="mb-4">
                     <label
-                      htmlFor="transaction-type-select"
-                      className="block text-gray-700 font-medium mb-2"
-                    >
-                      Transaction Type
-                    </label>
-                    <select
-                      id="transaction-type-select"
-                      name="transactionType"
-                      className="w-full border rounded px-3 py-2"
-                      value={transactionType}
-                      onChange={e =>
-                        settransactionType(e.target.value as "buy" | "sell")
-                      }
-                    >
-                      <option value="buy">Buy</option>
-                      <option value="sell">Sell</option>
-                    </select>
-                  </div>
-                  <div className="mb-4">
-                    <label
                       htmlFor="amount-input"
-                      className="block text-gray-700 font-medium mb-2"
+                      className="block text-white font-medium mb-2"
                     >
-                      Transaction Amount
+                      Amount
                     </label>
                     <input
+                      style={{ colorScheme: "dark" }}
                       type="number"
                       id="amount-input"
                       name="amount"
-                      value={
-                        editPortfolioData.amount !== null
-                          ? editPortfolioData.amount
-                          : ""
-                      }
+                      value={editPortfolioData.total_amount}
                       onChange={e => {
-                        const inputValue = e.target.value.trim();
-                        const parsedValue = parseFloat(inputValue);
-                        if (!isNaN(parsedValue)) {
-                          setEditPortfolioData({
-                            ...editPortfolioData,
-                            amount: parsedValue
-                          });
-                        } else {
-                          setEditPortfolioData({
-                            ...editPortfolioData,
-                            amount: null
-                          });
-                        }
+                        setEditPortfolioData({
+                          ...editPortfolioData,
+                          total_amount: parseFloat(e.target.value)
+                        });
                       }}
-                      className="w-full border rounded px-3 py-2"
+                      className="bg-LightGrey text-white w-full border rounded px-3 py-2"
                     />
                   </div>
                   <div className="mb-4">
                     <label
                       htmlFor="date-picker"
-                      className="block text-gray-700 font-medium mb-2"
+                      className="block text-white font-medium mb-2"
                     >
-                      Transaction Date
+                      Last Transaction/Edit Date
                     </label>
                     <input
+                      disabled={true}
                       type="date"
                       id="date-picker"
-                      value={editPortfolioData?.transaction_date}
-                      onChange={e => {
-                        setEditPortfolioData({
-                          ...editPortfolioData,
-                          transaction_date: e.target.value
-                        });
-                      }}
+                      value={editPortfolioData.transaction_date}
                       name="transactionDate"
-                      className="w-full border rounded px-3 py-2"
+                      className="bg-LightGrey text-gray-400 w-full border rounded px-3 py-2"
                     />
                   </div>
 
                   <div className="flex justify-end">
-                    <button type="submit" className={`${styles.addButton}`}>
-                      Update
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className={`${styles.addButton}`}
+                    >
+                      {loading ? (
+                        <FontAwesomeIcon
+                          icon={faSpinner}
+                          className="fa-spin text-white"
+                        />
+                      ) : (
+                        "Update"
+                      )}
                     </button>
                     <button
                       type="button"
                       className={`${styles.cancelButton} hover:bg-opacity-80`}
-                      onClick={() => setShowForm(false)}
+                      onClick={() => setShowEditForm(false)}
                     >
                       Cancel
                     </button>
                   </div>
                 </form>
               )}
+            </div>
+          </div>
+        )}
+      </div>
+      <div>
+        {showDeleteForm && (
+          <div className={`${styles.showForm} z-50 `}>
+            <div className="bg-gray-800 p-8 rounded-lg w-5/12">
+              <div className="flex flex-col lg:flex-row justify-between items-center gap-5">
+                <h3 className="text-xl text-white font-medium">
+                  Are you sure?
+                </h3>
+                <div className="flex">
+                  <button
+                    className="bg-danger text-white text-center px-4 py-2 rounded-lg"
+                    onClick={assetDelete}
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <FontAwesomeIcon
+                        icon={faSpinner}
+                        className="fa-spin text-white"
+                      />
+                    ) : (
+                      "Delete"
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    className={`${styles.cancelButton} hover:bg-opacity-80`}
+                    onClick={() => setShowDeleteForm(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         )}
