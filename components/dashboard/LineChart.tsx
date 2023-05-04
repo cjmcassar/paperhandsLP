@@ -133,7 +133,6 @@ export default function LineChart() {
       const [highRiskData, mediumRiskData, lowRiskData, historicallySafeData] =
         processData();
       let ctx = chartContainer.current.getContext("2d");
-      console.log("ctx:", ctx);
 
       if (lineChart) {
         lineChart.destroy();
