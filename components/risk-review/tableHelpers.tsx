@@ -93,7 +93,7 @@ export function initializeTable(
           select: 7,
           render: function (assetId) {
             return ` <div class="flex gap-2 mr-2">
-              <button class="bg-[#4b5563] text-white hover:ring-2 shadow-sm text-sm py-1 px-3 rounded-full" data-buyAssetId=${assetId[0].data}>Buy/Sell</button>
+              <button class="bg-[#4b5563] text-white hover:ring-2 shadow-sm text-sm py-1 px-3 rounded-full" data-buysellAssetId=${assetId[0].data}>Buy/Sell</button>
 
               <img class="border-[#4b5563] bg-[#4b5563] hover:ring-2 cursor-pointer inline-block text-white shadow-sm text-sm border-4 rounded-full" data-editAssetId=${assetId[0].data} width="30" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAACVklEQVR4nO2au2sVQRSH10ehhe9CFAs1WljkRkghwdbKQqMGUtpY+Af4PwhWVhaCnS/SaWtpTHxmi1QhRfABggZBEAvx5pMhc2E57PWqOTP3DJ4PFi7c3Zn5frM77M5MVTmO4ziO4xQOsB04B4zlrHQv0AHGMx77W9pxAFhknS5wNaX0JmAKmAfWyMtLYLdoz0FgSZwX2nUl1W02w3B4JeVjm3YAz1rO/wEc0e75GYzIh2cdGIm/dwJzLded1gxgiuHJ7xFtOQmsAu9ECOGx7DELbNEMYH4I8q9/I9/jPXAs/rcLeA4syOs0Rvs1A/JjQr5fCPvU5BsVW5Xv8QE4XqUAmMgovyB7MMp/HnDdW+Bo6QHU5uQzBvCmz20/SH4FOCyuO6T9DjBRSs9H+eXQ5lICqFvkOxuUp5QA6kTyRQRQJ5Q3H0CdWN50AHUGebMB1C3yJ4CPyvImA6gzypsMYESUOQp8+seXnEHy5gJYztjzJgO4Jcp7kljeXAAXG2VtA74nljcVwM8wodIo60wGeVMBvBBlXU8w4JkO4KYoK0xyyumsu8rypgK4Icq6DdwBLvf7ZleQNxXA07+sS0PeVACBs39Qx+a49qchby6Ar8B0WF1qlLkVOAVcAx4DX9DFVADNkf5RXMv7RlpMBpATD6DyO0AJ/BHAxwDKw8eAquDlcQ062hskupRDt21D1UZDmKMcZlXlA8AlyuF8pQ3r2+QeYp/76vJio+QD7HIvTLpWqQEuxC86CwNjN7ZlMrm4JGxpiSs840M6RtVHe8dxHMdxnOo/4RetNcoeAh5WwQAAAABJRU5ErkJggg==">
 
@@ -112,11 +112,12 @@ export function populateTable(
   dataTable,
   userAssets,
   assetData,
+  setShowBuySellForm,
   setShowEditForm,
   setShowDeleteForm,
+  setBuySellData,
   setEditPortfolioData,
-  setDeletePortfolioData,
-  setBuySellData
+  setDeletePortfolioData
 ) {
   dataTable!.destroy();
   dataTable!.init();
@@ -152,6 +153,27 @@ export function populateTable(
     }
   });
   dataTable!.insert({ data: data });
+
+  // Buy/sell button event listener
+  dataTable.dom.addEventListener("click", e => {
+    // if coming from buy sell button
+    if ((e.target as HTMLElement).getAttribute("data-buysellAssetId")) {
+      setShowBuySellForm(true);
+      let id = (e.target as HTMLElement).getAttribute("data-buysellAssetId");
+
+      let userAsset = userAssets.find(asset => asset.id == id);
+
+      if (userAsset) {
+        setBuySellData({
+          id: userAsset.id,
+          asset_symbol: userAsset.asset_symbol,
+          asset_name: userAsset.asset_name,
+          storage_type: userAsset.storage_type,
+          amount: 0
+        });
+      }
+    }
+  });
 
   // Edit button event listener
   dataTable.dom.addEventListener("click", e => {
