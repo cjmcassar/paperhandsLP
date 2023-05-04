@@ -186,7 +186,7 @@ function RiskReviewHeader() {
 
       {showForm && (
         <div className={`${styles.showForm} z-50`}>
-          <div className="bg-gray-800 p-8 rounded-lg">
+          <div className="bg-gray-800 p-8 rounded-lg  w-5/12">
             <h3 className="text-xl text-white font-medium mb-4">
               Add New Crypto
             </h3>
