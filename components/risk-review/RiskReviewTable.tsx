@@ -46,8 +46,18 @@ function RiskReviewTable() {
   const [userAssets, setUserAssets] = useState<UserAsset[]>([]);
   const [transactionType, settransactionType] = useState<"buy" | "sell">("buy");
 
+  const [showBuySellForm, setShowBuySellForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [showDeleteForm, setShowDeleteForm] = useState(false);
+
+  const [buySellData, setBuySellData] = useState({
+    id: "",
+    asset_symbol: "",
+    asset_name: "",
+    storage_type: "",
+    amount: 0,
+    transaction_date: ""
+  });
   const [editPortfolioData, setEditPortfolioData] = useState({
     id: "",
     asset_symbol: "",
@@ -56,13 +66,7 @@ function RiskReviewTable() {
     total_amount: 0,
     transaction_date: ""
   });
-  const [buySellData, setBuySellData] = useState({
-    id: "",
-    asset_symbol: "",
-    asset_name: "",
-    storage_type: "",
-    amount: 0
-  });
+
   const [deletePortfolioData, setDeletePortfolioData] = useState(null);
 
   const [tableInitialized, setTableInitialized] = useState(false);
@@ -123,11 +127,12 @@ function RiskReviewTable() {
         dataTable,
         userAssets,
         assetData,
+        setShowBuySellForm,
         setShowEditForm,
         setShowDeleteForm,
+        setBuySellData,
         setEditPortfolioData,
-        setDeletePortfolioData,
-        setBuySellData
+        setDeletePortfolioData
       );
     }
 
@@ -142,7 +147,7 @@ function RiskReviewTable() {
     const transactionsRef = collection(
       db,
       "user_assets",
-      editPortfolioData?.id,
+      buySellData?.id,
       "transactions"
     );
 
@@ -162,8 +167,86 @@ function RiskReviewTable() {
     }
   }
 
+  const assetBuySell = async e => {
+    e.preventDefault();
+    setLoading(true);
+
+    const docRef = doc(db, "user_assets", buySellData?.id);
+    const existingAssetData = (await getDoc(docRef)).data();
+
+    if (!existingAssetData) return;
+
+    const totalAmount = parseFloat(existingAssetData?.total_amount);
+    if (isNaN(totalAmount)) {
+      console.error("Error: Amount is not a valid number.");
+      return;
+    }
+
+    const currentAsset = assetData.assetData.find(
+      asset => asset.Symbol === buySellData?.asset_symbol
+    );
+    if (!currentAsset) {
+      console.error("Error: Asset not found in assetData context.");
+      return;
+    }
+
+    const currentPrice = currentAsset.Price;
+
+    const transactionPrice = currentPrice;
+    if (transactionPrice === undefined) {
+      console.error("Error: Transaction price is undefined.");
+      return;
+    }
+
+    let transactionAmount = buySellData?.amount;
+
+    let newAmount = transactionAmount;
+    if (transactionType === "sell") {
+      newAmount = totalAmount - newAmount;
+    } else {
+      newAmount = totalAmount + newAmount;
+    }
+
+    if (newAmount < 0) {
+      console.error("Error: New amount is negative.");
+      alert(
+        "Error: New amount is negative. Please check the transaction amount."
+      );
+      return;
+    }
+
+    updateDoc(docRef, {
+      total_amount: newAmount,
+      transaction_date: Timestamp.fromDate(
+        new Date(buySellData.transaction_date)
+      )
+    })
+      .then(() => {
+        console.log("Document successfully updated!");
+
+        const transactionData = {
+          transaction_amount: transactionAmount,
+          transaction_price: transactionPrice,
+          transaction_type: transactionType,
+          transaction_date: new Date(),
+          uid: user.uid
+        };
+
+        logTransaction(transactionData);
+
+        setLoading(false);
+        setShowBuySellForm(false);
+        setBuySellData(null);
+      })
+      .catch(error => {
+        console.error("Error updating document: ", error);
+        setLoading(false);
+      });
+  };
+
   const assetUpdate = async e => {
     e.preventDefault();
+    setLoading(true);
 
     const docRef = doc(db, "user_assets", editPortfolioData?.id);
 
@@ -183,11 +266,13 @@ function RiskReviewTable() {
       .then(() => {
         console.log("Document successfully updated!");
 
+        setLoading(false);
         setShowEditForm(false);
         setEditPortfolioData(null);
       })
       .catch(error => {
         console.error("Error updating document: ", error);
+        setLoading(false);
       });
   };
 
@@ -271,6 +356,168 @@ function RiskReviewTable() {
             </tr>
           </thead>
         </table>
+      </div>
+      <div>
+        {showBuySellForm && (
+          <div className={`${styles.showForm} z-50 `}>
+            <div className="bg-gray-800 p-8 rounded-lg w-5/12">
+              <div className="flex justify-between items-center gap-5 mb-4">
+                <h3 className="text-xl text-white font-medium">
+                  Buy/Sell Crypto
+                </h3>
+              </div>
+              {buySellData && (
+                <form onSubmit={assetBuySell}>
+                  <div className="mb-4">
+                    <label
+                      htmlFor="asset-select"
+                      className="block text-white font-medium mb-2"
+                    >
+                      Asset
+                    </label>
+                    <input
+                      type="text"
+                      value={buySellData.asset_name}
+                      disabled={true}
+                      className="bg-LightGrey text-gray-400 w-full border rounded px-3 py-2"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label
+                      htmlFor="asset-select"
+                      className="block text-white font-medium mb-2"
+                    >
+                      Storage Type
+                    </label>
+                    {/* <select
+                      id="storage-select"
+                      name="storageType"
+                      className="bg-LightGrey text-white w-full border rounded px-3 py-2"
+                      value={buySellData.storage_type}
+                      onChange={e => {
+                        setBuySellData({
+                          ...buySellData,
+                          storage_type: e.target.value
+                        });
+                      }}
+                    >
+                      {storageData?.storageData?.map(storage => (
+                        <option
+                          key={storage.Storage_Method}
+                          value={storage.Storage_Method}
+                        >
+                          {storage.Storage_Method} ({storage.Rating})
+                        </option>
+                      ))}
+                    </select> */}
+                    <input
+                      type="text"
+                      value={buySellData.storage_type}
+                      disabled={true}
+                      className="bg-LightGrey text-gray-400 w-full border rounded px-3 py-2"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label
+                      htmlFor="transaction-type-select"
+                      className="block text-white font-medium mb-2"
+                    >
+                      Transaction Type
+                    </label>
+                    <select
+                      id="transaction-type-select"
+                      name="transactionType"
+                      className="bg-LightGrey text-white w-full border rounded px-3 py-2"
+                      value={transactionType}
+                      onChange={e =>
+                        settransactionType(e.target.value as "buy" | "sell")
+                      }
+                    >
+                      <option value="buy">Buy</option>
+                      <option value="sell">Sell</option>
+                    </select>
+                  </div>
+                  <div className="mb-4">
+                    <label
+                      htmlFor="amount-input"
+                      className="block text-white font-medium mb-2"
+                    >
+                      Transaction Amount
+                    </label>
+                    <input
+                      type="number"
+                      id="amount-input"
+                      name="amount"
+                      value={buySellData.amount}
+                      onChange={e => {
+                        const inputValue = e.target.value.trim();
+                        const parsedValue = parseFloat(inputValue);
+                        if (!isNaN(parsedValue)) {
+                          setBuySellData({
+                            ...buySellData,
+                            amount: parsedValue
+                          });
+                        } else {
+                          setBuySellData({
+                            ...buySellData,
+                            amount: 0
+                          });
+                        }
+                      }}
+                      className="bg-LightGrey text-white w-full border rounded px-3 py-2"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label
+                      htmlFor="date-picker"
+                      className="block text-white font-medium mb-2"
+                    >
+                      Transaction Date
+                    </label>
+                    <input
+                      type="date"
+                      id="date-picker"
+                      required={true}
+                      style={{ colorScheme: "dark" }}
+                      onChange={e => {
+                        setBuySellData({
+                          ...buySellData,
+                          transaction_date: e.target.value
+                        });
+                      }}
+                      name="transactionDate"
+                      className="bg-LightGrey text-white w-full border rounded px-3 py-2"
+                    />
+                  </div>
+
+                  <div className="flex justify-end">
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className={`${styles.addButton}`}
+                    >
+                      {loading ? (
+                        <FontAwesomeIcon
+                          icon={faSpinner}
+                          className="fa-spin text-white"
+                        />
+                      ) : (
+                        "Save"
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      className={`${styles.cancelButton} hover:bg-opacity-80`}
+                      onClick={() => setShowBuySellForm(false)}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+        )}
       </div>
       <div>
         {showEditForm && (
@@ -389,8 +636,19 @@ function RiskReviewTable() {
                   </div>
 
                   <div className="flex justify-end">
-                    <button type="submit" className={`${styles.addButton}`}>
-                      Update
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className={`${styles.addButton}`}
+                    >
+                      {loading ? (
+                        <FontAwesomeIcon
+                          icon={faSpinner}
+                          className="fa-spin text-white"
+                        />
+                      ) : (
+                        "Update"
+                      )}
                     </button>
                     <button
                       type="button"
@@ -410,14 +668,15 @@ function RiskReviewTable() {
         {showDeleteForm && (
           <div className={`${styles.showForm} z-50 `}>
             <div className="bg-gray-800 p-8 rounded-lg w-5/12">
-              <div className="flex justify-between items-center gap-5">
+              <div className="flex flex-col lg:flex-row justify-between items-center gap-5">
                 <h3 className="text-xl text-white font-medium">
                   Are you sure?
                 </h3>
-                <div>
+                <div className="flex">
                   <button
                     className="bg-danger text-white text-center px-4 py-2 rounded-lg"
                     onClick={assetDelete}
+                    disabled={loading}
                   >
                     {loading ? (
                       <FontAwesomeIcon
