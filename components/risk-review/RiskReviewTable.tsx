@@ -445,6 +445,7 @@ function RiskReviewTable() {
                       Transaction Amount
                     </label>
                     <input
+                      style={{ colorScheme: "dark" }}
                       type="number"
                       id="amount-input"
                       name="amount"
@@ -605,6 +606,7 @@ function RiskReviewTable() {
                       Amount
                     </label>
                     <input
+                      style={{ colorScheme: "dark" }}
                       type="number"
                       id="amount-input"
                       name="amount"
