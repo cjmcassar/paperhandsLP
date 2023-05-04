@@ -56,6 +56,7 @@ function RiskReviewHeader() {
 
   const handleAssetSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
     let asset_input_amount = parseFloat(
       (e.currentTarget.elements.namedItem("amount") as HTMLInputElement).value
     );
@@ -68,8 +69,6 @@ function RiskReviewHeader() {
     if (!selectedAsset) return;
 
     try {
-      setLoading(true);
-
       const user = auth.currentUser;
       if (!user) {
         console.log("User is not authenticated.");
@@ -260,8 +259,19 @@ function RiskReviewHeader() {
               </div>
 
               <div className="flex justify-end">
-                <button type="submit" className={`${styles.addButton}`}>
-                  Add
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className={`${styles.addButton}`}
+                >
+                  {loading ? (
+                    <FontAwesomeIcon
+                      icon={faSpinner}
+                      className="fa-spin text-white"
+                    />
+                  ) : (
+                    "Add"
+                  )}
                 </button>
                 <button
                   type="button"
