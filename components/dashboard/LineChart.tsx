@@ -5,7 +5,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { query, collection, where, getDocs } from "firebase/firestore";
 import { db, auth } from "utils/firebaseClient";
 import { format, fromUnixTime } from "date-fns";
-import { AssetDataContext } from "contexts/assetDataContext";
+import { AssetDataContext } from "contexts/apiAssetDataContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
