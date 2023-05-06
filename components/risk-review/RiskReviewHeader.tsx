@@ -108,10 +108,10 @@ function RiskReviewHeader() {
       }
       await addDoc(collection(assetDocRef, "transactions"), {
         transaction_amount: asset_input_amount,
-        storage_type: selectedStorageType,
         transaction_price: selectedAsset.Price,
         transaction_type: "buy",
         transaction_date: transactionDate,
+        parent_id: assetDocRef.id,
         uid: uid
       });
 

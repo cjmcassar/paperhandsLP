@@ -135,6 +135,7 @@ function RiskReviewTable() {
       transaction_price: transactionData.transaction_price,
       transaction_type: transactionData.transaction_type,
       transaction_date: transactionData.transaction_date,
+      parent_id: editPortfolioData?.id,
       uid: transactionData.uid
     };
 
