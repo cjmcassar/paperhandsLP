@@ -1,31 +1,26 @@
 .container {
   display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 0;
 }
 
 .assetCard {
   position: relative;
   display: flex;
+  flex: 1;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 190.5px;
   height: 223.5px;
   background-color: #1a1c24;
   border-radius: 35px;
-  margin: 10px;
+  padding: 10px;
 }
 
 @media (max-width: 767px) {
-  .assetCard {
-    width: calc(50% - 20px);
-  }
-}
-
-@media (max-width: 480px) {
-  .assetCard {
-    width: 100%;
+  .container {
+    flex-direction: column;
   }
 }
 
@@ -34,6 +29,7 @@
   font-weight: 500;
   font-size: 0.9375rem;
   margin-top: 10px;
+  text-align: center;
 }
 
 .assetCard .icon {

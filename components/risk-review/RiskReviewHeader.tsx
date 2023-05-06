@@ -12,8 +12,8 @@ import {
 } from "firebase/firestore";
 
 import { auth, db } from "../../utils/firebaseClient";
-import { AssetDataContext } from "../../contexts/assetDataContext";
-import { StorageDataContext } from "../../contexts/storageDataContext";
+import { AssetDataContext } from "../../contexts/apiAssetDataContext";
+import { StorageDataContext } from "../../contexts/apiStorageDataContext";
 
 import Plus from "../../public/img/dashboard/icons/plus.svg";
 import Question from "../../public/img/dashboard/icons/question.svg";
@@ -107,10 +107,10 @@ function RiskReviewHeader() {
       }
       await addDoc(collection(assetDocRef, "transactions"), {
         transaction_amount: asset_input_amount,
-        storage_type: selectedStorageType,
         transaction_price: selectedAsset.Price,
         transaction_type: "buy",
         transaction_date: transactionDate,
+        parent_id: assetDocRef.id,
         uid: uid
       });
 

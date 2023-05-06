@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { AssetDataContext } from "../../contexts/assetDataContext";
-import { StorageDataContext } from "contexts/storageDataContext";
+import { AssetDataContext } from "../../contexts/apiAssetDataContext";
+import { StorageDataContext } from "contexts/apiStorageDataContext";
 
 import { auth, db } from "../../utils/firebaseClient";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -156,6 +156,7 @@ function RiskReviewTable() {
       transaction_price: transactionData.transaction_price,
       transaction_type: transactionData.transaction_type,
       transaction_date: transactionData.transaction_date,
+      parent_id: editPortfolioData?.id,
       uid: transactionData.uid
     };
 
