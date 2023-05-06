@@ -56,7 +56,7 @@ const AssetSummary: FC = () => {
     return acc;
   }, 0);
 
-  console.log("lastMonthTransactions", lastMonthTransactions);
+  // console.log("lastMonthTransactions", lastMonthTransactions);
 
   const soldInUSD = lastMonthTransactions.reduce((acc, transaction) => {
     if (transaction.transaction_type === "sell") {
@@ -71,7 +71,7 @@ const AssetSummary: FC = () => {
     return acc + asset.total_amount * asset.Price;
   }, 0);
 
-  console.log("userAssetsWithPrice", userAssetsWithPrice);
+  // console.log("userAssetsWithPrice", userAssetsWithPrice);
 
   return (
     <div className={styles.container}>
