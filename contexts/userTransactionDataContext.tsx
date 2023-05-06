@@ -10,8 +10,8 @@ type UserTransaction = {
   transaction_price: string;
   transaction_type: "buy" | "sell";
   transaction_date: string;
-  storage_type: string;
   id: string;
+  parent_id: string;
 };
 
 type UserTransactionsState = {
@@ -83,8 +83,8 @@ const UserTransactionsDataProvider: React.FC = ({ children }) => {
               fromUnixTime(transactionDateSeconds),
               "yyyy-MM-dd"
             ),
-            storage_type: transactionData.storage_type,
-            id: transactionDoc.id
+            id: transactionDoc.id,
+            parent_id: transactionData.parent_id
           });
         });
       });
