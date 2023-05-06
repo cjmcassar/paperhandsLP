@@ -191,6 +191,10 @@ function Settings() {
 
 export default function Navbar() {
   const { setIsOpen } = useTour();
+  const router = useRouter();
+
+  const showOpenAppTourButton = router.pathname === "/risk-review";
+
   return (
     <nav className={styles.navbar} navbar-scroll="false">
       <div className=" flex items-center justify-between w-full px-4 py-1 mx-auto flex-wrap-inherit">
@@ -201,12 +205,14 @@ export default function Navbar() {
           </div>
         </div> */}
         <ul className="relative z-50 flex flex-row justify-start gap-3 mb-0 list-none">
-          <button
-            className="bg-primary text-white px-4 py-2 rounded-lg"
-            onClick={() => setIsOpen(true)}
-          >
-            Open App Tour
-          </button>
+          {showOpenAppTourButton && (
+            <button
+              className="bg-primary text-white px-4 py-2 rounded-lg"
+              onClick={() => setIsOpen(true)}
+            >
+              Open App Tour
+            </button>
+          )}
           <UserSignIn />
           {/* <Settings /> */}
           {/* <Notifications /> */}

@@ -1,7 +1,7 @@
 import RiskReview from "../components/risk-review";
 import DashboardLayout from "../components/layouts/DashboardLayout";
-import { AssetDataProvider } from "../contexts/assetDataContext";
-import { StorageDataProvider } from "contexts/storageDataContext";
+import { AssetDataProvider } from "../contexts/apiAssetDataContext";
+import { StorageDataProvider } from "contexts/apiStorageDataContext";
 
 function Risk() {
   return (

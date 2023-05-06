@@ -4,7 +4,7 @@ import { format, fromUnixTime } from "date-fns";
 import { query, collection, where, onSnapshot } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { db, auth } from "utils/firebaseClient";
-import { AssetDataContext } from "contexts/assetDataContext";
+import { AssetDataContext } from "contexts/apiAssetDataContext";
 
 interface DonutChartData {
   risk: string;
@@ -213,26 +213,28 @@ export default function DoughnutChart() {
       className={` gap-6 flex align-center bg-[#1a1c24] rounded-lg p-5 w-full font-bold`}
     >
       <div className="w-6/12">
-        <div className="bg-[#404040] rounded-2xl overflow-hidden">
-          <div className="flex text-center text-white border-b-2 border-[#5B5B5B] uppercase">
-            <span className=" w-6/12 border-r-2 border-[#5B5B5B] px-3 py-2">
-              Risk Level
-            </span>
-            <span className=" w-6/12 px-3 py-2">Share</span>
-          </div>
-
-          {donutData.map((data, index) => (
-            <div
-              key={index}
-              className="flex text-center border-b-2 last:border-b-0 border-[#5B5B5B] bg-[#363636]"
-              style={{ color: data.color }}
-            >
-              <span className="w-6/12 border-r-2 border-[#5B5B5B] px-3 py-2 ">
-                {data.risk}
+        <div className="flex h-full items-center">
+          <div className="bg-[#404040] rounded-2xl overflow-hidden w-full">
+            <div className="flex text-center text-white border-b-2 border-[#5B5B5B] uppercase">
+              <span className=" w-6/12 border-r-2 border-[#5B5B5B] px-3 py-2">
+                Risk Level
               </span>
-              <span className="w-6/12 px-3 py-2">{data.percentage}%</span>
+              <span className=" w-6/12 px-3 py-2">Share</span>
             </div>
-          ))}
+
+            {donutData.map((data, index) => (
+              <div
+                key={index}
+                className="flex text-center border-b-2 last:border-b-0 border-[#5B5B5B] bg-[#363636]"
+                style={{ color: data.color }}
+              >
+                <span className="w-6/12 border-r-2 border-[#5B5B5B] px-3 py-2 ">
+                  {data.risk}
+                </span>
+                <span className="w-6/12 px-3 py-2">{data.percentage}%</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
       <div className="w-6/12">
