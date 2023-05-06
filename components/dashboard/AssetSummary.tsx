@@ -15,7 +15,7 @@ const AssetSummary: FC = () => {
 
   function convertPriceToNumber(priceString: string) {
     const withoutDollarSign = priceString?.replace("$", "");
-    const withoutComma = withoutDollarSign.replace(/,/g, "");
+    const withoutComma = withoutDollarSign?.replace(/,/g, "");
     const priceNumber = parseFloat(withoutComma);
     return priceNumber;
   }
