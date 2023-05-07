@@ -102,7 +102,7 @@ export default function LineChart() {
     };
 
     userAssets.forEach(asset => {
-      const assetDetails = assetData.assetData.find(
+      const assetDetails = assetData?.assetData?.find(
         assetData => assetData.Symbol === asset.asset_symbol
       );
       if (assetDetails) {
@@ -325,7 +325,6 @@ export default function LineChart() {
             ) : (
               <div className="h-96">
                 <canvas id="chart-line" ref={chartContainer}></canvas>
-                chart here
               </div>
             )}
           </div>
