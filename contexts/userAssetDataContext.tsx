@@ -41,7 +41,7 @@ const UserAssetsDataContext = createContext<
 >([initialState, () => initialState]);
 
 const UserAssetsDataProvider: React.FC = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [assetsState, dispatch] = useReducer(reducer, initialState);
   const [user, loading, error] = useAuthState(auth);
 
   const fetchUserAssets = () => {
@@ -74,7 +74,7 @@ const UserAssetsDataProvider: React.FC = ({ children }) => {
   }, [user]);
 
   return (
-    <UserAssetsDataContext.Provider value={[state, dispatch]}>
+    <UserAssetsDataContext.Provider value={[assetsState, dispatch]}>
       {children}
     </UserAssetsDataContext.Provider>
   );

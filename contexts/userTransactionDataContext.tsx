@@ -50,7 +50,7 @@ const UserTransactionsDataContext = createContext<
 >([initialState, () => initialState]);
 
 const UserTransactionsDataProvider: React.FC = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [transactionState, dispatch] = useReducer(reducer, initialState);
   const [user, loading, error] = useAuthState(auth);
 
   const fetchUserTransactions = async () => {
@@ -100,7 +100,7 @@ const UserTransactionsDataProvider: React.FC = ({ children }) => {
   }, [user]);
 
   return (
-    <UserTransactionsDataContext.Provider value={[state, dispatch]}>
+    <UserTransactionsDataContext.Provider value={[transactionState, dispatch]}>
       {children}
     </UserTransactionsDataContext.Provider>
   );
