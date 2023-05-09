@@ -29,20 +29,23 @@ export default function SidebarHistory() {
   const { userAssets } = userAssetsState;
 
   useEffect(() => {
-    const combinedData = userTransactions.map(transaction => {
-      const asset = userAssets.find(
-        asset => asset.id === transaction.parent_id
-      );
-      return {
-        ...transaction,
-        asset_name: asset?.asset_name,
-        asset_symbol: asset?.asset_symbol
-      };
-    });
-    console.log("updated");
+    const combinedData = userTransactions
+      .map(transaction => {
+        const asset = userAssets.find(
+          asset => asset.id === transaction.parent_id
+        );
+        return {
+          ...transaction,
+          asset_name: asset?.asset_name,
+          asset_symbol: asset?.asset_symbol
+        };
+      })
+      .filter(data => {
+        return userAssets.find(asset => asset.id === data.parent_id);
+      });
+
     setCombinedData(combinedData);
   }, [userAssetsState, transactionState]);
-  console.log(combinedData, userTransactions, userAssets);
 
   return (
     <div className="w-full text-white mb-10">
