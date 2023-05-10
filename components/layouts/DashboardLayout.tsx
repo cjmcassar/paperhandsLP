@@ -28,8 +28,12 @@ export default function DashboardLayout({ children }) {
 
   return loading ? (
     <div className="flex justify-center min-h-screen items-center text-2xl text-white bg-dark">
-      <FontAwesomeIcon icon={faSpinner} className="fa-spin mr-4" /> Checking
-      authentication
+      <FontAwesomeIcon
+        style={{ fontSize: "24px" }}
+        icon={faSpinner}
+        className="fa-spin mr-4"
+      />
+      Checking authentication
     </div>
   ) : (
     <div>
@@ -43,7 +47,7 @@ export default function DashboardLayout({ children }) {
         {children}
       </div>
 
-      <RightHandSidebar />
+      {/* <RightHandSidebar /> */}
 
       <div className="bg-darkGrey lg:pl-56 lg:pr-64">
         <Footer />
