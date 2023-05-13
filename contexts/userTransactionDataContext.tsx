@@ -1,7 +1,13 @@
 import React, { createContext, useReducer, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../utils/firebaseClient";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  onSnapshot,
+  query,
+  where
+} from "firebase/firestore";
 import { format, fromUnixTime } from "date-fns";
 
 type UserTransaction = {
@@ -50,7 +56,7 @@ const UserTransactionsDataContext = createContext<
 >([initialState, () => initialState]);
 
 const UserTransactionsDataProvider: React.FC = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [transactionState, dispatch] = useReducer(reducer, initialState);
   const [user, loading, error] = useAuthState(auth);
 
   const fetchUserTransactions = async () => {
@@ -61,38 +67,39 @@ const UserTransactionsDataProvider: React.FC = ({ children }) => {
       where("uid", "==", user.uid)
     );
 
-    const userAssetsSnapshots = await getDocs(userAssetsQuery);
-    const userTransactions: UserTransaction[] = [];
-
-    const transactionsPromises: Promise<void>[] = [];
-
-    userAssetsSnapshots.forEach(userAssetDoc => {
-      const transactionsPromise = getDocs(
-        collection(userAssetDoc.ref, "transactions")
-      ).then(transactionsSnapshots => {
-        transactionsSnapshots.forEach(transactionDoc => {
-          const transactionData = transactionDoc.data();
-          const transactionDateSeconds =
-            transactionData.transaction_date.seconds;
-          userTransactions.push({
-            uid: user.uid,
-            transaction_amount: transactionData.transaction_amount,
-            transaction_price: transactionData.transaction_price,
-            transaction_type: transactionData.transaction_type,
-            transaction_date: format(
-              fromUnixTime(transactionDateSeconds),
-              "yyyy-MM-dd"
-            ),
-            id: transactionDoc.id,
-            parent_id: transactionData.parent_id
-          });
-        });
+    const unsubscribe = onSnapshot(userAssetsQuery, querySnapshot => {
+      const userTransactions: UserTransaction[] = [];
+      querySnapshot.forEach(userAssetDoc => {
+        const transactionsQuery = query(
+          collection(userAssetDoc.ref, "transactions")
+        );
+        const transactionsUnsubscribe = onSnapshot(
+          transactionsQuery,
+          transactionsSnapshot => {
+            transactionsSnapshot.forEach(transactionDoc => {
+              const transactionData = transactionDoc.data();
+              const transactionDateSeconds =
+                transactionData.transaction_date.seconds;
+              userTransactions.push({
+                uid: user.uid,
+                transaction_amount: transactionData.transaction_amount,
+                transaction_price: transactionData.transaction_price,
+                transaction_type: transactionData.transaction_type,
+                transaction_date: format(
+                  fromUnixTime(transactionDateSeconds),
+                  "yyyy-MM-dd"
+                ),
+                id: transactionDoc.id,
+                parent_id: transactionData.parent_id
+              });
+            });
+            dispatch({ type: "SET_USER_TRANSACTIONS", userTransactions });
+          }
+        );
+        return transactionsUnsubscribe;
       });
-      transactionsPromises.push(transactionsPromise);
+      return unsubscribe;
     });
-
-    await Promise.all(transactionsPromises);
-    dispatch({ type: "SET_USER_TRANSACTIONS", userTransactions });
   };
 
   useEffect(() => {
@@ -100,7 +107,7 @@ const UserTransactionsDataProvider: React.FC = ({ children }) => {
   }, [user]);
 
   return (
-    <UserTransactionsDataContext.Provider value={[state, dispatch]}>
+    <UserTransactionsDataContext.Provider value={[transactionState, dispatch]}>
       {children}
     </UserTransactionsDataContext.Provider>
   );

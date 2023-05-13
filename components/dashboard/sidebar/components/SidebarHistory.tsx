@@ -1,20 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { query, collection, where, getDocs } from "firebase/firestore";
-import { auth, db } from "utils/firebaseClient";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { format, fromUnixTime } from "date-fns";
-
-interface UserAsset {
-  uid: string;
-  asset_name: string;
-  asset_symbol: string;
-  amount: number;
-  storage_type: string;
-  transaction_date: string;
-  transaction_amount: number;
-  transaction_type: "buy" | "sell";
-  transaction_id: string;
-}
+import React, { useContext, useEffect, useState } from "react";
+import { UserAssetsDataContext } from "contexts/userAssetDataContext";
+import { UserTransactionsDataContext } from "contexts/userTransactionDataContext";
 
 function SidebarHistoryItem({ icon, title, date, value, valueColor }) {
   return (
@@ -34,77 +20,40 @@ function SidebarHistoryItem({ icon, title, date, value, valueColor }) {
     </li>
   );
 }
-
 export default function SidebarHistory() {
-  const [user] = useAuthState(auth);
-  const [userAssets, setUserAssets] = useState<UserAsset[]>([]);
+  const [userAssetsState] = useContext(UserAssetsDataContext);
+  const [transactionState] = useContext(UserTransactionsDataContext);
+  const [combinedData, setCombinedData] = useState([]);
 
-  function getDayWithSuffix(day: number) {
-    if (day > 3 && day < 21) {
-      return `${day}th`;
-    } else {
-      switch (day % 10) {
-        case 1:
-          return `${day}st`;
-        case 2:
-          return `${day}nd`;
-        case 3:
-          return `${day}rd`;
-        default:
-          return `${day}th`;
-      }
-    }
-  }
+  const { userTransactions } = transactionState;
+  const { userAssets } = userAssetsState;
 
   useEffect(() => {
-    if (user) {
-      fetchUserTransactions();
-    }
-  }, [user]);
-
-  const fetchUserTransactions = async () => {
-    if (!user) return;
-
-    const userAssetsQuery = query(
-      collection(db, "user_assets"),
-      where("uid", "==", user.uid)
-    );
-
-    const userAssetsSnapshots = await getDocs(userAssetsQuery);
-    const userAssets: UserAsset[] = [];
-    const transactionsPromises: Promise<void>[] = [];
-
-    userAssetsSnapshots.forEach(userAssetDoc => {
-      const userAsset = userAssetDoc.data() as UserAsset;
-      const transactionsPromise = getDocs(
-        collection(userAssetDoc.ref, "transactions")
-      ).then(transactionsSnapshots => {
-        transactionsSnapshots.forEach(transactionDoc => {
-          const transactionData = transactionDoc.data();
-          userAssets.push({
-            ...userAsset,
-            ...transactionData,
-            transaction_date: format(
-              fromUnixTime(transactionData.transaction_date.seconds),
-              "MMMM do, yyyy"
-            ),
-            transaction_id: transactionDoc.id
-          });
-        });
+    const combinedData = userTransactions
+      .map(transaction => {
+        const asset = userAssets.find(
+          asset => asset.id === transaction.parent_id
+        );
+        return {
+          ...transaction,
+          asset_name: asset?.asset_name,
+          asset_symbol: asset?.asset_symbol
+        };
+      })
+      .filter(data => {
+        return userAssets.find(asset => asset.id === data.parent_id);
       });
-      transactionsPromises.push(transactionsPromise);
-    });
 
-    await Promise.all(transactionsPromises);
-    setUserAssets(userAssets);
-  };
+    setCombinedData(combinedData);
+  }, [userAssetsState, transactionState]);
+
   return (
     <div className="w-full text-white mb-10">
       <h1 className="font-bold mb-[17px] text-[24px] leading-[29px]">
         History
       </h1>
       <ul className="w-full">
-        {userAssets
+        {combinedData
           .sort((a, b) => {
             return (
               new Date(b.transaction_date).getTime() -
@@ -113,14 +62,6 @@ export default function SidebarHistory() {
           })
           .slice(0, 5)
           .map(asset => {
-            const date = new Date(asset.transaction_date);
-            const formattedDate = date.toLocaleDateString("en-US", {
-              month: "long",
-              day: "numeric",
-              year: "numeric"
-            });
-            const dayWithSuffix = getDayWithSuffix(date.getDate());
-
             const isBuy = asset.transaction_type === "buy";
             const transactionAmount = Number(asset.transaction_amount);
             const value = isBuy
@@ -130,7 +71,7 @@ export default function SidebarHistory() {
 
             return (
               <SidebarHistoryItem
-                key={asset.transaction_id}
+                key={asset.id}
                 icon={asset.asset_symbol}
                 title={`${isBuy ? "Bought" : "Sold"} ${asset.asset_name}`}
                 date={asset.transaction_date}
