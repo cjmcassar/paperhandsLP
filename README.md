@@ -1,33 +1,45 @@
-### 1\. Clone this Repository
+# Paperhands
 
-```bash
-git clone https://github.com/surjithctly/nextly-template.git
-```
+This project was bootstrapped with [Next.js](https://nextjs.org/).
 
-### 2\. Navigate to the directory
+## Getting Started
 
-```
-cd nextly-template
-```
+Follow these steps to get the project up and running:
 
-### 3\. Install dependencies
+### 1. Clone the Repository
 
-```
-yarn install
-# or
+Clone this repository to your local machine:
+
+git clone https://github.com/yourusername/paperhands.git
+
+### 2. Navigate to the Directory
+
+Change to the paperhands directory:
+cd paperhands
+
+### 3. Install Dependencies
+
+Use either npm or yarn to install the project's dependencies:
 npm install
-```
 
-### 5\. Run Dev Server
+** or **
 
-```
-yarn dev
-# or
+yarn install
+
+### 4. Setup Environment Variables
+
+Create a .env.local file in the root of your project and add the following variables from the .env.example file.
+
+Replace each YOUR_VARIABLE with your actual variable values.
+
+### 5. Run the Development Server
+
+You can start the development server with either npm or yarn:
 npm run dev
-```
 
-## Deploy with Vercel
+** or **
 
-Deploy this template using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example):
+yarn dev
+The server will start running at http://localhost:3000.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/surjithctly/nextly-template&project-name=nextly-template&repository-name=nextly-template)
+You may need to add more specific instructions about how to get each of these environment variables depending on the configuration of your project.
