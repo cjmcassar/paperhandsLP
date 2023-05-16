@@ -10,7 +10,7 @@ Follow these steps to get the project up and running:
 
 Clone this repository to your local machine:
 
-git clone https://github.com/yourusername/paperhands.git
+`git clone https://github.com/yourusername/paperhands.git`
 
 ### 2. Navigate to the Directory
 
@@ -26,9 +26,9 @@ Use either npm or yarn to install the project's dependencies:
 
 ### 4. Setup Environment Variables
 
-Create a .env.local file in the root of your project and add the following variables from the `.env.example` file.
+Create a `.env.local` file in the root of your project and add the following variables from the `.env.example` file.
 
-Replace each YOUR_VARIABLE with your actual variable values.
+Replace each `YOUR_VARIABLE` with your actual variable values.
 
 ### 5. Run the Development Server
 
