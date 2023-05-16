@@ -22,7 +22,7 @@ cd paperhands
 Use either npm or yarn to install the project's dependencies:
 npm install
 
-# or
+** or **
 
 yarn install
 
@@ -37,7 +37,7 @@ Replace each YOUR_VARIABLE with your actual variable values.
 You can start the development server with either npm or yarn:
 npm run dev
 
-# or
+** or **
 
 yarn dev
 The server will start running at http://localhost:3000.
