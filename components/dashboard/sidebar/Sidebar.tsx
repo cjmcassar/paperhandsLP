@@ -62,11 +62,11 @@ function NavigationItems() {
           Risk Review
         </SidebarItem>
       </li>
-      {/* <li className="items-center mb-3">
+      <li className="items-center mb-3">
         <SidebarItem href="/history" iconSrc="/img/dashboard/icons/history.svg">
           History
         </SidebarItem>
-      </li> */}
+      </li>
     </ul>
   );
 }

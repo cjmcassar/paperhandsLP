@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 
 import Plus from "../../public/img/dashboard/icons/plus.svg";
 import Question from "../../public/img/dashboard/icons/question.svg";
@@ -15,7 +15,9 @@ function CryptoHistoryHeader() {
   return (
     <div className="flex items-center py-5 gap-8">
       <div>
-        <h2 className={`${styles.latestOperationsTitle}`}>Latest Operations</h2>
+        <h2 className={`${styles.latestOperationsTitle}`}>
+          Recent Transactions
+        </h2>
       </div>
       <div className={`${styles.buttonGroup}`}>
         <button className={`${styles.customButton} hover:border-primary`}>
