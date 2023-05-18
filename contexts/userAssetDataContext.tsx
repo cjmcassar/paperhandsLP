@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useEffect } from "react";
+import React, { createContext, useReducer, useEffect, useRef } from "react";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../utils/firebaseClient";
@@ -43,6 +43,14 @@ const UserAssetsDataContext = createContext<
 const UserAssetsDataProvider: React.FC = ({ children }) => {
   const [assetsState, dispatch] = useReducer(reducer, initialState);
   const [user, loading, error] = useAuthState(auth);
+
+  const isMounted = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false; // Component is unmounted
+    };
+  }, []);
 
   const fetchUserAssets = () => {
     if (!user) return;
