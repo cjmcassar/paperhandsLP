@@ -1,14 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { AssetDataContext } from "../../contexts/apiAssetDataContext";
 import { StorageDataContext } from "contexts/apiStorageDataContext";
+import { UserAssetsDataContext } from "contexts/userAssetDataContext";
 
 import { auth, db } from "../../utils/firebaseClient";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
   collection,
-  onSnapshot,
-  query,
-  where,
   doc,
   deleteDoc,
   updateDoc,
@@ -27,6 +25,9 @@ import styles from "./RiskReviewTable.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
+import TableHeader from "./TableHeader";
+import BuySellForm from "./BuySellForm";
+
 interface UserAsset {
   uid: string;
   asset_name: string;
@@ -42,11 +43,13 @@ function RiskReviewTable() {
   const [user] = useAuthState(auth);
   const assetData = useContext(AssetDataContext);
   const storageData = useContext(StorageDataContext);
+  const [userAssetsData] = useContext(UserAssetsDataContext);
+  const userAssets = userAssetsData?.userAssets;
+
   const tableRef = useRef<HTMLTableElement | null>(null);
 
   const [loading, setLoading] = useState(false);
-  const [userAssets, setUserAssets] = useState<UserAsset[]>([]);
-  const [transactionType, settransactionType] = useState<"buy" | "sell">("buy");
+  const [transactionType, setTransactionType] = useState<"buy" | "sell">("buy");
 
   const [showBuySellForm, setShowBuySellForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
@@ -73,47 +76,6 @@ function RiskReviewTable() {
 
   const [tableInitialized, setTableInitialized] = useState(false);
   const [dataTable, setDataTable] = useState<DataTable | null>(null);
-
-  useEffect(() => {
-    if (user) {
-      const unsubscribe = fetchUserAssets();
-
-      return () => {
-        if (unsubscribe) {
-          unsubscribe();
-        }
-      };
-    }
-  }, [user]);
-
-  const fetchUserAssets = () => {
-    if (!user) return;
-
-    const userAssetsQuery = query(
-      collection(db, "user_assets"),
-      where("uid", "==", user.uid)
-    );
-
-    const unsubscribe = onSnapshot(userAssetsQuery, querySnapshot => {
-      const userAssets: UserAsset[] = [];
-      querySnapshot.forEach(doc => {
-        const docData = doc.data();
-        const transactionDateSeconds = docData.transaction_date?.seconds;
-
-        const data = {
-          ...docData,
-          transaction_date: transactionDateSeconds
-            ? format(fromUnixTime(transactionDateSeconds), "yyyy-MM-dd")
-            : "",
-          id: doc.id
-        };
-        userAssets.push(data as UserAsset);
-      });
-      setUserAssets(userAssets);
-    });
-
-    return unsubscribe;
-  };
 
   useEffect(() => {
     if (!tableInitialized) {
@@ -170,7 +132,7 @@ function RiskReviewTable() {
     }
   }
 
-  const assetBuySell = async e => {
+  const handleAssetBuySell = async e => {
     e.preventDefault();
     setLoading(true);
 
@@ -349,166 +311,30 @@ function RiskReviewTable() {
           ref={tableRef}
           className={`${styles.riskReviewTable} min-w-full divide-y divide-gray-200 sm:text-sm text-white`}
         >
-          <thead
-            className={`${styles.riskReviewTable} text-sm uppercase font-medium text-white`}
-          >
-            <tr>
-              <th className="px-6 py-3 text-left text-xs 2xl:text-sm font-medium text-gray-500 uppercase tracking-wider">
-                Asset
-              </th>
-              <th>Symbol</th>
-              <th>Amount</th>
-              <th>Value</th>
-              <th>Storage</th>
-              <th>Risk</th>
-              <th>Risk Review</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
+          <TableHeader />
         </table>
       </div>
+
       <div>
         {showBuySellForm && (
-          <div className={`${styles.showForm} z-50 `}>
-            <div className="bg-gray-800 p-8 rounded-lg w-5/12">
-              <div className="flex justify-between items-center gap-5 mb-4">
-                <h3 className="text-xl text-white font-medium">
-                  Buy/Sell Crypto
-                </h3>
-              </div>
-              {buySellData && (
-                <form onSubmit={assetBuySell}>
-                  <div className="mb-4">
-                    <label
-                      htmlFor="asset-select"
-                      className="block text-white font-medium mb-2"
-                    >
-                      Asset
-                    </label>
-                    <input
-                      type="text"
-                      value={buySellData.asset_name}
-                      disabled={true}
-                      className="bg-LightGrey text-gray-400 w-full border rounded px-3 py-2"
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label
-                      htmlFor="asset-select"
-                      className="block text-white font-medium mb-2"
-                    >
-                      Storage Type
-                    </label>
-                    <input
-                      type="text"
-                      value={buySellData.storage_type}
-                      disabled={true}
-                      className="bg-LightGrey text-gray-400 w-full border rounded px-3 py-2"
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label
-                      htmlFor="transaction-type-select"
-                      className="block text-white font-medium mb-2"
-                    >
-                      Transaction Type
-                    </label>
-                    <select
-                      id="transaction-type-select"
-                      name="transactionType"
-                      className="bg-LightGrey text-white w-full border rounded px-3 py-2"
-                      value={transactionType}
-                      onChange={e =>
-                        settransactionType(e.target.value as "buy" | "sell")
-                      }
-                    >
-                      <option value="buy">Buy</option>
-                      <option value="sell">Sell</option>
-                    </select>
-                  </div>
-                  <div className="mb-4">
-                    <label
-                      htmlFor="amount-input"
-                      className="block text-white font-medium mb-2"
-                    >
-                      Transaction Amount
-                    </label>
-                    <input
-                      style={{ colorScheme: "dark" }}
-                      type="number"
-                      id="amount-input"
-                      name="amount"
-                      value={buySellData.amount}
-                      onChange={e => {
-                        const inputValue = e.target.value.trim();
-                        const parsedValue = parseFloat(inputValue);
-                        if (!isNaN(parsedValue)) {
-                          setBuySellData({
-                            ...buySellData,
-                            amount: parsedValue
-                          });
-                        } else {
-                          setBuySellData({
-                            ...buySellData,
-                            amount: 0
-                          });
-                        }
-                      }}
-                      className="bg-LightGrey text-white w-full border rounded px-3 py-2"
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label
-                      htmlFor="date-picker"
-                      className="block text-white font-medium mb-2"
-                    >
-                      Transaction Date
-                    </label>
-                    <input
-                      type="date"
-                      id="date-picker"
-                      required={true}
-                      style={{ colorScheme: "dark" }}
-                      onChange={e => {
-                        setBuySellData({
-                          ...buySellData,
-                          transaction_date: e.target.value
-                        });
-                      }}
-                      name="transactionDate"
-                      className="bg-LightGrey text-white w-full border rounded px-3 py-2"
-                    />
-                  </div>
-
-                  <div className="flex justify-end">
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className={`${styles.addButton}`}
-                    >
-                      {loading ? (
-                        <FontAwesomeIcon
-                          icon={faSpinner}
-                          className="fa-spin text-white"
-                        />
-                      ) : (
-                        "Save"
-                      )}
-                    </button>
-                    <button
-                      type="button"
-                      className={`${styles.cancelButton} hover:bg-opacity-80`}
-                      onClick={() => setShowBuySellForm(false)}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
-              )}
-            </div>
-          </div>
+          <BuySellForm
+            buySellData={buySellData}
+            transactionType={transactionType}
+            storageData={storageData}
+            loading={loading}
+            onSubmit={handleAssetBuySell}
+            onCancel={() => setShowBuySellForm(false)}
+            onTransactionTypeChange={setTransactionType}
+            onAmountChange={amount =>
+              setBuySellData({ ...buySellData, amount })
+            }
+            onTransactionDateChange={transaction_date =>
+              setBuySellData({ ...buySellData, transaction_date })
+            }
+          />
         )}
       </div>
+
       <div>
         {showEditForm && (
           <div className={`${styles.showForm} z-50 `}>
@@ -655,6 +481,7 @@ function RiskReviewTable() {
           </div>
         )}
       </div>
+
       <div>
         {showDeleteForm && (
           <div className={`${styles.showForm} z-50 `}>
