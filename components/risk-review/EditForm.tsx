@@ -1,7 +1,34 @@
-import React from "react";
+import React, { ChangeEvent, FormEvent } from "react";
 import styles from "./RiskReviewTable.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+
+interface StorageDataItem {
+  Rating: string;
+  Storage_Method: string;
+  Storage_Review: string;
+  Storage_Type: string;
+}
+
+interface StorageData {
+  storageData: StorageDataItem[];
+}
+
+type EditFormProps = {
+  editPortfolioData: {
+    asset_name: string;
+    storage_type: string;
+    total_amount: number;
+    transaction_date: string;
+  } | null;
+  storageData: StorageData; // Add the correct type for storageData
+  loading: boolean;
+  onSubmit: (e: FormEvent<HTMLFormElement>) => void;
+  onDelete: () => void;
+  onCancel: () => void;
+  onStorageTypeChange: (storageType: string) => void;
+  onAmountChange: (amount: number) => void;
+};
 
 function EditForm({
   editPortfolioData,
@@ -12,7 +39,7 @@ function EditForm({
   onCancel,
   onStorageTypeChange,
   onAmountChange
-}) {
+}: EditFormProps): JSX.Element {
   return (
     <div className={`${styles.showForm} z-50 `}>
       <div className="bg-gray-800 p-8 rounded-lg w-5/12">
@@ -50,7 +77,7 @@ function EditForm({
             </div>
             <div className="mb-4">
               <label
-                htmlFor="asset-select"
+                htmlFor="storage-select"
                 className="block text-white font-medium mb-2"
               >
                 Storage Type
@@ -60,9 +87,11 @@ function EditForm({
                 name="storageType"
                 className="bg-LightGrey text-white w-full border rounded px-3 py-2"
                 value={editPortfolioData.storage_type}
-                onChange={e => onStorageTypeChange(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                  onStorageTypeChange(e.target.value)
+                }
               >
-                {storageData?.storageData?.map(storage => (
+                {storageData?.storageData?.map((storage: any) => (
                   <option
                     key={storage.Storage_Method}
                     value={storage.Storage_Method}
@@ -85,7 +114,9 @@ function EditForm({
                 id="amount-input"
                 name="amount"
                 value={editPortfolioData.total_amount}
-                onChange={e => onAmountChange(parseFloat(e.target.value))}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  onAmountChange(parseFloat(e.target.value))
+                }
                 className="bg-LightGrey text-white w-full border rounded px-3 py-2"
               />
             </div>

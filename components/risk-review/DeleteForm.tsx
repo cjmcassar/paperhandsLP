@@ -3,7 +3,17 @@ import styles from "./RiskReviewTable.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
-function DeleteForm({ loading, onDelete, onCancel }) {
+type DeleteFormProps = {
+  loading: boolean;
+  onDelete: () => void;
+  onCancel: () => void;
+};
+
+function DeleteForm({
+  loading,
+  onDelete,
+  onCancel
+}: DeleteFormProps): JSX.Element {
   return (
     <div className={`${styles.showForm} z-50 `}>
       <div className="bg-gray-800 p-8 rounded-lg w-5/12">

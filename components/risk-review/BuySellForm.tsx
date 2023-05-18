@@ -1,19 +1,33 @@
-import React from "react";
+import React, { ChangeEvent, FormEvent } from "react";
 import styles from "./RiskReviewTable.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
+type BuySellFormProps = {
+  buySellData: {
+    asset_name: string;
+    storage_type: string;
+    amount: number;
+  } | null;
+  transactionType: "buy" | "sell";
+  loading: boolean;
+  onSubmit: (e: FormEvent<HTMLFormElement>) => void;
+  onCancel: () => void;
+  onTransactionTypeChange: (transactionType: "buy" | "sell") => void;
+  onAmountChange: (amount: number) => void;
+  onTransactionDateChange: (transactionDate: string) => void;
+};
+
 function BuySellForm({
   buySellData,
   transactionType,
-  storageData,
   loading,
   onSubmit,
   onCancel,
   onTransactionTypeChange,
   onAmountChange,
   onTransactionDateChange
-}) {
+}: BuySellFormProps): JSX.Element {
   return (
     <div className={`${styles.showForm} z-50 `}>
       <div className="bg-gray-800 p-8 rounded-lg w-5/12">
@@ -62,7 +76,7 @@ function BuySellForm({
                 name="transactionType"
                 className="bg-LightGrey text-white w-full border rounded px-3 py-2"
                 value={transactionType}
-                onChange={e =>
+                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                   onTransactionTypeChange(e.target.value as "buy" | "sell")
                 }
               >
@@ -83,7 +97,7 @@ function BuySellForm({
                 id="amount-input"
                 name="amount"
                 value={buySellData.amount}
-                onChange={e => {
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
                   const inputValue = e.target.value.trim();
                   const parsedValue = parseFloat(inputValue);
                   if (!isNaN(parsedValue)) {
@@ -107,7 +121,9 @@ function BuySellForm({
                 id="date-picker"
                 required={true}
                 style={{ colorScheme: "dark" }}
-                onChange={e => onTransactionDateChange(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  onTransactionDateChange(e.target.value)
+                }
                 name="transactionDate"
                 className="bg-LightGrey text-white w-full border rounded px-3 py-2"
               />

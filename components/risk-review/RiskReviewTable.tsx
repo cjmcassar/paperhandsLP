@@ -18,30 +18,43 @@ import {
 } from "firebase/firestore";
 
 import { DataTable } from "simple-datatables";
-import { format, fromUnixTime } from "date-fns";
 import { initializeTable, populateTable } from "./tableHelpers";
-
+import { format } from "date-fns";
 import styles from "./RiskReviewTable.module.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import TableHeader from "./TableHeader";
 import BuySellForm from "./BuySellForm";
 import EditForm from "./EditForm";
 import DeleteForm from "./DeleteForm";
 
-interface UserAsset {
+type TransactionData = {
+  transaction_amount: number;
+  transaction_price: string;
+  transaction_type: string;
+  transaction_date: Date;
+  transaction_parent_id: string;
   uid: string;
-  asset_name: string;
-  asset_symbol: string;
-  total_amount: number;
-  storage_type: string;
-  transaction_date: string;
-  transaction_type: "buy" | "sell";
-  id: string;
-}
+};
 
-function RiskReviewTable() {
+type PortfolioData = {
+  id: string;
+  asset_symbol: string;
+  asset_name: string;
+  storage_type: string;
+  total_amount: number;
+  transaction_date: string;
+};
+
+type BuySellData = {
+  id: string;
+  asset_symbol: string;
+  asset_name: string;
+  storage_type: string;
+  amount: number;
+  transaction_date: string;
+};
+
+function RiskReviewTable(): JSX.Element {
   const [user] = useAuthState(auth);
   const assetData = useContext(AssetDataContext);
   const storageData = useContext(StorageDataContext);
@@ -50,14 +63,14 @@ function RiskReviewTable() {
 
   const tableRef = useRef<HTMLTableElement | null>(null);
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [transactionType, setTransactionType] = useState<"buy" | "sell">("buy");
 
-  const [showBuySellForm, setShowBuySellForm] = useState(false);
-  const [showEditForm, setShowEditForm] = useState(false);
-  const [showDeleteForm, setShowDeleteForm] = useState(false);
+  const [showBuySellForm, setShowBuySellForm] = useState<boolean>(false);
+  const [showEditForm, setShowEditForm] = useState<boolean>(false);
+  const [showDeleteForm, setShowDeleteForm] = useState<boolean>(false);
 
-  const [buySellData, setBuySellData] = useState({
+  const [buySellData, setBuySellData] = useState<BuySellData>({
     id: "",
     asset_symbol: "",
     asset_name: "",
@@ -65,7 +78,7 @@ function RiskReviewTable() {
     amount: 0,
     transaction_date: ""
   });
-  const [editPortfolioData, setEditPortfolioData] = useState({
+  const [editPortfolioData, setEditPortfolioData] = useState<PortfolioData>({
     id: "",
     asset_symbol: "",
     asset_name: "",
@@ -74,9 +87,11 @@ function RiskReviewTable() {
     transaction_date: ""
   });
 
-  const [deletePortfolioData, setDeletePortfolioData] = useState(null);
+  const [deletePortfolioData, setDeletePortfolioData] = useState<string | null>(
+    null
+  );
 
-  const [tableInitialized, setTableInitialized] = useState(false);
+  const [tableInitialized, setTableInitialized] = useState<boolean>(false);
   const [dataTable, setDataTable] = useState<DataTable | null>(null);
 
   useEffect(() => {
@@ -109,7 +124,9 @@ function RiskReviewTable() {
     };
   }, [dataTable, userAssets, assetData]);
 
-  async function logTransaction(transactionData) {
+  async function logTransaction(
+    transactionData: TransactionData
+  ): Promise<void> {
     const transactionsRef = collection(
       db,
       "user_assets",
@@ -122,7 +139,7 @@ function RiskReviewTable() {
       transaction_price: transactionData.transaction_price,
       transaction_type: transactionData.transaction_type,
       transaction_date: transactionData.transaction_date,
-      parent_id: buySellData?.id,
+      parent_id: transactionData.transaction_parent_id,
       uid: transactionData.uid
     };
 
@@ -134,7 +151,9 @@ function RiskReviewTable() {
     }
   }
 
-  const handleAssetBuySell = async e => {
+  const handleAssetBuySell = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
     setLoading(true);
 
@@ -196,9 +215,9 @@ function RiskReviewTable() {
           transaction_price: transactionPrice,
           transaction_type: transactionType,
           transaction_date: new Date(),
+          transaction_parent_id: buySellData.id,
           uid: user.uid
         };
-
         logTransaction(transactionData);
 
         setLoading(false);
@@ -211,7 +230,9 @@ function RiskReviewTable() {
       });
   };
 
-  const handleAssetUpdate = async e => {
+  const handleAssetUpdate = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
     setLoading(true);
 
@@ -228,7 +249,9 @@ function RiskReviewTable() {
     updateDoc(docRef, {
       total_amount: newAmount,
       storage_type: editPortfolioData?.storage_type,
-      transaction_date: Timestamp.fromMillis(Date.now())
+      transaction_date: Timestamp.fromDate(
+        new Date(format(Date.now(), "yyyy-MM-dd"))
+      )
     })
       .then(() => {
         console.log("Document successfully updated!");
@@ -243,7 +266,7 @@ function RiskReviewTable() {
       });
   };
 
-  const handleAssetDelete = () => {
+  const handleAssetDelete = (): void => {
     setLoading(true);
     const assetId = deletePortfolioData ?? editPortfolioData?.id;
     if (!assetId) {
@@ -322,7 +345,6 @@ function RiskReviewTable() {
           <BuySellForm
             buySellData={buySellData}
             transactionType={transactionType}
-            storageData={storageData}
             loading={loading}
             onSubmit={handleAssetBuySell}
             onCancel={() => setShowBuySellForm(false)}
