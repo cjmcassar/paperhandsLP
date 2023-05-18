@@ -13,7 +13,6 @@ const AssetSummary: FC = () => {
   const [userAssetsState] = useContext(UserAssetsDataContext);
   const [userTransactionsState] = useContext(UserTransactionsDataContext);
   const { assetData } = useContext(AssetDataContext);
-  const [isLoading, setIsLoading] = useState(false);
 
   function convertPriceToNumber(priceString: string) {
     const withoutDollarSign = priceString?.replace("$", "");
