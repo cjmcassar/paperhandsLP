@@ -27,6 +27,8 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import TableHeader from "./TableHeader";
 import BuySellForm from "./BuySellForm";
+import EditForm from "./EditForm";
+import DeleteForm from "./DeleteForm";
 
 interface UserAsset {
   uid: string;
@@ -209,7 +211,7 @@ function RiskReviewTable() {
       });
   };
 
-  const assetUpdate = async e => {
+  const handleAssetUpdate = async e => {
     e.preventDefault();
     setLoading(true);
 
@@ -226,7 +228,7 @@ function RiskReviewTable() {
     updateDoc(docRef, {
       total_amount: newAmount,
       storage_type: editPortfolioData?.storage_type,
-      transaction_date: Timestamp.fromDate(new Date())
+      transaction_date: Timestamp.fromMillis(Date.now())
     })
       .then(() => {
         console.log("Document successfully updated!");
@@ -241,7 +243,7 @@ function RiskReviewTable() {
       });
   };
 
-  const assetDelete = async () => {
+  const handleAssetDelete = () => {
     setLoading(true);
     const assetId = deletePortfolioData ?? editPortfolioData?.id;
     if (!assetId) {
@@ -337,185 +339,30 @@ function RiskReviewTable() {
 
       <div>
         {showEditForm && (
-          <div className={`${styles.showForm} z-50 `}>
-            <div className="bg-gray-800 p-8 rounded-lg w-5/12">
-              <div className="flex justify-between items-center gap-5 mb-4">
-                <h3 className="text-xl text-white font-medium">
-                  Update Crypto
-                </h3>
-                <button
-                  className="bg-danger text-white px-4 py-2 rounded-lg"
-                  onClick={assetDelete}
-                >
-                  {loading ? (
-                    <FontAwesomeIcon
-                      icon={faSpinner}
-                      className="fa-spin text-white"
-                    />
-                  ) : (
-                    "Delete"
-                  )}
-                </button>
-              </div>
-              {editPortfolioData && (
-                <form onSubmit={assetUpdate}>
-                  <div className="mb-4">
-                    <label
-                      htmlFor="asset-select"
-                      className="block text-white font-medium mb-2"
-                    >
-                      Asset
-                    </label>
-                    {/* <select
-                      disabled={true}
-                      id="asset-select"
-                      name="asset"
-                      className="bg-LightGrey text-white w-full border rounded px-3 py-2"
-                      value={editPortfolioData.asset_name}
-                    >
-                      <option value={editPortfolioData?.asset_name}>
-                        {editPortfolioData?.asset_name}
-                      </option>
-                    </select> */}
-                    <input
-                      type="text"
-                      value={editPortfolioData.asset_name}
-                      disabled={true}
-                      className="bg-LightGrey text-gray-400 w-full border rounded px-3 py-2"
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label
-                      htmlFor="asset-select"
-                      className="block text-white font-medium mb-2"
-                    >
-                      Storage Type
-                    </label>
-                    <select
-                      id="storage-select"
-                      name="storageType"
-                      className="bg-LightGrey text-white w-full border rounded px-3 py-2"
-                      value={editPortfolioData.storage_type}
-                      onChange={e => {
-                        setEditPortfolioData({
-                          ...editPortfolioData,
-                          storage_type: e.target.value
-                        });
-                      }}
-                    >
-                      {storageData?.storageData?.map(storage => (
-                        <option
-                          key={storage.Storage_Method}
-                          value={storage.Storage_Method}
-                        >
-                          {storage.Storage_Method} ({storage.Rating})
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="mb-4">
-                    <label
-                      htmlFor="amount-input"
-                      className="block text-white font-medium mb-2"
-                    >
-                      Amount
-                    </label>
-                    <input
-                      style={{ colorScheme: "dark" }}
-                      type="number"
-                      id="amount-input"
-                      name="amount"
-                      value={editPortfolioData.total_amount}
-                      onChange={e => {
-                        setEditPortfolioData({
-                          ...editPortfolioData,
-                          total_amount: parseFloat(e.target.value)
-                        });
-                      }}
-                      className="bg-LightGrey text-white w-full border rounded px-3 py-2"
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label
-                      htmlFor="date-picker"
-                      className="block text-white font-medium mb-2"
-                    >
-                      Last Transaction/Edit Date
-                    </label>
-                    <input
-                      disabled={true}
-                      type="date"
-                      id="date-picker"
-                      value={editPortfolioData.transaction_date}
-                      name="transactionDate"
-                      className="bg-LightGrey text-gray-400 w-full border rounded px-3 py-2"
-                    />
-                  </div>
-
-                  <div className="flex justify-end">
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className={`${styles.addButton}`}
-                    >
-                      {loading ? (
-                        <FontAwesomeIcon
-                          icon={faSpinner}
-                          className="fa-spin text-white"
-                        />
-                      ) : (
-                        "Update"
-                      )}
-                    </button>
-                    <button
-                      type="button"
-                      className={`${styles.cancelButton} hover:bg-opacity-80`}
-                      onClick={() => setShowEditForm(false)}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
-              )}
-            </div>
-          </div>
+          <EditForm
+            editPortfolioData={editPortfolioData}
+            storageData={storageData}
+            loading={loading}
+            onSubmit={handleAssetUpdate}
+            onDelete={handleAssetDelete}
+            onCancel={() => setShowEditForm(false)}
+            onStorageTypeChange={storage_type =>
+              setEditPortfolioData({ ...editPortfolioData, storage_type })
+            }
+            onAmountChange={total_amount =>
+              setEditPortfolioData({ ...editPortfolioData, total_amount })
+            }
+          />
         )}
       </div>
 
       <div>
         {showDeleteForm && (
-          <div className={`${styles.showForm} z-50 `}>
-            <div className="bg-gray-800 p-8 rounded-lg w-5/12">
-              <div className="flex flex-col lg:flex-row justify-between items-center gap-5">
-                <h3 className="text-xl text-white font-medium">
-                  Are you sure?
-                </h3>
-                <div className="flex">
-                  <button
-                    className="bg-danger text-white text-center px-4 py-2 rounded-lg"
-                    onClick={assetDelete}
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <FontAwesomeIcon
-                        icon={faSpinner}
-                        className="fa-spin text-white"
-                      />
-                    ) : (
-                      "Delete"
-                    )}
-                  </button>
-                  <button
-                    type="button"
-                    className={`${styles.cancelButton} hover:bg-opacity-80`}
-                    onClick={() => setShowDeleteForm(false)}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+          <DeleteForm
+            loading={loading}
+            onDelete={handleAssetDelete}
+            onCancel={() => setShowDeleteForm(false)}
+          />
         )}
       </div>
     </>
