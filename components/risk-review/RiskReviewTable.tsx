@@ -14,7 +14,9 @@ import {
   updateDoc,
   getDoc,
   Timestamp,
-  addDoc
+  addDoc,
+  getDocs,
+  writeBatch
 } from "firebase/firestore";
 
 import { DataTable } from "simple-datatables";
@@ -156,7 +158,7 @@ function RiskReviewTable() {
       transaction_price: transactionData.transaction_price,
       transaction_type: transactionData.transaction_type,
       transaction_date: transactionData.transaction_date,
-      parent_id: editPortfolioData?.id,
+      parent_id: buySellData?.id,
       uid: transactionData.uid
     };
 
@@ -277,21 +279,28 @@ function RiskReviewTable() {
       });
   };
 
-  const assetDelete = () => {
+  const assetDelete = async () => {
     setLoading(true);
-    const docRef = doc(
-      db,
-      "user_assets",
-      deletePortfolioData ?? editPortfolioData?.id
-    );
+    const assetId = deletePortfolioData ?? editPortfolioData?.id;
+    if (!assetId) {
+      console.log("Asset ID not provided.");
+      return;
+    }
+
+    const docRef = doc(db, "user_assets", assetId);
+
+    const transactionsCollectionRef = collection(docRef, "transactions");
+    const transactionsSnapshot = await getDocs(transactionsCollectionRef);
+    const batch = writeBatch(db);
+    transactionsSnapshot.docs.forEach(doc => {
+      batch.delete(doc.ref);
+    });
+    await batch.commit();
+
     deleteDoc(docRef)
       .then(() => {
-        // if deletes from delete form
         setShowDeleteForm(false);
-
-        // if deletes from edit form
         setShowEditForm(false);
-
         console.log("Document successfully deleted!");
         setLoading(false);
       })
@@ -390,27 +399,6 @@ function RiskReviewTable() {
                     >
                       Storage Type
                     </label>
-                    {/* <select
-                      id="storage-select"
-                      name="storageType"
-                      className="bg-LightGrey text-white w-full border rounded px-3 py-2"
-                      value={buySellData.storage_type}
-                      onChange={e => {
-                        setBuySellData({
-                          ...buySellData,
-                          storage_type: e.target.value
-                        });
-                      }}
-                    >
-                      {storageData?.storageData?.map(storage => (
-                        <option
-                          key={storage.Storage_Method}
-                          value={storage.Storage_Method}
-                        >
-                          {storage.Storage_Method} ({storage.Rating})
-                        </option>
-                      ))}
-                    </select> */}
                     <input
                       type="text"
                       value={buySellData.storage_type}

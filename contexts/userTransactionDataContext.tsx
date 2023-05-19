@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useEffect } from "react";
+import React, { createContext, useReducer, useEffect, useRef } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../utils/firebaseClient";
 import {
@@ -58,6 +58,14 @@ const UserTransactionsDataContext = createContext<
 const UserTransactionsDataProvider: React.FC = ({ children }) => {
   const [transactionState, dispatch] = useReducer(reducer, initialState);
   const [user, loading, error] = useAuthState(auth);
+
+  const isMounted = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false; // Component is unmounted
+    };
+  }, []);
 
   const fetchUserTransactions = async () => {
     if (!user) return;
