@@ -84,6 +84,8 @@ const UserTransactionsDataProvider: React.FC = ({ children }) => {
         const transactionsUnsubscribe = onSnapshot(
           transactionsQuery,
           transactionsSnapshot => {
+            if (!isMounted.current) return; // Check if component is still mounted
+
             transactionsSnapshot.forEach(transactionDoc => {
               const transactionData = transactionDoc.data();
               const transactionDateSeconds =

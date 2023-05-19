@@ -39,7 +39,7 @@ export function initializeTable(
         {
           select: 4,
           render: function (storage) {
-            return `<span class=" text-white my-2 text-xs 2xl:text-sm"> ${storage[0].data}</span>`;
+            return `<span class=" text-white my-2 text-xs 2xl:text-sm"> ${storage[0]?.data}</span>`;
           }
         },
         {

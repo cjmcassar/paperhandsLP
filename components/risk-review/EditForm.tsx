@@ -2,6 +2,8 @@ import React, { ChangeEvent, FormEvent } from "react";
 import styles from "./RiskReviewTable.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { format, fromUnixTime } from "date-fns";
+import { Timestamp } from "firebase/firestore";
 
 interface StorageDataItem {
   Rating: string;
@@ -19,7 +21,7 @@ type EditFormProps = {
     asset_name: string;
     storage_type: string;
     total_amount: number;
-    transaction_date: string;
+    transaction_date: Timestamp;
   } | null;
   storageData: StorageData; // Add the correct type for storageData
   loading: boolean;
@@ -131,7 +133,16 @@ function EditForm({
                 disabled={true}
                 type="date"
                 id="date-picker"
-                value={editPortfolioData.transaction_date}
+                value={
+                  editPortfolioData.transaction_date
+                    ? format(
+                        fromUnixTime(
+                          editPortfolioData.transaction_date.seconds
+                        ),
+                        "yyyy-MM-dd"
+                      )
+                    : ""
+                }
                 name="transactionDate"
                 className="bg-LightGrey text-gray-400 w-full border rounded px-3 py-2"
               />

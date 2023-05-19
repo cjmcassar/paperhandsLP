@@ -19,7 +19,6 @@ import {
 
 import { DataTable } from "simple-datatables";
 import { initializeTable, populateTable } from "./tableHelpers";
-import { format } from "date-fns";
 import styles from "./RiskReviewTable.module.css";
 
 import TableHeader from "./TableHeader";
@@ -42,7 +41,7 @@ type PortfolioData = {
   asset_name: string;
   storage_type: string;
   total_amount: number;
-  transaction_date: string;
+  transaction_date: Timestamp;
 };
 
 type BuySellData = {
@@ -84,7 +83,7 @@ function RiskReviewTable(): JSX.Element {
     asset_name: "",
     storage_type: "",
     total_amount: 0,
-    transaction_date: ""
+    transaction_date: Timestamp.now()
   });
 
   const [deletePortfolioData, setDeletePortfolioData] = useState<string | null>(
@@ -249,9 +248,7 @@ function RiskReviewTable(): JSX.Element {
     updateDoc(docRef, {
       total_amount: newAmount,
       storage_type: editPortfolioData?.storage_type,
-      transaction_date: Timestamp.fromDate(
-        new Date(format(Date.now(), "yyyy-MM-dd"))
-      )
+      transaction_date: Timestamp.fromDate(new Date())
     })
       .then(() => {
         console.log("Document successfully updated!");
@@ -266,7 +263,7 @@ function RiskReviewTable(): JSX.Element {
       });
   };
 
-  const handleAssetDelete = (): void => {
+  const handleAssetDelete = async () => {
     setLoading(true);
     const assetId = deletePortfolioData ?? editPortfolioData?.id;
     if (!assetId) {
