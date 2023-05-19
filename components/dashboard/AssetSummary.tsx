@@ -1,7 +1,6 @@
 import React, { FC, useContext, useState } from "react";
 import styles from "./AssetSummary.module.css";
 import Eth from "../../public/img/brands/eth.svg";
-import NFT from "../../public/img/dashboard/icons/nft.svg";
 import RedDollar from "../../public/img/dashboard/icons/redDollar.svg";
 import Bank from "../../public/img/dashboard/icons/bank.svg";
 import { UserAssetsDataContext } from "contexts/userAssetDataContext";
@@ -14,7 +13,6 @@ const AssetSummary: FC = () => {
   const [userAssetsState] = useContext(UserAssetsDataContext);
   const [userTransactionsState] = useContext(UserTransactionsDataContext);
   const { assetData } = useContext(AssetDataContext);
-  const [isLoading, setIsLoading] = useState(false);
 
   function convertPriceToNumber(priceString: string) {
     const withoutDollarSign = priceString?.replace("$", "");
@@ -59,8 +57,6 @@ const AssetSummary: FC = () => {
     return acc;
   }, 0);
 
-  // console.log("lastMonthTransactions", lastMonthTransactions);
-
   const soldInUSD = lastMonthTransactions.reduce((acc, transaction) => {
     if (transaction.transaction_type === "sell") {
       return (
@@ -73,8 +69,6 @@ const AssetSummary: FC = () => {
   const totalUSDValue = userAssetsWithPrice.reduce((acc, asset) => {
     return acc + asset.total_amount * asset.Price;
   }, 0);
-
-  // console.log("userAssetsWithPrice", userAssetsWithPrice);
 
   return (
     <div className={styles.container}>
