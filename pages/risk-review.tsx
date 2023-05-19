@@ -8,15 +8,15 @@ import { UserTransactionsDataProvider } from "contexts/userTransactionDataContex
 function Risk() {
   return (
     <DashboardLayout>
-      <UserAssetsDataProvider>
-        <UserTransactionsDataProvider>
-          <AssetDataProvider>
-            <StorageDataProvider>
+      <AssetDataProvider>
+        <StorageDataProvider>
+          <UserAssetsDataProvider>
+            <UserTransactionsDataProvider>
               <RiskReview />
-            </StorageDataProvider>
-          </AssetDataProvider>
-        </UserTransactionsDataProvider>
-      </UserAssetsDataProvider>
+            </UserTransactionsDataProvider>
+          </UserAssetsDataProvider>
+        </StorageDataProvider>
+      </AssetDataProvider>
     </DashboardLayout>
   );
 }

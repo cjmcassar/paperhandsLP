@@ -9,14 +9,14 @@ function Dashboard() {
   return (
     <DashboardLayout>
       <div>
-        <UserAssetsDataProvider>
-          <UserTransactionsDataProvider>
-            <AssetDataProvider>
+        <AssetDataProvider>
+          <UserAssetsDataProvider>
+            <UserTransactionsDataProvider>
               <AssetSummary />
               <LineChart />
-            </AssetDataProvider>
-          </UserTransactionsDataProvider>
-        </UserAssetsDataProvider>
+            </UserTransactionsDataProvider>
+          </UserAssetsDataProvider>
+        </AssetDataProvider>
       </div>
     </DashboardLayout>
   );
