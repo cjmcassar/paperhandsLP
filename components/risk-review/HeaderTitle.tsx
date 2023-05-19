@@ -4,7 +4,11 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import styles from "./RiskReviewHeader.module.css";
 
-function HeaderTitle({ showLoading }) {
+interface HeaderTitleProps {
+  showLoading: boolean;
+}
+
+const HeaderTitle: React.FC<HeaderTitleProps> = ({ showLoading }) => {
   return (
     <div>
       <h2
@@ -25,6 +29,6 @@ function HeaderTitle({ showLoading }) {
       </h2>
     </div>
   );
-}
+};
 
 export default HeaderTitle;

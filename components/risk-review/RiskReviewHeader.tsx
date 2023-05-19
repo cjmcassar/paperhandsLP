@@ -6,8 +6,8 @@ import ButtonGroup from "./ButtonGroup";
 import AddCryptoForm from "./AddCryptoForm";
 
 function RiskReviewHeader() {
-  const [showForm, setShowForm] = useState(false);
-  const [isFAQModalOpen, setIsFAQModalOpen] = useState(false);
+  const [showForm, setShowForm] = useState<boolean>(false);
+  const [isFAQModalOpen, setIsFAQModalOpen] = useState<boolean>(false);
 
   const openFAQModal = () => setIsFAQModalOpen(true);
   const closeFAQModal = () => setIsFAQModalOpen(false);
@@ -16,7 +16,7 @@ function RiskReviewHeader() {
 
   const assetData = useContext(AssetDataContext);
 
-  const showLoading = !assetData.assetData;
+  const showLoading: boolean = !assetData.assetData;
 
   return (
     <div className="flex items-center py-5 gap-8">

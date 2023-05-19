@@ -5,7 +5,17 @@ import FAQButton from "./FAQButton";
 
 import styles from "./RiskReviewHeader.module.css";
 
-function ButtonGroup({ handleAddNewCrypto, openFAQModal, showLoading }) {
+interface ButtonGroupProps {
+  handleAddNewCrypto: () => void;
+  openFAQModal: () => void;
+  showLoading: boolean;
+}
+
+const ButtonGroup: React.FC<ButtonGroupProps> = ({
+  handleAddNewCrypto,
+  openFAQModal,
+  showLoading
+}) => {
   return (
     <div className={`${styles.buttonGroup}`}>
       <AddCryptoButton
@@ -15,6 +25,6 @@ function ButtonGroup({ handleAddNewCrypto, openFAQModal, showLoading }) {
       <FAQButton openFAQModal={openFAQModal} />
     </div>
   );
-}
+};
 
 export default ButtonGroup;

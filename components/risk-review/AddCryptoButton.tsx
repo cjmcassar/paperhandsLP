@@ -2,7 +2,15 @@ import React from "react";
 import Plus from "../../public/img/dashboard/icons/plus.svg";
 import styles from "./RiskReviewHeader.module.css";
 
-function AddCryptoButton({ handleAddNewCrypto, showLoading }) {
+interface AddCryptoButtonProps {
+  handleAddNewCrypto: () => void;
+  showLoading: boolean;
+}
+
+const AddCryptoButton: React.FC<AddCryptoButtonProps> = ({
+  handleAddNewCrypto,
+  showLoading
+}) => {
   return (
     <button
       className={`${styles.customButton} tour-step-1 hover:border-primary ${
@@ -15,6 +23,6 @@ function AddCryptoButton({ handleAddNewCrypto, showLoading }) {
       <span className="tour-step-1 text-xs">Add New Crypto</span>
     </button>
   );
-}
+};
 
 export default AddCryptoButton;
