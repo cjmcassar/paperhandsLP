@@ -1,15 +1,22 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, ReactNode } from "react";
 import { UserAssetsDataContext } from "contexts/userAssetDataContext";
 import { UserTransactionsDataContext } from "contexts/userTransactionDataContext";
 
-function SidebarHistoryItem({ icon, title, date, value, valueColor }) {
+interface SidebarHistoryItemProps {
+  title: string;
+  date: string;
+  value: string;
+  valueColor: string;
+}
+
+function SidebarHistoryItem({
+  title,
+  date,
+  value,
+  valueColor
+}: SidebarHistoryItemProps) {
   return (
     <li className="flex mb-[23px]">
-      <div className="relative bg-lightGrey w-10 rounded-5">
-        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          {icon}
-        </div>
-      </div>
       <div className="ml-3.5 flex justify-between items-center w-40">
         <div className="flex flex-col">
           <h5 className="font-bold">{title}</h5>
@@ -20,10 +27,24 @@ function SidebarHistoryItem({ icon, title, date, value, valueColor }) {
     </li>
   );
 }
+
+interface Transaction {
+  parent_id: string;
+  transaction_type: string;
+  transaction_amount: number;
+  transaction_date: string;
+}
+
+interface CombinedData extends Transaction {
+  id?: string;
+  asset_name?: string;
+  asset_symbol?: ReactNode;
+}
+
 export default function SidebarHistory() {
   const [userAssetsState] = useContext(UserAssetsDataContext);
   const [transactionState] = useContext(UserTransactionsDataContext);
-  const [combinedData, setCombinedData] = useState([]);
+  const [combinedData, setCombinedData] = useState<CombinedData[]>([]);
 
   const { userTransactions } = transactionState;
   const { userAssets } = userAssetsState;
@@ -60,7 +81,7 @@ export default function SidebarHistory() {
               new Date(a.transaction_date).getTime()
             );
           })
-          .slice(0, 5)
+          .slice(0, 4)
           .map(asset => {
             const isBuy = asset.transaction_type === "buy";
             const transactionAmount = Number(asset.transaction_amount);
@@ -72,8 +93,7 @@ export default function SidebarHistory() {
             return (
               <SidebarHistoryItem
                 key={asset.id}
-                icon={asset.asset_symbol}
-                title={`${isBuy ? "Bought" : "Sold"} ${asset.asset_name}`}
+                title={`${isBuy ? "Bought" : "Sold"} ${asset.asset_symbol}`}
                 date={asset.transaction_date}
                 value={value}
                 valueColor={valueColor}
