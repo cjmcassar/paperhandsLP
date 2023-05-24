@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { ReactNode, useContext, useEffect, useState } from "react";
 import { AssetDataContext } from "contexts/apiAssetDataContext";
 import { UserAssetsDataContext } from "contexts/userAssetDataContext";
 import { UserTransactionsDataContext } from "contexts/userTransactionDataContext";
@@ -20,17 +20,30 @@ function RiskInfoItem({ color, title, date }) {
   );
 }
 
+interface Transaction {
+  parent_id: string;
+  transaction_type: string;
+  transaction_amount: number;
+  transaction_date: string;
+}
+
+interface CombinedData extends Transaction {
+  id?: string;
+  asset_name?: string;
+  asset_symbol?: ReactNode;
+  risk_rating?: string;
+  uid: string;
+}
+
 export default function RiskInfo() {
   const [userAssetsState] = useContext(UserAssetsDataContext);
   const [transactionState] = useContext(UserTransactionsDataContext);
   const assetDataState = useContext(AssetDataContext);
-  const [combinedData, setCombinedData] = useState([]);
+  const [combinedData, setCombinedData] = useState<CombinedData[]>([]);
   const [loading, setLoading] = useState(true);
 
   const { userTransactions } = transactionState;
   const { userAssets } = userAssetsState;
-
-  // There is a bug with mapping the risk rating to the transactions.
 
   useEffect(() => {
     setLoading(true);
@@ -58,19 +71,16 @@ export default function RiskInfo() {
           asset_name: asset.asset_name,
           asset_symbol: asset.asset_symbol,
           risk_rating: assetData.Rating,
-          transaction_date: new Date(transaction.transaction_date)
+          transaction_date: transaction.transaction_date
         };
       })
-      .filter(item => item !== null)
-      .sort(
-        (a, b) => b.transaction_date.getTime() - a.transaction_date.getTime()
-      );
+      .filter(item => item !== null);
 
     setCombinedData(data);
     setLoading(false);
     console.log("tsx:", transactionState);
     console.log("combined data:", data);
-  }, [assetDataState, userAssets, userTransactions]);
+  }, [assetDataState, userAssetsState, transactionState]);
 
   if (loading) {
     return (
@@ -85,37 +95,43 @@ export default function RiskInfo() {
     <div className="sm:w-full w-[30%] text-white">
       <h1 className="text-2xl font-bold mb-4">Risk Information</h1>
       <ul className="ml-3 flex flex-col items-start">
-        {combinedData.map((data, index) => {
-          let color;
-          switch (data.risk_rating) {
-            case "High":
-              color = "#FF6262";
-              break;
-            case "Medium":
-              color = "#FFF962";
-              break;
-            case "Low":
-              color = "#62FF97";
-              break;
-            case "Historically Safe":
-              color = "#7B62FF";
-              break;
-          }
-          return (
-            <RiskInfoItem
-              key={index}
-              color={color}
-              title={
-                <>
-                  {data.risk_rating}
-                  <br />
-                  {data.asset_name}
-                </>
-              }
-              date={new Date(data.transaction_date).toLocaleDateString()}
-            />
-          );
-        })}
+        {combinedData
+          .sort(
+            (a, b) =>
+              new Date(b.transaction_date).getTime() -
+              new Date(a.transaction_date).getTime()
+          )
+          .map((data, index) => {
+            let color;
+            switch (data.risk_rating) {
+              case "4 - High Risk":
+                color = "#FF6262";
+                break;
+              case "3 - Medium Risk":
+                color = "#FFF962";
+                break;
+              case "2 - Low Risk":
+                color = "#62FF97";
+                break;
+              case "1 - Historically Safe":
+                color = "#7B62FF";
+                break;
+            }
+            return (
+              <RiskInfoItem
+                key={index}
+                color={color}
+                title={
+                  <>
+                    {data.risk_rating}
+                    <br />
+                    {data.asset_name}
+                  </>
+                }
+                date={data.transaction_date}
+              />
+            );
+          })}
       </ul>
     </div>
   );
