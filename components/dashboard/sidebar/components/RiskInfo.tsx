@@ -78,8 +78,6 @@ export default function RiskInfo() {
 
     setCombinedData(data);
     setLoading(false);
-    console.log("tsx:", transactionState);
-    console.log("combined data:", data);
   }, [assetDataState, userAssetsState, transactionState]);
 
   if (loading) {
