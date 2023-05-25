@@ -18,6 +18,7 @@ import {
 } from "firebase/firestore";
 
 import { DataTable } from "simple-datatables";
+import { parseISO } from "date-fns";
 import { initializeTable, populateTable } from "./tableHelpers";
 import styles from "./RiskReviewTable.module.css";
 
@@ -202,9 +203,7 @@ function RiskReviewTable(): JSX.Element {
 
     updateDoc(docRef, {
       total_amount: newAmount,
-      transaction_date: Timestamp.fromDate(
-        new Date(buySellData.transaction_date)
-      )
+      transaction_date: parseISO(buySellData.transaction_date)
     })
       .then(() => {
         console.log("Document successfully updated!");
@@ -213,10 +212,11 @@ function RiskReviewTable(): JSX.Element {
           transaction_amount: transactionAmount,
           transaction_price: transactionPrice,
           transaction_type: transactionType,
-          transaction_date: new Date(),
+          transaction_date: parseISO(buySellData.transaction_date),
           transaction_parent_id: buySellData.id,
           uid: user.uid
         };
+
         logTransaction(transactionData);
 
         setLoading(false);
