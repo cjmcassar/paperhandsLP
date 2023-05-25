@@ -99,6 +99,7 @@ export default function RiskInfo() {
               new Date(b.transaction_date).getTime() -
               new Date(a.transaction_date).getTime()
           )
+          .slice(0, 3)
           .map((data, index) => {
             let color;
             switch (data.risk_rating) {
