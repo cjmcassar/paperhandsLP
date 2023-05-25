@@ -54,8 +54,6 @@ function CryptoHistoryHeader() {
   const assetData = useContext(AssetDataContext);
   const storageData = useContext(StorageDataContext);
 
-  console.log("storageData -->", storageData);
-
   const handleAssetSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);

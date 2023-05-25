@@ -1,8 +1,12 @@
 import SidebarHistory from "./components/SidebarHistory";
 import RiskInfo from "./components/RiskInfo";
+
 import styles from "../sidebar/RightHandSidebar.module.css";
+
 import { UserTransactionsDataProvider } from "contexts/userTransactionDataContext";
 import { UserAssetsDataProvider } from "contexts/userAssetDataContext";
+import { AssetDataProvider } from "contexts/apiAssetDataContext";
+
 export default function RightHandSidebar(): JSX.Element {
   return (
     <>
@@ -11,8 +15,10 @@ export default function RightHandSidebar(): JSX.Element {
           <div className="px-3 pb-5">
             <UserTransactionsDataProvider>
               <UserAssetsDataProvider>
-                <SidebarHistory />
-                <RiskInfo />
+                <AssetDataProvider>
+                  <SidebarHistory />
+                  <RiskInfo />
+                </AssetDataProvider>
               </UserAssetsDataProvider>
             </UserTransactionsDataProvider>
           </div>
