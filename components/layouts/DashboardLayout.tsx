@@ -36,14 +36,14 @@ export default function DashboardLayout({ children }) {
       Checking authentication
     </div>
   ) : (
-    <div>
+    <div className="w-full bg-white">
       <Sidebar />
 
       <div className="lg:fixed relative z-30 lg:pl-56 bg-dark w-full">
         <Navbar />
       </div>
 
-      <div className="px-4 lg:p-10 lg:pl-64 lg:pr-72 lg:pt-20 flex-1 bg-dark min-h-screen">
+      <div className="px-4 lg:p-10 lg:pl-64 lg:pr-72 lg:pt-20 flex-1 bg-dark  min-h-screen">
         {children}
       </div>
 
