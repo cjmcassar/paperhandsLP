@@ -52,7 +52,7 @@ const RiskLevelRow: React.FC<RiskLevelRowProps> = ({
     className="flex text-center border-b-2 last:border-b-0 border-[#5B5B5B] bg-[#363636]"
     style={{ color }}
   >
-    <span className="w-6/12 border-r-2 border-[#5B5B5B] px-3 py-2">{risk}</span>
+    <span className="w-6/12 border-r-2  border-[#5B5B5B]  py-2">{risk}</span>
     <span className="w-6/12 px-3 py-2">{percentage}%</span>
   </div>
 );
@@ -226,11 +226,11 @@ export default function DoughnutChart() {
   }
 
   return (
-    <div className="gap-6 flex align-center bg-[#1a1c24] rounded-lg p-5 w-full font-bold">
-      <div className="w-6/12">
+    <div className="gap-7 mt-5 flex flex-col-reverse items-center sm:items-start sm:flex-row bg-[#1a1c24] rounded-lg p-5 w-full font-bold">
+      <div className="w-full sm:w-1/2">
         <RiskLevelTable donutData={donutData} />
       </div>
-      <div className="w-6/12">
+      <div className="w-full sm:w-1/2">
         <DonutChartCanvas
           chartContainer={chartContainer}
           dataChart={dataChart}
