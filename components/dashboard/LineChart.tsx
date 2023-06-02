@@ -13,7 +13,7 @@ interface RiskLabelProps {
 }
 
 const RiskLabel = ({ color, text }: RiskLabelProps) => (
-  <div className="flex gap-2 items-center">
+  <div className="flex  gap-2 items-center">
     <div className={`w-4 h-4 rounded-full ${color}`}></div>
     <div>{text}</div>
   </div>
@@ -263,23 +263,26 @@ export default function LineChart(): JSX.Element {
         }
       }
     }
-  }, [isLoading, userAssets, assetData]);
+  }, [isLoading, userAssets, assetData, combinedData]);
 
   return (
     <div className={styles.outerContainer}>
       <div className={styles.container}>
-        <div className={styles.chartWrapper}>
-          <div className={styles.header}>
+        <div className={`${styles.chartWrapper}`}>
+          <div className={`${styles.header} flex-col  justify-between`}>
             <div>
-              <h2 className={`${styles.title} md:text-3xl sm:text-lg`}>
-                Types
-              </h2>
+              <h2 className={`${styles.title} text-3xl pb-4 w-full`}>Types</h2>
             </div>
-            <div className="flex gap-4 md:text-lg sm:text-xs">
-              <RiskLabel color="bg-danger" text="High Risk" />
-              <RiskLabel color="bg-warning" text="Medium Risk" />
-              <RiskLabel color="bg-success" text="Low Risk" />
-              <RiskLabel color="bg-primary" text="Historically Safe" />
+            <div className="w-full sm:justify-center justify-between flex sm:gap-4 md:text-sm sm:text-xs  ">
+              <div className="flex sm:flex-row flex-col sm:gap-4 justify-between">
+                <RiskLabel color="bg-danger" text="High Risk" />
+                <RiskLabel color="bg-warning" text="Medium Risk" />
+              </div>
+
+              <div className="flex sm:flex-row sm:gap-4 flex-col justify-between">
+                <RiskLabel color="bg-success" text="Low Risk" />
+                <RiskLabel color="bg-primary" text="Historically Safe" />
+              </div>
             </div>
           </div>
           <div className={styles.canvasContainer}>

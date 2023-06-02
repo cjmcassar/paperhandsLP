@@ -144,7 +144,7 @@ function CryptoHistoryHeader() {
   const showLoading = !assetData.assetData;
 
   return (
-    <div className="flex items-center py-5 gap-8">
+    <div className="flex-col flex sm:flex-row sm:items-center py-5 gap-8">
       <div>
         <h2
           className={`${styles.latestOperationsTitle} ${
