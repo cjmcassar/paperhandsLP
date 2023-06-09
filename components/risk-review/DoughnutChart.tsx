@@ -1,81 +1,98 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
-import { format, fromUnixTime } from "date-fns";
-import { query, collection, where, onSnapshot } from "firebase/firestore";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { db, auth } from "utils/firebaseClient";
 import { AssetDataContext } from "contexts/apiAssetDataContext";
+import { UserAssetsDataContext } from "contexts/userAssetDataContext";
 
 interface DonutChartData {
   risk: string;
   color: string;
   percentage: number;
 }
-interface UserAsset {
-  uid: string;
-  asset_name: string;
-  asset_symbol: string;
-  total_amount: number;
-  storage_type: string;
-  transaction_date: string;
-  transaction_type: "buy" | "sell";
-  id: string;
+interface DonutChartCanvasProps {
+  chartContainer: React.RefObject<HTMLCanvasElement>;
+  dataChart: Chart | null;
+  donutData: DonutChartData[];
 }
 
+interface RiskLevelRowProps {
+  risk: string;
+  percentage: number;
+  color: string;
+}
+
+interface RiskLevelTableProps {
+  donutData: DonutChartData[];
+}
+
+const DonutChartCanvas: React.FC<DonutChartCanvasProps> = ({
+  chartContainer,
+  dataChart,
+  donutData
+}) => {
+  useEffect(() => {
+    if (!dataChart) return;
+
+    dataChart.data.labels = donutData.map(data => data.risk);
+    dataChart.data.datasets[0].backgroundColor = donutData.map(
+      data => data.color
+    );
+    dataChart.data.datasets[0].data = donutData.map(data => data.percentage);
+    dataChart.update();
+  }, [dataChart, donutData]);
+
+  return <canvas id="char-doughnut" ref={chartContainer} height="200"></canvas>;
+};
+
+const RiskLevelRow: React.FC<RiskLevelRowProps> = ({
+  risk,
+  percentage,
+  color
+}) => (
+  <div
+    className="flex text-center border-b-2 last:border-b-0 border-[#5B5B5B] bg-[#363636]"
+    style={{ color }}
+  >
+    <span className="w-6/12 border-r-2  border-[#5B5B5B]  py-2">{risk}</span>
+    <span className="w-6/12 px-3 py-2">{percentage}%</span>
+  </div>
+);
+
+const RiskLevelTable: React.FC<RiskLevelTableProps> = ({ donutData }) => (
+  <div className="flex h-full items-center">
+    <div className="bg-[#404040] rounded-2xl overflow-hidden w-full">
+      <div className="flex text-center text-white border-b-2 border-[#5B5B5B] uppercase">
+        <span className="w-6/12 border-r-2 border-[#5B5B5B] px-3 py-2">
+          Risk Level
+        </span>
+        <span className="w-6/12 px-3 py-2">Share</span>
+      </div>
+
+      {donutData.map((data, index) => (
+        <RiskLevelRow
+          key={index}
+          risk={data.risk}
+          percentage={data.percentage}
+          color={data.color}
+        />
+      ))}
+    </div>
+  </div>
+);
+
 export default function DoughnutChart() {
-  const chartContainer = useRef(null);
-  const [user] = useAuthState(auth);
-  const [userAssets, setUserAssets] = useState<UserAsset[]>([]);
+  const chartContainer = useRef<HTMLCanvasElement>(null);
   const assetData = useContext(AssetDataContext);
-  const [donutInitialized, setDonutInitialized] = useState(false);
+  const [donutInitialized, setDonutInitialized] = useState<boolean>(false);
   const [dataChart, setDataChart] = useState(null);
-  const [donutData, setDonutData] = useState([
+  const [donutData, setDonutData] = useState<DonutChartData[]>([
     { risk: "High Risk", percentage: 50, color: "#FC62FF" },
     { risk: "Medium Risk", percentage: 20, color: "#FFF507" },
     { risk: "Low Risk", percentage: 15, color: "#62FF97" },
     { risk: "Historically Safe", percentage: 15, color: "#8DAAF5" }
   ]);
 
-  useEffect(() => {
-    if (user) {
-      const unsubscribe = fetchUserAssets();
-
-      return () => {
-        if (unsubscribe) {
-          unsubscribe();
-        }
-      };
-    }
-  }, [user]);
-
-  const fetchUserAssets = () => {
-    if (!user) return;
-
-    const userAssetsQuery = query(
-      collection(db, "user_assets"),
-      where("uid", "==", user.uid)
-    );
-
-    const unsubscribe = onSnapshot(userAssetsQuery, querySnapshot => {
-      const userAssets: UserAsset[] = [];
-      querySnapshot.forEach(doc => {
-        const docData = doc.data();
-        const transactionDateSeconds = docData.transaction_date?.seconds;
-
-        const data = {
-          ...docData,
-          transaction_date: transactionDateSeconds
-            ? format(fromUnixTime(transactionDateSeconds), "yyyy-MM-dd")
-            : "",
-          id: doc.id
-        };
-        userAssets.push(data as UserAsset);
-      });
-      setUserAssets(userAssets);
-    });
-
-    return unsubscribe;
-  };
+  const [UserAssetsData] = useContext(UserAssetsDataContext);
+  const { userAssets } = UserAssetsData;
 
   useEffect(() => {
     if (!donutInitialized) {
@@ -209,36 +226,16 @@ export default function DoughnutChart() {
   }
 
   return (
-    <div
-      className={` gap-6 flex align-center bg-[#1a1c24] rounded-lg p-5 w-full font-bold`}
-    >
-      <div className="w-6/12">
-        <div className="flex h-full items-center">
-          <div className="bg-[#404040] rounded-2xl overflow-hidden w-full">
-            <div className="flex text-center text-white border-b-2 border-[#5B5B5B] uppercase">
-              <span className=" w-6/12 border-r-2 border-[#5B5B5B] px-3 py-2">
-                Risk Level
-              </span>
-              <span className=" w-6/12 px-3 py-2">Share</span>
-            </div>
-
-            {donutData.map((data, index) => (
-              <div
-                key={index}
-                className="flex text-center border-b-2 last:border-b-0 border-[#5B5B5B] bg-[#363636]"
-                style={{ color: data.color }}
-              >
-                <span className="w-6/12 border-r-2 border-[#5B5B5B] px-3 py-2 ">
-                  {data.risk}
-                </span>
-                <span className="w-6/12 px-3 py-2">{data.percentage}%</span>
-              </div>
-            ))}
-          </div>
-        </div>
+    <div className="gap-7 mt-5 flex flex-col-reverse items-center sm:items-start sm:flex-row bg-[#1a1c24] rounded-lg p-5 w-full font-bold">
+      <div className="w-full sm:w-1/2">
+        <RiskLevelTable donutData={donutData} />
       </div>
-      <div className="w-6/12">
-        <canvas id="char-doughnut" ref={chartContainer} height="200"></canvas>
+      <div className="w-full sm:w-1/2">
+        <DonutChartCanvas
+          chartContainer={chartContainer}
+          dataChart={dataChart}
+          donutData={donutData}
+        />
       </div>
     </div>
   );

@@ -19,7 +19,7 @@ function RiskReviewHeader() {
   const showLoading: boolean = !assetData.assetData;
 
   return (
-    <div className="flex items-center py-5 gap-8">
+    <div className="flex flex-col sm:flex-row items-center py-5 gap-8 ">
       <HeaderTitle showLoading={showLoading} />
       <ButtonGroup
         handleAddNewCrypto={handleAddNewCrypto}

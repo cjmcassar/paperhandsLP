@@ -18,6 +18,7 @@ import {
 } from "firebase/firestore";
 
 import { DataTable } from "simple-datatables";
+import { parseISO } from "date-fns";
 import { initializeTable, populateTable } from "./tableHelpers";
 import styles from "./RiskReviewTable.module.css";
 
@@ -202,9 +203,7 @@ function RiskReviewTable(): JSX.Element {
 
     updateDoc(docRef, {
       total_amount: newAmount,
-      transaction_date: Timestamp.fromDate(
-        new Date(buySellData.transaction_date)
-      )
+      transaction_date: parseISO(buySellData.transaction_date)
     })
       .then(() => {
         console.log("Document successfully updated!");
@@ -213,10 +212,11 @@ function RiskReviewTable(): JSX.Element {
           transaction_amount: transactionAmount,
           transaction_price: transactionPrice,
           transaction_type: transactionType,
-          transaction_date: new Date(),
+          transaction_date: parseISO(buySellData.transaction_date),
           transaction_parent_id: buySellData.id,
           uid: user.uid
         };
+
         logTransaction(transactionData);
 
         setLoading(false);
@@ -296,39 +296,43 @@ function RiskReviewTable(): JSX.Element {
 
   return (
     <>
-      <div className="py-5">
-        <div className="flex gap-6 md:text-lg sm:text-xs text-white">
-          <div className="flex gap-2 items-center">
-            <div
-              className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: "#FF6262" }}
-            ></div>
-            <div>High Risk</div>
+      <div className="py-5 flex  flex-col  md:text-lg sm:text-xs text-white">
+        <div className="flex justify-between sm:justify-start gap-6">
+          <div className="flex flex-col sm:gap-6 sm:flex-row">
+            <div className="flex gap-2 items-center">
+              <div
+                className="w-4 h-4 rounded-full"
+                style={{ backgroundColor: "#FF6262" }}
+              ></div>
+              <div>High Risk</div>
+            </div>
+            <div className="flex gap-2 items-center">
+              <div
+                className="w-4 h-4 rounded-full"
+                style={{ backgroundColor: "#FFF962" }}
+              ></div>
+              <div>Medium Risk</div>
+            </div>
           </div>
-          <div className="flex gap-2 items-center">
-            <div
-              className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: "#FFF962" }}
-            ></div>
-            <div>Medium Risk</div>
-          </div>
-          <div className="flex gap-2 items-center">
-            <div
-              className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: "#62FF97" }}
-            ></div>
-            <div>Low Risk</div>
-          </div>
-          <div className="flex gap-2 items-center">
-            <div
-              className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: "#7B62FF" }}
-            ></div>
-            <div>Historically Safe</div>
+          <div className="flex flex-col sm:gap-6 sm:flex-row ">
+            <div className="flex gap-2 items-center">
+              <div
+                className="w-4 h-4 rounded-full"
+                style={{ backgroundColor: "#62FF97" }}
+              ></div>
+              <div>Low Risk</div>
+            </div>
+            <div className="flex gap-2 items-center">
+              <div
+                className="w-4 h-4 rounded-full"
+                style={{ backgroundColor: "#7B62FF" }}
+              ></div>
+              <div>Historically Safe</div>
+            </div>
           </div>
         </div>
       </div>
-      <div className="overflow-x-auto  tour-step-2">
+      <div className="overflow-x-auto tour-step-2">
         <table
           ref={tableRef}
           className={`${styles.riskReviewTable} min-w-full divide-y divide-gray-200 sm:text-sm text-white`}
