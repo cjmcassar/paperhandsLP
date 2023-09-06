@@ -25,7 +25,7 @@ import {
 
 function NavbarTitle() {
   return (
-    <nav>
+    <nav className="flex md:flex-col md:gap-0 gap-10">
       <h6 className={styles.navbarTitle}>Dashboard</h6>
       <ol className={styles.navbarList}>
         <li className={styles.navbarListItem} aria-current="page">
@@ -197,17 +197,17 @@ export default function Navbar() {
 
   return (
     <nav className={styles.navbar} navbar-scroll="false">
-      <div className=" flex items-center justify-between w-full px-4 py-1 mx-auto flex-wrap-inherit">
+      <div className=" flex items-center justify-between w-full md:px-4 py-1 mx-auto flex-wrap-inherit">
         <NavbarTitle />
         {/* <div className="flex items-center mt-2 grow sm:mt-0 sm:mr-6 md:mr-0 lg:flex lg:basis-auto">
           <div className="flex items-center md:ml-auto md:pr-4">
             <SearchBar />
           </div>
         </div> */}
-        <ul className="relative z-50 flex flex-row justify-start gap-3 mb-0 list-none">
+        <ul className="relative z-50 flex flex-row justify-start md:gap-3 mb-0 list-none">
           {showOpenAppTourButton && (
             <button
-              className="bg-primary text-white px-4 py-2 rounded-lg"
+              className="bg-primary text-white px-4 py-2 hidden sm:block rounded-lg"
               onClick={() => setIsOpen(true)}
             >
               Open App Tour

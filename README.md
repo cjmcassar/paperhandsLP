@@ -1,5 +1,7 @@
 # Paperhands
 
+This is the codebase for the paperhands website and risk portfolio application. This project is opensource and anyone is welcome to contribute. Please remember to give a star to the project if you find it useful.
+
 This project was bootstrapped with [Next.js](https://nextjs.org/).
 
 ## Getting Started
@@ -22,7 +24,7 @@ Change to the paperhands directory:
 
 Use either npm or yarn to install the project's dependencies:
 
-`npm install`  **or** `yarn install`
+`npm install` **or** `yarn install`
 
 ### 4. Setup Environment Variables
 

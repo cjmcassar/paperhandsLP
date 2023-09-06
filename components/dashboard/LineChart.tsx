@@ -1,87 +1,54 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import styles from "./LineChart.module.css";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { query, collection, where, getDocs } from "firebase/firestore";
-import { db, auth } from "utils/firebaseClient";
-import { format, fromUnixTime } from "date-fns";
 import { AssetDataContext } from "contexts/apiAssetDataContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { UserTransactionsDataContext } from "contexts/userTransactionDataContext";
+import { UserAssetsDataContext } from "contexts/userAssetDataContext";
 
-const RiskLabel = ({ color, text }) => (
-  <div className="flex gap-2 items-center">
+interface RiskLabelProps {
+  color: string;
+  text: string;
+}
+
+const RiskLabel = ({ color, text }: RiskLabelProps) => (
+  <div className="flex  gap-2 items-center">
     <div className={`w-4 h-4 rounded-full ${color}`}></div>
     <div>{text}</div>
   </div>
 );
 
-type RiskLevel = "high" | "medium" | "low" | "historically_safe";
-
-interface UserAsset {
-  uid: string;
-  asset_name: string;
-  asset_symbol: string;
-  total_amount: number;
-  storage_type: string;
-  transaction_date: string;
-  transaction_type: "buy" | "sell";
-  transaction_id: string;
-  risk_level: RiskLevel;
-  id: string;
-}
-
-export default function LineChart() {
-  const chartContainer = useRef(null);
-  const [user] = useAuthState(auth);
+export default function LineChart(): JSX.Element {
+  const chartContainer = useRef<HTMLCanvasElement>(null);
   const assetData = useContext(AssetDataContext);
-  const [userAssets, setUserAssets] = useState<UserAsset[]>([]);
-  const [lineChart, setLineChart] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [lineChart, setLineChart] = useState<Chart | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [combinedData, setCombinedData] = useState<any[]>([]);
+  const [transactionState] = useContext(UserTransactionsDataContext);
+  const [userAssetsState] = useContext(UserAssetsDataContext);
+  const { userAssets } = userAssetsState;
+  const { userTransactions } = transactionState;
 
   useEffect(() => {
-    if (user) {
-      fetchUserTransactions();
-    }
-  }, [user]);
-
-  const fetchUserTransactions = async () => {
-    if (!user) return;
-
-    const userAssetsQuery = query(
-      collection(db, "user_assets"),
-      where("uid", "==", user.uid)
-    );
-
-    const userAssetsSnapshots = await getDocs(userAssetsQuery);
-    const userAssets: UserAsset[] = [];
-    const transactionsPromises: Promise<void>[] = [];
-
-    userAssetsSnapshots.forEach(userAssetDoc => {
-      const userAsset = userAssetDoc.data() as UserAsset;
-      const transactionsPromise = getDocs(
-        collection(userAssetDoc.ref, "transactions")
-      ).then(transactionsSnapshots => {
-        transactionsSnapshots.forEach(transactionDoc => {
-          const transactionData = transactionDoc.data();
-          userAssets.push({
-            ...userAsset,
-            ...transactionData,
-            transaction_date: format(
-              fromUnixTime(transactionData.transaction_date.seconds),
-              "yyyy-MM-dd"
-            ),
-            transaction_id: transactionDoc.id
-          });
-        });
+    const combinedData = userTransactions
+      .map(transaction => {
+        const asset = userAssets.find(
+          asset => asset.id === transaction.parent_id
+        );
+        return {
+          ...transaction,
+          asset_name: asset?.asset_name,
+          asset_symbol: asset?.asset_symbol,
+          total_amount: asset?.total_amount
+        };
+      })
+      .filter(data => {
+        return userAssets.find(asset => asset.id === data.parent_id);
       });
-      transactionsPromises.push(transactionsPromise);
-    });
 
-    await Promise.all(transactionsPromises);
-    setUserAssets(userAssets);
-    setIsLoading(false);
-  };
+    setCombinedData(combinedData);
+  }, [userAssetsState, transactionState]);
 
   const processData = (): number[][] => {
     // Initialize empty data arrays
@@ -101,10 +68,11 @@ export default function LineChart() {
       return ratingMap[rating] || "Unknown";
     };
 
-    userAssets.forEach(asset => {
+    combinedData.forEach(asset => {
       const assetDetails = assetData?.assetData?.find(
         assetData => assetData.Symbol === asset.asset_symbol
       );
+
       if (assetDetails) {
         const price = parseFloat(assetDetails?.Price.replace(/[$,]/g, ""));
         const assetValue = asset.total_amount * price;
@@ -237,7 +205,7 @@ export default function LineChart() {
                       style: "normal",
                       lineHeight: 2
                     },
-                    callback: function (value, index, ticks) {
+                    callback: function (value: number) {
                       const numValue = Number(value);
                       if (numValue >= 1000000) {
                         return `$${(numValue / 1000000).toLocaleString(
@@ -295,23 +263,26 @@ export default function LineChart() {
         }
       }
     }
-  }, [isLoading, userAssets, assetData]);
+  }, [isLoading, userAssets, assetData, combinedData]);
 
   return (
     <div className={styles.outerContainer}>
       <div className={styles.container}>
-        <div className={styles.chartWrapper}>
-          <div className={styles.header}>
+        <div className={`${styles.chartWrapper}`}>
+          <div className={`${styles.header} flex-col  justify-between`}>
             <div>
-              <h2 className={`${styles.title} md:text-3xl sm:text-lg`}>
-                Types
-              </h2>
+              <h2 className={`${styles.title} text-3xl pb-4 w-full`}>Types</h2>
             </div>
-            <div className="flex gap-4 md:text-lg sm:text-xs">
-              <RiskLabel color="bg-danger" text="High Risk" />
-              <RiskLabel color="bg-warning" text="Medium Risk" />
-              <RiskLabel color="bg-success" text="Low Risk" />
-              <RiskLabel color="bg-primary" text="Historically Safe" />
+            <div className="w-full sm:justify-center justify-between flex sm:gap-4 md:text-sm sm:text-xs  ">
+              <div className="flex sm:flex-row flex-col sm:gap-4 justify-between">
+                <RiskLabel color="bg-danger" text="High Risk" />
+                <RiskLabel color="bg-warning" text="Medium Risk" />
+              </div>
+
+              <div className="flex sm:flex-row sm:gap-4 flex-col justify-between">
+                <RiskLabel color="bg-success" text="Low Risk" />
+                <RiskLabel color="bg-primary" text="Historically Safe" />
+              </div>
             </div>
           </div>
           <div className={styles.canvasContainer}>

@@ -33,6 +33,12 @@
 .datatable-table > tbody > tr > td {
   vertical-align: middle;
 }
+@media (max-width: 767px) {
+  /* Styles for mobile devices */
+  .datatable-top {
+    display: none;
+  }
+}
 
 .datatable-sorter {
   color: #fff;
